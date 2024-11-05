@@ -40,7 +40,7 @@ export class RegistroComponent implements OnInit {
       (response: ObraSocialResponse) => {
         if (response.data && Array.isArray(response.data)) {
           this.obrasSociales = response.data; 
-          console.log('Obras sociales:', this.obrasSociales); // Verifica que esto sea un array
+          console.log('Obras sociales:', this.obrasSociales); // Verifica que esto sea un arrayyy
         } else {
           this.errorMessage = 'No se encontraron obras sociales.';
         }
