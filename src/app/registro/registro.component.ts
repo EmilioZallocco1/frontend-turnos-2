@@ -1,4 +1,3 @@
-// registro.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service'; // Servicio de autenticación
@@ -28,11 +27,9 @@ export class RegistroComponent implements OnInit {
       apellido: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      obraSocialId: ['', [Validators.required]],
-      role: ['', [Validators.required]] // Nuevo campo de rol
+      obraSocialId: ['', [Validators.required]]
     });
   }
-  
 
   ngOnInit() {
     this.loadObrasSociales(); // Cargar las obras sociales al inicializar el componente
@@ -41,7 +38,6 @@ export class RegistroComponent implements OnInit {
   loadObrasSociales() {
     this.obraSocialService.getObrasSociales().subscribe(
       (response: ObraSocialResponse) => {
-        // Asegúrate de que la respuesta contenga datos
         if (response.data && Array.isArray(response.data)) {
           this.obrasSociales = response.data; 
           console.log('Obras sociales:', this.obrasSociales); // Verifica que esto sea un array
@@ -58,9 +54,9 @@ export class RegistroComponent implements OnInit {
 
   onSubmit() {
     if (this.registroForm.valid) {
-      const { nombre, apellido, email, password, obraSocialId, role } = this.registroForm.value;
-  
-      this.authService.register(nombre, apellido, email, password, obraSocialId, role).subscribe(
+      const { nombre, apellido, email, password, obraSocialId } = this.registroForm.value;
+
+      this.authService.register(nombre, apellido, email, password, obraSocialId).subscribe(
         response => {
           console.log('Registro exitoso:', response);
           this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
@@ -77,4 +73,4 @@ export class RegistroComponent implements OnInit {
       this.errorMessage = 'Por favor, complete todos los campos requeridos.';
     }
   }
-}  
+}
