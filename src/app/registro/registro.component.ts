@@ -20,7 +20,7 @@ export class RegistroComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private obraSocialService: ObraSocialService, // Inyección del servicio
+    private obraSocialService: ObraSocialService,
     private router: Router
   ) {
     this.registroForm = this.fb.group({
@@ -28,9 +28,11 @@ export class RegistroComponent implements OnInit {
       apellido: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      obraSocialId: ['', [Validators.required]], // Debe estar presente
+      obraSocialId: ['', [Validators.required]],
+      role: ['', [Validators.required]] // Nuevo campo de rol
     });
   }
+  
 
   ngOnInit() {
     this.loadObrasSociales(); // Cargar las obras sociales al inicializar el componente
@@ -56,19 +58,18 @@ export class RegistroComponent implements OnInit {
 
   onSubmit() {
     if (this.registroForm.valid) {
-      const { nombre, apellido, email, password, obraSocialId } = this.registroForm.value;
-
-      this.authService.register(nombre, apellido, email, password, obraSocialId).subscribe(
+      const { nombre, apellido, email, password, obraSocialId, role } = this.registroForm.value;
+  
+      this.authService.register(nombre, apellido, email, password, obraSocialId, role).subscribe(
         response => {
           console.log('Registro exitoso:', response);
-          this.successMessage = 'Registro exitoso. Por favor, inicie sesión.'; // Mensaje de éxito
-          this.registroForm.reset(); // Reiniciar el formulario
-          // Redirigir al usuario a la página de inicio de sesión
+          this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
+          this.registroForm.reset();
           this.router.navigate(['/login']);
         },
         error => {
           console.error('Error en el registro:', error);
-          this.errorMessage = error; // Mostrar mensaje de error
+          this.errorMessage = error;
         }
       );
     } else {
@@ -76,4 +77,4 @@ export class RegistroComponent implements OnInit {
       this.errorMessage = 'Por favor, complete todos los campos requeridos.';
     }
   }
-}
+}  

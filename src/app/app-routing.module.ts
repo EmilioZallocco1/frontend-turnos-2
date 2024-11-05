@@ -7,11 +7,13 @@ import { SelectorComponent } from './selector/selector.component';
 
 const routes: Routes = [
   { path: '', component: SelectorComponent },
-  { path: 'login/:role', component: LoginComponent }, // Ruta con el parámetro de rol
+  { path: 'pacientes/login', component: LoginComponent }, // Ruta específica para pacientes
+  { path: 'medicos/login', component: LoginComponent }, // Ruta específica para médicos
   { path: 'home', component: HomeComponent },
   { path: 'registro', component: RegistroComponent },
-  { path: '**', redirectTo: '' }
+  { path: '**', redirectTo: '' } // Ruta por defecto
 ];
+
 
 
 @NgModule({
