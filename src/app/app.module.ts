@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http'; // Importa HttpClientMo
 import { RouterModule } from '@angular/router';
 import { RegistroComponent } from './registro/registro.component';
 import { SelectorComponent } from './selector/selector.component';
+import { TurnoFormComponent } from './turno-form/turno-form.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { SelectorComponent } from './selector/selector.component';
     HomeComponent,
     RegistroComponent,
     SelectorComponent,
+    TurnoFormComponent,
     
   ],
   imports: [

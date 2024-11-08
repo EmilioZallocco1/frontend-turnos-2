@@ -8,11 +8,17 @@ import { ObraSocialResponse } from './models/obra-social.interface';
   providedIn: 'root'
 })
 export class ObraSocialService {
-  private apiUrl = 'http://localhost:3000/api/obrasSocial'; // Cambia esto a tu URL de API
+  private apiUrl = 'http://localhost:3000/api'; // URL base de tu API
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
+  // Método para obtener las obras sociales
   getObrasSociales(): Observable<ObraSocialResponse> {
-    return this.http.get<ObraSocialResponse>(this.apiUrl);
+    return this.http.get<ObraSocialResponse>(`${this.apiUrl}/obrasSocial`);
+  }
+
+  // Método para obtener los médicos
+  getMedicos(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/medicos`);
   }
 }

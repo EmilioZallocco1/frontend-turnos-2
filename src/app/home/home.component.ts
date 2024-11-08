@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,25 +6,28 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
-  proximosTurnos = [
-    { fecha: '2024-09-20', especialidad: 'Cardiología', medico: 'Juan Pérez' },
-    { fecha: '2024-09-22', especialidad: 'Dermatología', medico: 'Ana García' },
-    { fecha: '2024-09-25', especialidad: 'Pediatría', medico: 'María López' }
-  ];
+export class HomeComponent implements OnInit {
+  proximosTurnos: Array<{ fecha: string; especialidad: string; medico: string }> = []; // Define la propiedad
+  
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
+  ngOnInit() {
+    // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
+    this.proximosTurnos = [
+      { fecha: '2024-11-10', especialidad: 'Cardiología', medico: 'Dr. González' },
+      { fecha: '2024-11-12', especialidad: 'Dermatología', medico: 'Dra. Fernández' }
+    ];
+  }
 
-  // Navegar a otras páginas
   solicitarTurno() {
-    this.router.navigate(['/solicitar-turno']);
+    this.router.navigate(['/turno-form']); // Redirige al formulario de turno
   }
 
   verTurnos() {
-    this.router.navigate(['/mis-turnos']);
+    // Implementa la lógica para ver los turnos
   }
 
   verPerfil() {
-    this.router.navigate(['/perfil']);
+    // Implementa la lógica para ver el perfil
   }
 }

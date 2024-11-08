@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { RegistroComponent } from './registro/registro.component'; // Corrige la importación
 import { SelectorComponent } from './selector/selector.component';
+import { TurnoFormComponent } from './turno-form/turno-form.component';
 
 const routes: Routes = [
   { path: '', component: SelectorComponent },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'medicos/login', component: LoginComponent }, // Ruta específica para médicos
   { path: 'home', component: HomeComponent },
   { path: 'registro', component: RegistroComponent },
+  { path: 'turno-form', component: TurnoFormComponent },
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
 
