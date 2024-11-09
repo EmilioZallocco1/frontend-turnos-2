@@ -1,0 +1,39 @@
+<div class="container mt-5">
+    <h2>Mis Turnos</h2>
+    <div *ngIf="turnos && turnos.length > 0; else noTurnos">
+      <ul class="list-group">
+        <li *ngFor="let turno of turnos" class="list-group-item">
+          <div>
+            <strong>ID:</strong> {{ turno.id }}
+          </div>
+          <div>
+            <strong>Fecha:</strong> {{ turno.fecha | date:'shortDate' }}
+          </div>
+          <div>
+            <strong>Hora:</strong> {{ turno.hora }}
+          </div>
+          <div>
+            <strong>Estado:</strong> {{ turno.estado }}
+          </div>
+          <div>
+            <strong>Descripción:</strong> {{ turno.descripcion }}
+          </div>
+          <div>
+            <strong>Médico:</strong> {{ turno.medico.nombre }} {{ turno.medico.apellido }}
+          </div>
+          <div>
+            <strong>Paciente:</strong> {{ turno.paciente.nombre }} {{ turno.paciente.apellido }}
+          </div>
+  
+          <!-- Botones para eliminar o actualizar -->
+          <button class="btn btn-warning">Editar</button>
+          <button class="btn btn-danger">Eliminar</button>
+        </li>
+      </ul>
+    </div>
+  
+    <ng-template #noTurnos>
+      <p>No tienes turnos registrados.</p>
+    </ng-template>
+  </div>
+  

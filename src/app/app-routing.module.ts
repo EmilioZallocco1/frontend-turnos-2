@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { RegistroComponent } from './registro/registro.component'; // Corrige la importación
 import { SelectorComponent } from './selector/selector.component';
 import { TurnoFormComponent } from './turno-form/turno-form.component';
+import {ListaTurnosComponent  } from './lista-turnos/lista-turnos.component';
 
 const routes: Routes = [
   { path: '', component: SelectorComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'turno-form', component: TurnoFormComponent },
+  { path: 'listaTurnos', component:ListaTurnosComponent  },
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
 

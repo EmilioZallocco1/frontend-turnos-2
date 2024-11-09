@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   }
 
   verTurnos() {
-    // Implementa la lógica para ver los turnos
+    this.router.navigate(['/listaTurnos']);  // Redirige a la página 'listaTurnos'
   }
 
   verPerfil() {

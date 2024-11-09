@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { RegistroComponent } from './registro/registro.component';
 import { SelectorComponent } from './selector/selector.component';
 import { TurnoFormComponent } from './turno-form/turno-form.component';
+import { ListaTurnosComponent } from './lista-turnos/lista-turnos.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { TurnoFormComponent } from './turno-form/turno-form.component';
     RegistroComponent,
     SelectorComponent,
     TurnoFormComponent,
+    ListaTurnosComponent,
     
   ],
   imports: [
