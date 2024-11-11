@@ -11,6 +11,7 @@ import { RegistroComponent } from './registro/registro.component';
 import { SelectorComponent } from './selector/selector.component';
 import { TurnoFormComponent } from './turno-form/turno-form.component';
 import { ListaTurnosComponent } from './lista-turnos/lista-turnos.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { ListaTurnosComponent } from './lista-turnos/lista-turnos.component';
     SelectorComponent,
     TurnoFormComponent,
     ListaTurnosComponent,
+    PerfilComponent,
     
   ],
   imports: [

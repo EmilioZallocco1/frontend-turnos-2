@@ -1,0 +1,49 @@
+/* Agregamos algo de estilo para los botones y los mensajes */
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .card-body {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  h4 {
+    color: #007bff;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  button {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  
+  .alert {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+  }
+  
+  .alert .close {
+    padding: 0.5rem;
+  }
+  
+  

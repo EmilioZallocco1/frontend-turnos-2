@@ -1,33 +1,39 @@
-<div class="container mt-5">
+
+  
+
+
+
+
+
+
+  <div class="container mt-5">
     <h2>Mis Turnos</h2>
+  
+    <!-- Mensaje de éxito -->
+    <div *ngIf="successMessage" class="alert alert-success" role="alert">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Mensaje de error -->
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+  
     <div *ngIf="turnos && turnos.length > 0; else noTurnos">
       <ul class="list-group">
         <li *ngFor="let turno of turnos" class="list-group-item">
-          <div>
-            <strong>ID:</strong> {{ turno.id }}
-          </div>
-          <div>
-            <strong>Fecha:</strong> {{ turno.fecha | date:'shortDate' }}
-          </div>
-          <div>
-            <strong>Hora:</strong> {{ turno.hora }}
-          </div>
-          <div>
-            <strong>Estado:</strong> {{ turno.estado }}
-          </div>
-          <div>
-            <strong>Descripción:</strong> {{ turno.descripcion }}
-          </div>
-          <div>
-            <strong>Médico:</strong> {{ turno.medico.nombre }} {{ turno.medico.apellido }}
-          </div>
-          <div>
-            <strong>Paciente:</strong> {{ turno.paciente.nombre }} {{ turno.paciente.apellido }}
-          </div>
+          <div><strong>ID:</strong> {{ turno.id }}</div>
+          <div><strong>Fecha:</strong> {{ turno.fecha | date:'shortDate' }}</div>
+          <div><strong>Hora:</strong> {{ turno.hora }}</div>
+          <div><strong>Estado:</strong> {{ turno.estado }}</div>
+          <div><strong>Descripción:</strong> {{ turno.descripcion }}</div>
+          <div><strong>Médico:</strong> {{ turno.medico.nombre }}</div>
+          <div><strong>Paciente:</strong> {{ turno.paciente.nombre }}</div>
   
-          <!-- Botones para eliminar o actualizar -->
+          <!-- Botón Eliminar -->
           <button class="btn btn-warning">Editar</button>
-          <button class="btn btn-danger">Eliminar</button>
+          <button class="btn btn-danger" (click)="eliminarTurno(turno.id)">Eliminar</button>
+
         </li>
       </ul>
     </div>

@@ -28,6 +28,6 @@ export class HomeComponent implements OnInit {
   }
 
   verPerfil() {
-    // Implementa la lógica para ver el perfil
+    this.router.navigate(['/perfil']);
   }
 }

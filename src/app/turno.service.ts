@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -57,13 +59,17 @@ getTurnosPorPaciente(): Observable<any> {
 // }
 
 // // Método para eliminar un turno
-eliminarTurno(turnoId: number): Observable<any> {
+eliminarTurno(turnoId: number): Observable<void> {
+  console.log(`Intentando eliminar turno con ID: ${turnoId}`);
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  return this.http.delete<any>(`${this.apiUrl}/${turnoId}`, { headers })
+  return this.http.delete<void>(`${this.apiUrl}/${turnoId}`, { headers })
     .pipe(
+      tap(() => {
+        console.log(`Turno con ID ${turnoId} eliminado en la API`);
+      }),
       catchError(err => {
-        console.error('Error al eliminar el turno:', err);
-        return throwError(() => err.error?.message || 'Error en el servidor');
+        console.error('Error al eliminar el turno en el servicio:', err);
+        return throwError(err.error.message || 'Error en el servidor');
       })
     );
 }

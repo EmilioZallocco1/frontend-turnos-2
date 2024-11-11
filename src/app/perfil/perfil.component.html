@@ -1,0 +1,47 @@
+<div *ngIf="paciente" class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <!-- Encabezado -->
+        <div class="card mb-4">
+          <div class="card-header text-center">
+            <h2>Perfil del Paciente</h2>
+          </div>
+          <div class="card-body">
+            <!-- Información del paciente -->
+            <div class="row">
+              <div class="col-12 mb-3">
+                <h4>Información Personal</h4>
+                <ul class="list-unstyled">
+                  <li><strong>Nombre:</strong> {{ paciente.nombre }}</li>
+                  <li><strong>Apellido:</strong> {{ paciente.apellido }}</li>
+                  <li><strong>Email:</strong> {{ paciente.email }}</li>
+                  <li><strong>Obra Social:</strong> {{ paciente.obraSocial?.nombre }}</li>
+                </ul>
+              </div>
+              <div class="col-12">
+                <h4>Acciones</h4>
+                <button class="btn btn-warning" (click)="actualizarPerfil()">Actualizar Perfil</button>
+                <button class="btn btn-danger" (click)="eliminarCuenta()">Eliminar Cuenta</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Mensajes de éxito o error -->
+        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ successMessage }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+  
+        <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ error }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
