@@ -1,40 +1,39 @@
 <div class="container mt-5">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h1>Bienvenido al Sistema de Turnos Médicos</h1>
-        <p class="lead">Administra tus turnos médicos de forma rápida y sencilla.</p>
-      </div>
-    </div>
-  
-    <div class="row mt-4">
-      <!-- Acciones rápidas -->
-      <div class="col-md-4 text-center">
-        <button class="btn btn-primary btn-lg w-100" (click)="solicitarTurno()">
-          Solicitar Turno
-        </button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button class="btn btn-secondary btn-lg w-100" (click)="verTurnos()">
-          Ver Mis Turnos
-        </button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button class="btn btn-info btn-lg w-100" (click)="verPerfil()">
-          Mi Perfil
-        </button>
-      </div>
-    </div>
-  
-    <!-- Lista de turnos próximos -->
-    <div class="row mt-5">
-      <div class="col-12">
-        <h3>Próximos Turnos</h3>
-        <ul class="list-group">
-          <li *ngFor="let turno of proximosTurnos" class="list-group-item">
-            <strong>{{ turno.fecha }}:</strong> {{ turno.especialidad }} con el Dr./Dra. {{ turno.medico }}
-          </li>
-        </ul>
-      </div>
+  <div class="row">
+    <div class="col-12 text-center">
+      <h1>Bienvenido al Sistema de Turnos Médicos</h1>
+      <p class="lead">Administra tus turnos médicos de forma rápida y sencilla.</p>
     </div>
   </div>
-  
+
+  <div class="row mt-4">
+    <!-- Acciones rápidas -->
+    <div class="col-md-4 text-center">
+      <button class="btn btn-primary btn-lg w-100" (click)="solicitarTurno()">
+        Solicitar Turno
+      </button>
+    </div>
+    <div class="col-md-4 text-center">
+      <button class="btn btn-secondary btn-lg w-100" (click)="verTurnos()">
+        Ver Mis Turnos
+      </button>
+    </div>
+    <div class="col-md-4 text-center">
+      <button class="btn btn-info btn-lg w-100" (click)="verPerfil()">
+        Mi Perfil
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de turnos próximos -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <h3>Próximos Turnos</h3>
+      <ul class="list-group">
+        <li *ngFor="let turno of proximosTurnos" class="list-group-item">
+          <strong>{{ turno.fecha | date:'dd MMMM yyyy' }}</strong> con el Dr./Dra. {{ turno.medico.nombre }}
+        </li>        
+      </ul>
+    </div>
+  </div>
+</div>
