@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit {
   cargarTurnos() {
     this.obtenerTurnosActuales().subscribe(
       (turnosResponse) => {
-        console.log(turnosResponse);
         this.proximosTurnos = turnosResponse.data.map((turno: any) => ({
           fecha: turno.fecha,
           especialidad: turno.especialidad,
