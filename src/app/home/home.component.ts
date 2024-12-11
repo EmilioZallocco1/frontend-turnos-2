@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit {
   }
 
   solicitarTurno() {
-    this.router.navigate(['/turno-form']);
+    this.router.navigate(['/turno-form']); // Redirige al formulario de turno
   }
 
   verTurnos() {
