@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
     this.obtenerTurnosActuales().subscribe(
       (turnosResponse) => {
         console.log(turnosResponse);
-        // Mapeamos la respuesta para ajustar la estructura de cada turno
         this.proximosTurnos = turnosResponse.data.map((turno: any) => ({
           fecha: turno.fecha,
           especialidad: turno.especialidad,
@@ -55,7 +54,7 @@ export class HomeComponent implements OnInit {
   }
 
   obtenerTurnosActuales(): Observable<{ data: Turno[] }> {
-    const apiUrl = 'http://localhost:3000/api/turnos'; // Reemplaza con tu URL real
+    const apiUrl = 'http://localhost:3000/api/turnos';
     return this.http.get<{ data: Turno[] }>(apiUrl);
   }
 
