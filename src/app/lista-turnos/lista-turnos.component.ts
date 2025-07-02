@@ -57,6 +57,12 @@ export class ListaTurnosComponent implements OnInit {
         }
       );
     }
+
+    editarTurno(turnoId: number) {};
+    goBack(): void {
+    window.history.back();
+    }
+
     
     
 

@@ -30,4 +30,9 @@ export class HomeComponent implements OnInit {
   verPerfil() {
     this.router.navigate(['/perfil']);
   }
+
+  goBack(): void {
+  window.history.back();
+}
+
 }

@@ -1,14 +1,114 @@
+/* Container padding */
+.container {
+  max-width: 900px;
+}
+
+/* Botón volver con sombra suave y tamaño */
+.btn-outline-secondary {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.5rem 1.3rem;
+  border-radius: 6px;
+  user-select: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #e2e6ea;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Card styling para cada turno */
 .list-group-item {
-    position: relative;
+  border: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+/* Card interna para separar visualmente */
+.card-turno {
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-turno:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* Contenido principal de info */
+.card-content {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.card-content div {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.card-content strong {
+  color: #0d6efd; /* Bootstrap primary */
+}
+
+/* Contenedor de botones */
+.card-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Botones más grandes y con sombra */
+.card-actions button {
+  flex: 1;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+.card-actions button.btn-warning {
+  background-color: #ffc107;
+  border: none;
+  color: #212529;
+}
+
+.card-actions button.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.card-actions button.btn-danger {
+  background-color: #dc3545;
+  border: none;
+  color: #fff;
+}
+
+.card-actions button.btn-danger:hover {
+  background-color: #bb2d3b;
+}
+
+/* Responsive: apilar contenido y botones en móvil */
+@media (max-width: 767.98px) {
+  .card-turno {
+    padding: 15px 20px;
   }
-  
-  .float-end {
-    position: absolute;
-    right: 10px;
-    top: 10px;
+
+  .card-turno {
+    flex-direction: column;
   }
-  
-  .btn-sm {
-    margin-top: 5px;
+
+  .card-actions {
+    flex-direction: column;
   }
-  
+
+  .card-actions button {
+    width: 100%;
+  }
+}

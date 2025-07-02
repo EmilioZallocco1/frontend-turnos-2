@@ -1,45 +1,48 @@
-
-  
-
-
-
-
-
-
-  <div class="container mt-5">
-    <h2>Mis Turnos</h2>
-  
-    <!-- Mensaje de éxito -->
-    <div *ngIf="successMessage" class="alert alert-success" role="alert">
-      {{ successMessage }}
-    </div>
-  
-    <!-- Mensaje de error -->
-    <div *ngIf="error" class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
-  
-    <div *ngIf="turnos && turnos.length > 0; else noTurnos">
-      <ul class="list-group">
-        <li *ngFor="let turno of turnos" class="list-group-item">
-          <div><strong>ID:</strong> {{ turno.id }}</div>
-          <div><strong>Fecha:</strong> {{ turno.fecha | date:'shortDate' }}</div>
-          <div><strong>Hora:</strong> {{ turno.hora }}</div>
-          <div><strong>Estado:</strong> {{ turno.estado }}</div>
-          <div><strong>Descripción:</strong> {{ turno.descripcion }}</div>
-          <div><strong>Médico:</strong> {{ turno.medico.nombre }}</div>
-          <div><strong>Paciente:</strong> {{ turno.paciente.nombre }}</div>
-  
-          <!-- Botón Eliminar -->
-          <button class="btn btn-warning">Editar</button>
-          <button class="btn btn-danger" (click)="eliminarTurno(turno.id)">Eliminar</button>
-
-        </li>
-      </ul>
-    </div>
-  
-    <ng-template #noTurnos>
-      <p>No tienes turnos registrados.</p>
-    </ng-template>
+<div class="container mt-5">
+  <!-- Botón de retroceso -->
+  <div class="mb-4">
+    <button class="btn btn-outline-secondary" (click)="goBack()">
+      ← Volver
+    </button>
   </div>
-  
+
+  <h2 class="mb-4">Mis Turnos</h2>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="successMessage" class="alert alert-success" role="alert" tabindex="0">
+    {{ successMessage }}
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="alert alert-danger" role="alert" tabindex="0">
+    {{ error }}
+  </div>
+
+  <div *ngIf="turnos && turnos.length > 0; else noTurnos">
+    <ul class="list-group">
+      <li *ngFor="let turno of turnos" class="list-group-item">
+  <div class="card-turno">
+    <div class="card-content">
+      <div><strong>ID:</strong> {{ turno.id }}</div>
+      <div><strong>Fecha:</strong> {{ turno.fecha | date: 'shortDate' }}</div>
+      <div><strong>Hora:</strong> {{ turno.hora }}</div>
+      <div><strong>Estado:</strong> {{ turno.estado }}</div>
+      <div><strong>Descripción:</strong> {{ turno.descripcion }}</div>
+      <div><strong>Médico:</strong> {{ turno.medico.nombre }}</div>
+      <div><strong>Paciente:</strong> {{ turno.paciente.nombre }}</div>
+    </div>
+
+    <div class="card-actions">
+      <button class="btn btn-warning" (click)="editarTurno(turno.id)">Editar</button>
+      <button class="btn btn-danger" (click)="eliminarTurno(turno.id)">Eliminar</button>
+    </div>
+  </div>
+</li>
+
+    </ul>
+  </div>
+
+  <ng-template #noTurnos>
+    <p>No tienes turnos registrados.</p>
+  </ng-template>
+</div>

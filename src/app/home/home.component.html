@@ -1,40 +1,77 @@
-<div class="container mt-5">
-    <div class="row">
-      <div class="col-12 text-center">
-        <h1>Bienvenido al Sistema de Turnos Médicos</h1>
-        <p class="lead">Administra tus turnos médicos de forma rápida y sencilla.</p>
-      </div>
+<div class="container mt-5 p-4 bg-white rounded shadow-sm">
+  <!-- Botón de retroceso -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <button 
+        class="btn btn-outline-secondary"
+        (click)="goBack()"
+        aria-label="Volver a la página anterior"
+      >
+        ← Volver
+      </button>
     </div>
-  
-    <div class="row mt-4">
-      <!-- Acciones rápidas -->
-      <div class="col-md-4 text-center">
-        <button class="btn btn-primary btn-lg w-100" (click)="solicitarTurno()">
-          Solicitar Turno
-        </button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button class="btn btn-secondary btn-lg w-100" (click)="verTurnos()">
-          Ver Mis Turnos
-        </button>
-      </div>
-      <div class="col-md-4 text-center">
-        <button class="btn btn-info btn-lg w-100" (click)="verPerfil()">
-          Mi Perfil
-        </button>
-      </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-12 text-center">
+      <h1 class="display-4 fw-bold text-primary mb-3" tabindex="0">
+        Bienvenido al Sistema de Turnos Médicos
+      </h1>
+      <p class="lead text-secondary mb-4" tabindex="0">
+        Administra tus turnos médicos de forma rápida y sencilla.
+      </p>
     </div>
-  
-    <!-- Lista de turnos próximos -->
-    <div class="row mt-5">
-      <div class="col-12">
-        <h3>Próximos Turnos</h3>
-        <ul class="list-group">
-          <li *ngFor="let turno of proximosTurnos" class="list-group-item">
-            <strong>{{ turno.fecha }}:</strong> {{ turno.especialidad }} con el Dr./Dra. {{ turno.medico }}
-          </li>
-        </ul>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3">
+      <button
+        class="btn btn-primary btn-lg w-100 transition"
+        (click)="solicitarTurno()"
+        aria-label="Solicitar un nuevo turno médico"
+      >
+        <i class="bi bi-calendar-plus me-2"></i> Solicitar Turno
+      </button>
+    </div>
+    <div class="col-md-4 mb-3">
+      <button
+        class="btn btn-secondary btn-lg w-100 transition"
+        (click)="verTurnos()"
+        aria-label="Ver mis turnos"
+      >
+        <i class="bi bi-list-check me-2"></i> Ver Mis Turnos
+      </button>
+    </div>
+    <div class="col-md-4 mb-3">
+      <button
+        class="btn btn-info btn-lg w-100 text-white transition"
+        (click)="verPerfil()"
+        aria-label="Ver mi perfil"
+      >
+        <i class="bi bi-person-circle me-2"></i> Mi Perfil
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h3 class="mb-4" tabindex="0">Próximos Turnos</h3>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4" *ngFor="let turno of proximosTurnos">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ turno.especialidad }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ turno.fecha }}</h6>
+              <p class="card-text">Con el {{ turno.medico }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  
+</div>
+
+<footer class="mt-5 py-3 bg-light text-center text-muted">
+  &copy; 2025 Sistema de Turnos Médicos
+</footer>
