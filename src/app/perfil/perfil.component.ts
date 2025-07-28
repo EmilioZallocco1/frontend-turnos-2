@@ -9,7 +9,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./perfil.component.scss']
 })
 export class PerfilComponent implements OnInit {
-  paciente: any = {}; // Variable para almacenar los datos del paciente
+  paciente: any = {};
+  pacienteEditando: any = null;
+  editandoPerfil: boolean = false;
   error: string | null = null;
   successMessage: string | null = null;
 
@@ -20,7 +22,7 @@ export class PerfilComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.obtenerPerfil(); // Llama a obtenerPerfil al cargar el componente
+    this.obtenerPerfil();
   }
 
   obtenerPerfil() {
@@ -28,8 +30,8 @@ export class PerfilComponent implements OnInit {
     if (pacienteId !== null) {
       this.pacienteService.getPacienteData().subscribe(
         (response) => {
-          console.log('Datos del paciente recibidos:', response);
-          this.paciente = response.data; // Asigna los datos del paciente a la propiedad
+          this.paciente = response.data;
+          this.error = null;
         },
         (error) => {
           this.error = 'Error al cargar el perfil';
@@ -40,13 +42,26 @@ export class PerfilComponent implements OnInit {
       this.error = 'ID de paciente no disponible';
     }
   }
-  
+
   actualizarPerfil() {
+    this.pacienteEditando = { ...this.paciente };
+    this.editandoPerfil = true;
+  }
+
+  cancelarEdicion() {
+    this.editandoPerfil = false;
+    this.pacienteEditando = null;
+  }
+
+  guardarPerfilActualizado() {
     const pacienteId = this.authService.getPacienteId();
-    if (pacienteId !== null) {  // Verifica que el ID no sea null
-      this.pacienteService.actualizarPaciente(pacienteId, this.paciente).subscribe(
+    if (pacienteId !== null && this.pacienteEditando) {
+      this.pacienteService.actualizarPaciente(pacienteId, this.pacienteEditando).subscribe(
         () => {
           this.successMessage = 'Perfil actualizado con éxito';
+          this.error = null;
+          this.paciente = { ...this.pacienteEditando };
+          this.editandoPerfil = false;
           setTimeout(() => (this.successMessage = null), 3000);
         },
         (error) => {
@@ -58,13 +73,13 @@ export class PerfilComponent implements OnInit {
       this.error = 'ID de paciente no disponible';
     }
   }
-  
+
   eliminarCuenta() {
     const pacienteId = this.authService.getPacienteId();
-    if (pacienteId !== null) {  // Verifica que el ID no sea null
+    if (pacienteId !== null) {
       this.pacienteService.eliminarPaciente(pacienteId).subscribe(
         () => {
-          this.router.navigate(['/']); // Redirige a la página de inicio después de eliminar la cuenta
+          this.router.navigate(['/']);
         },
         (error) => {
           this.error = 'Error al eliminar la cuenta';
@@ -75,5 +90,4 @@ export class PerfilComponent implements OnInit {
       this.error = 'ID de paciente no disponible';
     }
   }
-  
 }

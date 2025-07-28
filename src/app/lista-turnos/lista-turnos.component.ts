@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TurnoService } from '../turno.service'; // Ajusta la ruta según tu estructura
-import { AuthService } from '../auth.service'; // Asegúrate de importar el servicio de autenticación
+import { TurnoService } from '../turno.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-lista-turnos',
@@ -8,64 +8,91 @@ import { AuthService } from '../auth.service'; // Asegúrate de importar el serv
   styleUrls: ['./lista-turnos.component.scss']
 })
 export class ListaTurnosComponent implements OnInit {
-  turnos: any[] = [];  // Array para almacenar los turnos obtenidos
+  turnos: any[] = [];
+  turnoEditando: any = null;  // 🆕 Turno en modo edición
   error: string | null = null;
-  successMessage: string | null = null; // Variable para el mensaje de éxito
+  successMessage: string | null = null;
 
-  constructor(private turnoService: TurnoService, private authService: AuthService) {}
+  constructor(
+    private turnoService: TurnoService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.obtenerTurnos();
   }
 
   obtenerTurnos() {
-    this.turnoService.getTurnosPorPaciente().subscribe(
-      (response: any) => {
-        this.turnos = response.data;  // Asignamos los datos recibidos a la variable `turnos`
+    this.turnoService.getTurnosPorPaciente().subscribe({
+      next: (response: any) => {
+        this.turnos = response.data;
+        this.error = null;
       },
-      error => {
-        this.error = error;  // En caso de error, mostramos el mensaje
-        console.error('Error al obtener los turnos:', error);
+      error: err => {
+        this.error = err;
+        console.error('Error al obtener los turnos:', err);
       }
-    );
+    });
   }
 
-    // Método para eliminar un turno
-    eliminarTurno(turnoId: number) {
-      console.log(`Intentando eliminar turno con ID: ${turnoId}`); // Asegúrate de que la función es llamada
-    
-      // Llamada al servicio para eliminar el turno
-      this.turnoService.eliminarTurno(turnoId).subscribe(
-        () => {
-          console.log('Recibido el éxito de la API para eliminar el turno'); // Verifica que la respuesta de la API ha llegado correctamente
-    
-          // Filtrar el turno eliminado de la lista
-          this.turnos = this.turnos.filter(turno => turno.id !== turnoId);
-    
-          // Mostrar el mensaje de éxito
-          this.successMessage = `Turno con ID ${turnoId} eliminado con éxito`;
-          console.log(`Turno con ID ${turnoId} eliminado con éxito`); // Verifica que este log es alcanzado
-    
-          // Limpiar el mensaje después de 3 segundos
-          setTimeout(() => {
-            this.successMessage = null;
-          }, 3000);
-        },
-        error => {
-          this.error = 'Error al eliminar el turno';
-          console.error('Error al eliminar el turno en el componente:', error);
-        }
-      );
-    }
+  eliminarTurno(turnoId: number) {
+    console.log(`Intentando eliminar turno con ID: ${turnoId}`);
+    this.turnoService.eliminarTurno(turnoId).subscribe({
+      next: () => {
+        this.turnos = this.turnos.filter(turno => turno.id !== turnoId);
+        this.successMessage = `Turno con ID ${turnoId} eliminado con éxito`;
+        console.log(`Turno con ID ${turnoId} eliminado`);
 
-    editarTurno(turnoId: number) {};
-    goBack(): void {
+        setTimeout(() => {
+          this.successMessage = null;
+        }, 3000);
+      },
+      error: err => {
+        this.error = 'Error al eliminar el turno';
+        console.error('Error al eliminar el turno en el componente:', err);
+      }
+    });
+  }
+
+  // 🆕 Inicia la edición de un turno
+  editarTurno(turnoId: number) {
+    const turno = this.turnos.find(t => t.id === turnoId);
+    if (turno) {
+      this.turnoEditando = { ...turno }; // Copia para evitar modificar directamente
+    }
+  }
+
+  // 🆕 Cancela la edición
+  cancelarEdicion() {
+    this.turnoEditando = null;
+  }
+
+  // 🆕 Guarda los cambios
+  guardarEdicion() {
+    if (!this.turnoEditando) return;
+
+    this.turnoService.actualizarTurno(this.turnoEditando.id, {
+      fecha: this.turnoEditando.fecha,
+      hora: this.turnoEditando.hora,
+      estado: this.turnoEditando.estado,
+      descripcion: this.turnoEditando.descripcion,
+      medico: this.turnoEditando.medico.id,
+      paciente: this.turnoEditando.paciente.id
+    }).subscribe({
+      next: res => {
+        this.successMessage = 'Turno actualizado con éxito';
+        this.error = null;
+        this.turnoEditando = null;
+        this.obtenerTurnos(); // Refresca lista actualizada
+      },
+      error: err => {
+        this.error = 'Error al actualizar el turno';
+        console.error('Error al actualizar el turno:', err);
+      }
+    });
+  }
+
+  goBack(): void {
     window.history.back();
-    }
-
-    
-    
-
+  }
 }
-
-

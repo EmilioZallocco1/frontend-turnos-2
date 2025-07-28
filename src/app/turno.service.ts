@@ -47,16 +47,22 @@ getTurnosPorPaciente(): Observable<any> {
 }
 
 // // Método para actualizar un turno
-// actualizarTurno(turnoId: number, turnoData: any): Observable<any> {
-//   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-//   return this.http.put<any>(`${this.apiUrl}/${turnoId}`, turnoData, { headers })
-//     .pipe(
-//       catchError(err => {
-//         console.error('Error al actualizar el turno:', err);
-//         return throwError(err.error.message || 'Error en el servidor');
-//       })
-//     );
-// }
+// Método para actualizar un turno
+actualizarTurno(turnoId: number, turnoData: any): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+  // Enviamos los datos bajo la clave "sanitizedInput" como espera el backend
+  return this.http.put<any>(
+    `${this.apiUrl}/${turnoId}`, 
+    { sanitizedInput: turnoData }, 
+    { headers }
+  ).pipe(
+    catchError(err => {
+      console.error('Error al actualizar el turno:', err);
+      return throwError(err.error.message || 'Error en el servidor');
+    })
+  );
+}
 
 // // Método para eliminar un turno
 eliminarTurno(turnoId: number): Observable<void> {
@@ -78,5 +84,3 @@ eliminarTurno(turnoId: number): Observable<void> {
 
          }
 
-
-  // Puedes agregar otros métodos aquí para obtener, actualizar y eliminar turnos según sea necesa}

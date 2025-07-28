@@ -21,25 +21,57 @@
   <div *ngIf="turnos && turnos.length > 0; else noTurnos">
     <ul class="list-group">
       <li *ngFor="let turno of turnos" class="list-group-item">
-  <div class="card-turno">
-    <div class="card-content">
-      <div><strong>ID:</strong> {{ turno.id }}</div>
-      <div><strong>Fecha:</strong> {{ turno.fecha | date: 'shortDate' }}</div>
-      <div><strong>Hora:</strong> {{ turno.hora }}</div>
-      <div><strong>Estado:</strong> {{ turno.estado }}</div>
-      <div><strong>Descripción:</strong> {{ turno.descripcion }}</div>
-      <div><strong>Médico:</strong> {{ turno.medico.nombre }}</div>
-      <div><strong>Paciente:</strong> {{ turno.paciente.nombre }}</div>
-    </div>
+        <div class="card-turno">
+          <div class="card-content">
+            <div><strong>ID:</strong> {{ turno.id }}</div>
+            <div><strong>Fecha:</strong> {{ turno.fecha | date: 'shortDate' }}</div>
+            <div><strong>Hora:</strong> {{ turno.hora }}</div>
+            <div><strong>Estado:</strong> {{ turno.estado }}</div>
+            <div><strong>Descripción:</strong> {{ turno.descripcion }}</div>
+            <div><strong>Médico:</strong> {{ turno.medico.nombre }}</div>
+            <div><strong>Paciente:</strong> {{ turno.paciente.nombre }}</div>
+          </div>
 
-    <div class="card-actions">
-      <button class="btn btn-warning" (click)="editarTurno(turno.id)">Editar</button>
-      <button class="btn btn-danger" (click)="eliminarTurno(turno.id)">Eliminar</button>
-    </div>
-  </div>
-</li>
-
+          <div class="card-actions">
+            <button class="btn btn-warning" (click)="editarTurno(turno.id)">Editar</button>
+            <button class="btn btn-danger" (click)="eliminarTurno(turno.id)">Eliminar</button>
+          </div>
+        </div>
+      </li>
     </ul>
+
+    <!-- ✅ FORMULARIO DE EDICIÓN INSERTADO AQUÍ -->
+    <div *ngIf="turnoEditando" class="card p-3 mt-4 border border-primary">
+      <h4>Editar Turno (ID: {{ turnoEditando.id }})</h4>
+      <form (ngSubmit)="guardarEdicion()">
+        <div class="mb-2">
+          <label>Fecha:</label>
+          <input type="date" class="form-control" [(ngModel)]="turnoEditando.fecha" name="fecha" required>
+        </div>
+        <div class="mb-2">
+          <label>Hora:</label>
+          <input type="time" class="form-control" [(ngModel)]="turnoEditando.hora" name="hora" required>
+        </div>
+        <div class="mb-2">
+          <label>Estado:</label>
+          <select class="form-control" [(ngModel)]="turnoEditando.estado" name="estado" required>
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmado">Confirmado</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <label>Descripción:</label>
+          <input type="text" class="form-control" [(ngModel)]="turnoEditando.descripcion" name="descripcion">
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+    <!-- ✅ FIN DEL FORMULARIO -->
+
   </div>
 
   <ng-template #noTurnos>
