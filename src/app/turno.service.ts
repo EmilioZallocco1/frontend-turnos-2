@@ -81,6 +81,18 @@ eliminarTurno(turnoId: number): Observable<void> {
 }
 
 
+      getTurnosPorMedico(medicoId: number): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.get<any>(`${this.apiUrl}/medico/${medicoId}`, { headers })
+    .pipe(
+      catchError(err => {
+        console.error('Error al obtener los turnos del médico:', err);
+        return throwError(err.error.message || 'Error en el servidor');
+      })
+    );
+}
 
-         }
+
+
+}
 

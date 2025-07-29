@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { TurnoService } from '../turno.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +11,12 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   proximosTurnos: Array<{ fecha: string; especialidad: string; medico: string }> = []; // Define la propiedad
   
-  constructor(private router: Router) {}
+  constructor(private router: Router,public authService: AuthService, private turnoService: TurnoService) {}
+
+
+  medicoId: number | null = null;
+  fechaTurno: string = '';
+  resultadoAdmin: any[] = [];
 
   ngOnInit() {
     // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
@@ -34,5 +41,38 @@ export class HomeComponent implements OnInit {
   goBack(): void {
   window.history.back();
 }
+
+    irACargarMedico() {
+    this.router.navigate(['/admin/medicos']);
+  }
+
+  irACargarObraSocial() {
+    this.router.navigate(['/admin/obras-sociales']);
+  }
+
+
+//-------------------------------------------------------- PRUEBAS --------------------------------------------------------
+
+   verTurnosMedico(): void {
+    if (!this.medicoId) {
+      alert('Debes ingresar un ID de médico');
+      return;
+    }
+
+    this.turnoService.getTurnosPorMedico(this.medicoId).subscribe(
+      (res) => {
+        console.log('Turnos del médico:', res);
+        this.resultadoAdmin = res.data; // Asigna los turnos a la lista
+      },
+      (error) => {
+        console.error(error);
+        this.resultadoAdmin = []; // Limpia en caso de error
+        alert(error);
+      }
+    );
+  }
+
+  verPacientesPorFecha() {}
+
 
 }
