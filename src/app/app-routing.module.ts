@@ -8,6 +8,7 @@ import { TurnoFormComponent } from './turno-form/turno-form.component';
 import {ListaTurnosComponent  } from './lista-turnos/lista-turnos.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
+import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
 
 const routes: Routes = [
   { path: '', component: SelectorComponent },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'listaTurnos', component:ListaTurnosComponent  },
   { path: 'perfil', component: PerfilComponent },
   { path:  'admin/medicos', component: CargarMedicoComponent },
+  { path: 'lista-medicos', component: ListaMedicosComponent },
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
 

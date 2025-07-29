@@ -13,6 +13,7 @@ import { TurnoFormComponent } from './turno-form/turno-form.component';
 import { ListaTurnosComponent } from './lista-turnos/lista-turnos.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
+import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
     ListaTurnosComponent,
     PerfilComponent,
     CargarMedicoComponent,
+    ListaMedicosComponent,
     
   ],
   imports: [

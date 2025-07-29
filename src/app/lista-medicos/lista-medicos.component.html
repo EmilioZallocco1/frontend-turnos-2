@@ -1,0 +1,37 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4 text-primary">👨‍⚕️ Lista de Médicos</h2>
+
+  <div *ngIf="mensajeError" class="alert alert-danger text-center">{{ mensajeError }}</div>
+
+  <div class="row g-4" *ngIf="medicos.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let medico of medicos">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <h5 class="card-title text-primary">{{ medico.nombre }}</h5>
+            <p class="card-text">
+              📧 {{ medico.email }}<br />
+              📞 {{ medico.telefono }}<br />
+              🏥 Especialidad: {{ medico.especialidad?.name || 'N/A' }}<br />
+              🏢 Obra Social: {{ medico.obraSocial?.nombre || 'Sin asignar' }}
+            </p>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="mt-3 d-flex justify-content-between">
+            <button class="btn btn-outline-warning btn-sm" title="Editar médico">
+              <i class="bi bi-pencil-square me-1"></i> Editar
+            </button>
+            <button class="btn btn-outline-danger btn-sm" title="Eliminar médico">
+              <i class="bi bi-trash me-1"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="medicos.length === 0 && !mensajeError" class="alert alert-info text-center">
+    No hay médicos registrados.
+  </div>
+</div>

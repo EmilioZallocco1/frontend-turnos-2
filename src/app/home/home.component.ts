@@ -50,6 +50,11 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/admin/obras-sociales']);
   }
 
+  verListaMedicos() {
+  this.router.navigate(['/lista-medicos']);
+}
+
+
 
 //-------------------------------------------------------- PRUEBAS --------------------------------------------------------
 
