@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'perfil', component: PerfilComponent },
   { path:  'admin/medicos', component: CargarMedicoComponent },
   { path: 'lista-medicos', component: ListaMedicosComponent },
+  {path: 'cargar-medico/:id',component: CargarMedicoComponent},
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
 

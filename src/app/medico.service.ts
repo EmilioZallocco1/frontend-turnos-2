@@ -23,9 +23,12 @@ export class MedicoService {
     return this.http.post(this.apiUrl, medico);
   }
 
-  actualizar(id: number, medico: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, medico);
-  }
+ actualizar(id: number, medico: any): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${id}`, {
+    sanitizedInput: medico
+  });
+}
+
 
   eliminar(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);

@@ -1,51 +1,51 @@
 <div class="container mt-5 p-4 bg-white rounded shadow-sm">
-  <h2 class="mb-4 text-primary text-center">📋 Alta de Médico</h2>
+  <h2 class="mb-4 text-primary text-center">
+    {{ modoEdicion ? '✏️ Editar Médico' : '📋 Alta de Médico' }}
+  </h2>
 
-  <form (ngSubmit)="registrarMedico()">
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input type="text" id="nombre" class="form-control" [(ngModel)]="medico.nombre" name="nombre" required>
-      </div>
-      <div class="col-md-6">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" class="form-control" [(ngModel)]="medico.email" name="email" required>
-      </div>
+  <form (ngSubmit)="guardarMedico()">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombre" [(ngModel)]="medico.nombre" name="nombre" required>
     </div>
 
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="telefono" class="form-label">Teléfono</label>
-        <input type="text" id="telefono" class="form-control" [(ngModel)]="medico.telefono" name="telefono" required>
-      </div>
-      <div class="col-md-6">
-        <label for="especialidad" class="form-label">Especialidad</label>
-        <select class="form-select" id="especialidad" [(ngModel)]="medico.especialidadId" name="especialidadId" required>
-          <option value="" disabled selected>Seleccione una especialidad</option>
-          <option *ngFor="let esp of especialidades" [value]="esp.id">{{ esp.nombre }}</option>
-        </select>
-      </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="medico.email" name="email" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono</label>
+      <input type="text" class="form-control" id="telefono" [(ngModel)]="medico.telefono" name="telefono" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="especialidad" class="form-label">Especialidad</label>
+      <select class="form-select" id="especialidad" [(ngModel)]="medico.especialidadId" name="especialidadId" required>
+        <option [ngValue]="null">Seleccione una especialidad</option>
+        <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.name }}</option>
+      </select>
     </div>
 
     <div class="mb-3">
       <label for="obraSocial" class="form-label">Obra Social</label>
       <select class="form-select" id="obraSocial" [(ngModel)]="medico.obraSocialId" name="obraSocialId">
-        <option value="">(Opcional) Seleccione una obra social</option>
-        <option *ngFor="let os of obrasSociales" [value]="os.id">{{ os.nombre }}</option>
+        <option [ngValue]="null">(Opcional) Seleccione una obra social</option>
+        <option *ngFor="let os of obrasSociales" [ngValue]="os.id">{{ os.nombre }}</option>
       </select>
     </div>
 
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-success btn-lg">
-        <i class="bi bi-check-circle me-2"></i> Registrar Médico
+        {{ modoEdicion ? 'Guardar Cambios' : 'Registrar Médico' }}
       </button>
     </div>
   </form>
 
-  <div *ngIf="mensajeExito" class="alert alert-success mt-4 text-center">
+  <div *ngIf="mensajeExito" class="alert alert-success mt-3 text-center">
     {{ mensajeExito }}
   </div>
-  <div *ngIf="mensajeError" class="alert alert-danger mt-4 text-center">
+  <div *ngIf="mensajeError" class="alert alert-danger mt-3 text-center">
     {{ mensajeError }}
   </div>
 </div>
