@@ -1,14 +1,26 @@
 <div class="container mt-5">
+  <!-- Botón volver -->
+  <button class="btn btn-outline-secondary mb-4" (click)="goBack()">
+    <i class="bi bi-arrow-left me-2"></i> Volver
+  </button>
+
   <h2 class="text-center mb-4 text-primary">👨‍⚕️ Lista de Médicos</h2>
 
+  <!-- Filtro -->
+  <div class="mb-4">
+    <input type="text" class="form-control" placeholder="Buscar por nombre o especialidad" [(ngModel)]="filtro">
+  </div>
+
+  <!-- Error -->
   <div *ngIf="mensajeError" class="alert alert-danger text-center">{{ mensajeError }}</div>
 
-  <div class="row g-4" *ngIf="medicos.length > 0">
-    <div class="col-md-6 col-lg-4" *ngFor="let medico of medicos">
+  <!-- Lista -->
+  <div class="row g-4" *ngIf="medicosFiltrados.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let medico of medicosFiltrados">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
           <div>
-            <h5 class="card-title text-primary">{{ medico.nombre }}</h5>
+            <h5 class="card-title text-primary">Dr. {{ medico.nombre }}</h5>
             <p class="card-text">
               📧 {{ medico.email }}<br />
               📞 {{ medico.telefono }}<br />
@@ -17,7 +29,7 @@
             </p>
           </div>
 
-          <!-- Botones de acción -->
+          <!-- Botones -->
           <div class="mt-3 d-flex justify-content-between">
             <button class="btn btn-outline-warning btn-sm" title="Editar médico">
               <i class="bi bi-pencil-square me-1"></i> Editar
@@ -31,7 +43,11 @@
     </div>
   </div>
 
-  <div *ngIf="medicos.length === 0 && !mensajeError" class="alert alert-info text-center">
-    No hay médicos registrados.
+  <!-- Mensaje si no hay resultados -->
+  <div *ngIf="medicosFiltrados.length === 0 && !mensajeError" class="alert alert-info text-center">
+    No hay médicos registrados o no hay coincidencias con la búsqueda.
   </div>
+
+  <!-- Botón flotante para cambiar modo oscuro -->
+ 
 </div>
