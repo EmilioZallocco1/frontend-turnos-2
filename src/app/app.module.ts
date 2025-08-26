@@ -16,6 +16,7 @@ import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
 import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
     PerfilComponent,
     CargarMedicoComponent,
     ListaMedicosComponent,
+    
     
   ],
   imports: [

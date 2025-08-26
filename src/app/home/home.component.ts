@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   }
 
   irACargarObraSocial() {
-    this.router.navigate(['/admin/obras-sociales']);
+    this.router.navigate(['/admin/obras-sociales/nueva']);
   }
 
   verListaMedicos() {

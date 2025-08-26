@@ -77,6 +77,10 @@ export class AuthService {
     return this.getRole() === 'admin';
   }
 
+  esPaciente(): boolean {
+    return this.getRole() === 'paciente';
+  }
+
   // Saber si hay sesión iniciada
   isLoggedIn(): boolean {
     return !!this.getPacienteId(); // Devuelve true si hay ID

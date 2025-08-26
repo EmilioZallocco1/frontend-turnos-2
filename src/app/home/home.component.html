@@ -1,34 +1,36 @@
-<!-- CONTENEDOR PRINCIPAL -->
-<div class="container mt-5 p-4 bg-white rounded shadow-lg">
-  <!-- Botón de volver -->
-  <div class="mb-4">
-    <button class="btn btn-outline-secondary" (click)="goBack()" aria-label="Volver a la página anterior">
-      <i class="bi bi-arrow-left-circle me-2"></i> Volver
-    </button>
-  </div>
-
-  <!-- Encabezado principal -->
-  <div class="text-center mb-5">
-    <h1 class="display-5 fw-bold text-primary">Bienvenido al Sistema de Turnos Médicos</h1>
-    <p class="lead text-muted">Administra tus turnos médicos de forma rápida y sencilla.</p>
-  </div>
-
-  <!-- Botones de acción para pacientes -->
-  <div class="row mb-5">
-    <div class="col-md-4 mb-3">
-      <button class="btn btn-primary btn-lg w-100 shadow-sm" (click)="solicitarTurno()">
-        <i class="bi bi-calendar-plus me-2"></i> Solicitar Turno
+<!-- CONTENEDOR PRINCIPAL SOLO PACIENTES -->
+<div *ngIf="authService.esPaciente()">
+  <div class="container mt-5 p-4 bg-white rounded shadow-lg">
+    <!-- Botón de volver -->
+    <div class="mb-4">
+      <button class="btn btn-outline-secondary" (click)="goBack()" aria-label="Volver a la página anterior">
+        <i class="bi bi-arrow-left-circle me-2"></i> Volver
       </button>
     </div>
-    <div class="col-md-4 mb-3">
-      <button class="btn btn-secondary btn-lg w-100 shadow-sm" (click)="verTurnos()">
-        <i class="bi bi-list-check me-2"></i> Ver Mis Turnos
-      </button>
+
+    <!-- Encabezado principal -->
+    <div class="text-center mb-5">
+      <h1 class="display-5 fw-bold text-primary">Bienvenido al Sistema de Turnos Médicos</h1>
+      <p class="lead text-muted">Administra tus turnos médicos de forma rápida y sencilla.</p>
     </div>
-    <div class="col-md-4 mb-3">
-      <button class="btn btn-info btn-lg w-100 text-white shadow-sm" (click)="verPerfil()">
-        <i class="bi bi-person-circle me-2"></i> Mi Perfil
-      </button>
+
+    <!-- Botones de acción para pacientes -->
+    <div class="row mb-5">
+      <div class="col-md-4 mb-3">
+        <button class="btn btn-primary btn-lg w-100 shadow-sm" (click)="solicitarTurno()">
+          <i class="bi bi-calendar-plus me-2"></i> Solicitar Turno
+        </button>
+      </div>
+      <div class="col-md-4 mb-3">
+        <button class="btn btn-secondary btn-lg w-100 shadow-sm" (click)="verTurnos()">
+          <i class="bi bi-list-check me-2"></i> Ver Mis Turnos
+        </button>
+      </div>
+      <div class="col-md-4 mb-3">
+        <button class="btn btn-info btn-lg w-100 text-white shadow-sm" (click)="verPerfil()">
+          <i class="bi bi-person-circle me-2"></i> Mi Perfil
+        </button>
+      </div>
     </div>
   </div>
 
@@ -47,6 +49,8 @@
       </div>
     </div>
   </div>
+</div>
+
 
 <!-- PANEL DE ADMINISTRADOR -->
 <div *ngIf="authService.esAdmin()" class="mt-5">
@@ -105,7 +109,8 @@
                   <p class="card-text">
                     <strong>Fecha:</strong> {{ item.fecha || 'Sin fecha' }}<br />
                     <strong>Médico:</strong> {{ item.medico?.nombre || item.medico || 'No disponible' }}<br />
-                    <strong>Paciente:</strong> {{ item.paciente?.nombre || item.paciente || 'No disponible' }}
+                    <strong>Paciente:</strong> {{ item.paciente?.nombre || item.paciente || 'No disponible' }}<br />
+                    <strong>Estado:</strong> {{ item.estado || 'Sin estado' }} <br />
                   </p>
                 </div>
               </div>

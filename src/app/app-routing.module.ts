@@ -10,6 +10,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
 import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
 
+
 const routes: Routes = [
   { path: '', component: SelectorComponent },
   { path: 'pacientes/login', component: LoginComponent }, // Ruta específica para pacientes
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path:  'admin/medicos', component: CargarMedicoComponent },
   { path: 'lista-medicos', component: ListaMedicosComponent },
   {path: 'cargar-medico/:id',component: CargarMedicoComponent},
+
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
 

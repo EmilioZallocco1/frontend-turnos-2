@@ -21,4 +21,12 @@ export class ObraSocialService {
   getMedicos(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/medicos`);
   }
+
+
+  
+
+
+
 }
+
+

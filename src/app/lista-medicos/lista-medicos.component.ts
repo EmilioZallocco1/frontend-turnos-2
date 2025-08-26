@@ -33,6 +33,29 @@ export class ListaMedicosComponent implements OnInit {
     );
   }
 
+
+  eliminarMedico(id: number) {
+  if (!confirm('¿Seguro que deseas eliminar este médico?')) return;
+
+  this.medicoService.eliminar(id).subscribe({
+    next: () => {
+      this.medicos = this.medicos.filter(m => m.id !== id);
+      this.mensajeError = '';
+    },
+    error: (e) => {
+      if (e?.status === 409 && e?.error?.message) {
+        this.mensajeError = e.error.message; // “tiene turnos asociados”
+      } else if (e?.status === 404) {
+        this.mensajeError = 'El médico no existe (ya fue eliminado).';
+        this.medicos = this.medicos.filter(m => m.id !== id);
+      } else {
+        this.mensajeError = 'No se pudo eliminar el médico.';
+      }
+    },
+  });
+}
+
+
   goBack(): void {
     window.history.back();
   }
