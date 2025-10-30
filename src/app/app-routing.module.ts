@@ -9,6 +9,7 @@ import {ListaTurnosComponent  } from './lista-turnos/lista-turnos.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
 import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
+import { ObraSocialFormComponent } from './obra-social-form/obra-social-form.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path:  'admin/medicos', component: CargarMedicoComponent },
   { path: 'lista-medicos', component: ListaMedicosComponent },
   {path: 'cargar-medico/:id',component: CargarMedicoComponent},
+  { path: 'admin/obras-sociales/nueva', component: ObraSocialFormComponent },
 
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];

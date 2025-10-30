@@ -14,6 +14,7 @@ import { ListaTurnosComponent } from './lista-turnos/lista-turnos.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
 import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
+import { ObraSocialFormComponent } from './obra-social-form/obra-social-form.component';
 
 
 
@@ -29,6 +30,7 @@ import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
     PerfilComponent,
     CargarMedicoComponent,
     ListaMedicosComponent,
+    ObraSocialFormComponent,
     
     
   ],
