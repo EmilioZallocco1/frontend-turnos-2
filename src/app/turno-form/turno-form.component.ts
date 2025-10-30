@@ -12,7 +12,11 @@ import { ObraSocialService } from '../obra-social-service.service';
 })
 export class TurnoFormComponent implements OnInit {
   turnoForm: FormGroup;
-  medicos: any[] = []; // Almacena la lista de médicos
+  medicos: any[] = [];
+
+  errorMsg = '';
+  successMsg = '';
+  redirectCountdown = 0; // segundos restantes antes de redirigir
 
   constructor(
     private fb: FormBuilder,
@@ -33,60 +37,64 @@ export class TurnoFormComponent implements OnInit {
     this.loadMedicos();
   }
 
-  // Cargar la lista de médicos usando el servicio
   loadMedicos() {
-    this.obraSocialService.getMedicos().subscribe(
-      (response) => {
-        this.medicos = response.data;
-        console.log('Médicos cargados:', this.medicos); // Verifica que los médicos se carguen
-      },
-      (error) => {
-        console.error('Error al cargar médicos:', error);
-      }
-    );
+    this.obraSocialService.getMedicos().subscribe({
+      next: (response) => (this.medicos = response.data),
+      error: (error) => console.error('Error al cargar médicos:', error)
+    });
   }
-  
+
+  volverHome() {
+  this.router.navigate(['/home']);
+}
+
+
   onSubmit() {
-    if (this.turnoForm.valid) {
-      const { fecha, hora, descripcion, medicoId } = this.turnoForm.value;
-      const pacienteId = this.authService.getPacienteId(); // Obtener el ID del paciente autenticado
-
-      // Comprobar los valores de `pacienteId` y `medicoId` antes de continuar
-      console.log('ID del paciente:', pacienteId);
-      console.log('ID del médico (sin conversión):', medicoId);
-
-      // Validar que pacienteId y medicoId existan y sean numéricos
-      if (pacienteId === null || pacienteId === undefined) {
-        console.error('Error: El pacienteId es nulo o indefinido.');
-        return;
-      }
-      if (medicoId === null || medicoId === undefined) {
-        console.error('Error: El medicoId es nulo o indefinido.');
-        return;
-      }
-
-      const nuevoTurno = {
-        fecha,
-        hora,
-        estado: 'Pendiente', // Estado inicial
-        descripcion,
-        medicoId: Number(medicoId), // Asegúrate de convertir a número
-        pacienteId // Asigna el paciente
-      };
-
-      console.log('Datos del turno a enviar:', nuevoTurno);
-
-      this.turnoService.crearTurno(nuevoTurno).subscribe(
-        response => {
-          console.log('Turno creado exitosamente:', response);
-          this.router.navigate(['/home']); // Redirige a la página principal o a donde desees
-        },
-        error => {
-          console.error('Error al crear el turno:', error);
-        }
-      );
-    } else {
-      console.log('Formulario inválido');
+    if (this.turnoForm.invalid) {
+      this.errorMsg = 'Completá todos los campos requeridos.';
+      return;
     }
+
+    const { fecha, hora, descripcion, medicoId } = this.turnoForm.value;
+    const pacienteId = this.authService.getPacienteId();
+
+    if (!pacienteId) {
+      this.errorMsg = 'No se pudo identificar al paciente.';
+      return;
+    }
+
+    const nuevoTurno = {
+      fecha,
+      hora,
+      descripcion,
+      estado: 'Pendiente',
+      medicoId: Number(medicoId),
+      pacienteId: Number(pacienteId),
+      duracionMin: 30
+    };
+
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    this.turnoService.crearTurno(nuevoTurno).subscribe({
+      next: () => {
+        this.successMsg = '✅ Turno creado con éxito. Serás redirigido al inicio en 5 segundos...';
+        this.turnoForm.reset();
+
+        // 🔁 Iniciar cuenta regresiva de 5s
+        this.redirectCountdown = 5;
+        const interval = setInterval(() => {
+          this.redirectCountdown--;
+          if (this.redirectCountdown === 0) {
+            clearInterval(interval);
+            this.router.navigate(['/home']);
+          }
+        }, 1000);
+      },
+      error: (msg: string) => {
+        this.errorMsg = msg || 'Error al crear el turno.';
+        console.error('Error al crear el turno:', msg);
+      }
+    });
   }
 }

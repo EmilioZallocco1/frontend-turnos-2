@@ -1,0 +1,41 @@
+.page-wrap {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f8ff, #e9f3ff);
+}
+
+.medico-card {
+  width: min(920px, 95%);
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+
+  .card-header {
+    background: linear-gradient(135deg, #ffffff, #f7fbff);
+  }
+
+  .input-group-text {
+    background-color: #f7f9fc;
+    border-right: 0;
+  }
+
+  .form-control, .form-select {
+    border-left: 0;
+    border-radius: 10px;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, .15);
+  }
+
+  .is-valid {
+    border-color: #198754 !important;
+  }
+
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+
+  .invalid-feedback {
+    font-size: .9rem;
+  }
+}

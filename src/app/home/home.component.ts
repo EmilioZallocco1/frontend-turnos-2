@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
   }
 
   goBack(): void {
-  window.history.back();
+  this.router.navigate(['/login']);
 }
 
     irACargarMedico() {

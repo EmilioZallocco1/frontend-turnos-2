@@ -33,6 +33,8 @@ export class CargarMedicoComponent implements OnInit {
     private router: Router
   ) {}
 
+  
+
   ngOnInit(): void {
     this.idMedico = this.route.snapshot.params['id'];
     this.modoEdicion = !!this.idMedico;

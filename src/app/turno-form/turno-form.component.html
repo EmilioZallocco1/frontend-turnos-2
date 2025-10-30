@@ -1,29 +1,65 @@
-<div class="container mt-5">
-    <h2>Solicitar Turno</h2>
-    <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="fecha">Fecha</label>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg p-4 w-100" style="max-width: 500px; border-radius: 15px;">
+    <h2 class="text-center mb-4 text-primary fw-bold">🩺 Solicitar Turno</h2>
+
+    <!-- Mensajes -->
+    <div *ngIf="errorMsg" class="alert alert-danger text-center animate__animated animate__shakeX">
+      {{ errorMsg }}
+    </div>
+
+    <div *ngIf="successMsg" class="alert alert-success text-center animate__animated animate__fadeIn">
+      <strong>{{ successMsg }}</strong>
+      <div *ngIf="redirectCountdown > 0" class="progress mt-3" style="height: 8px;">
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+          role="progressbar"
+          [style.width.%]="((5 - redirectCountdown) / 5) * 100"
+        ></div>
+      </div>
+      <small *ngIf="redirectCountdown > 0" class="text-muted d-block mt-2">
+        Redirigiendo en {{ redirectCountdown }}s…
+      </small>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()" novalidate>
+      <div class="mb-3">
+        <label for="fecha" class="form-label fw-semibold">📅 Fecha</label>
         <input type="date" id="fecha" formControlName="fecha" class="form-control" />
       </div>
-  
-      <div class="form-group">
-        <label for="hora">Hora</label>
+
+      <div class="mb-3">
+        <label for="hora" class="form-label fw-semibold">⏰ Hora</label>
         <input type="time" id="hora" formControlName="hora" class="form-control" />
       </div>
-  
-      <div class="form-group">
-        <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" formControlName="descripcion" class="form-control"></textarea>
+
+      <div class="mb-3">
+        <label for="descripcion" class="form-label fw-semibold">📝 Descripción</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          class="form-control"
+          placeholder="Motivo de la consulta"
+          rows="3"
+        ></textarea>
       </div>
-  
-      <div class="form-group">
-        <label for="medicoId">Médico</label>
-        <select id="medicoId" formControlName="medicoId" class="form-control">
-          <option value="" disabled selected>Seleccione un médico</option>
+
+      <div class="mb-4">
+        <label for="medicoId" class="form-label fw-semibold">👨‍⚕️ Médico</label>
+        <select id="medicoId" formControlName="medicoId" class="form-select">
+          <option [ngValue]="null" disabled selected>Seleccione un médico</option>
           <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nombre }}</option>
         </select>
       </div>
-  
-      <button type="submit" class="btn btn-primary">Solicitar Turno</button>
+
+      <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-secondary" (click)="volverHome()">
+          ⬅️ Volver al Home
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="turnoForm.invalid">
+          💾 Solicitar Turno
+        </button>
+      </div>
     </form>
+  </div>
 </div>

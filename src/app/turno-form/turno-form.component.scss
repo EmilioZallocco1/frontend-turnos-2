@@ -1,0 +1,38 @@
+.container {
+  background: linear-gradient(135deg, #f0f8ff, #e6f2ff);
+  min-height: 100vh;
+}
+
+.card {
+  background-color: #ffffff;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+}
+
+button {
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.alert {
+  border-radius: 10px;
+  font-size: 0.95rem;
+}

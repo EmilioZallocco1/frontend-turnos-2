@@ -15,16 +15,18 @@ export class TurnoService {
   constructor(private http: HttpClient,private authService: AuthService) {}
 
   // Método para crear un turno
-  crearTurno(turno: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.apiUrl}`, turno, { headers })
-      .pipe(
-        catchError(err => {
-          console.error('Error en la creación del turno:', err);
-          return throwError(err.error.message || 'Error en el servidor');
-        })
-      );
- }
+crearTurno(turno: any): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http.post<any>(`${this.apiUrl}`, turno, { headers }).pipe(
+    catchError(err => {
+      const msg = err?.status === 409
+        ? (err.error?.message || 'Conflicto: superposición de turnos.')
+        : (err.error?.message || 'Error en el servidor');
+      return throwError(() => msg);
+    })
+  );
+}
+
 
 
 // Método para obtener los turnos de un paciente según su ID

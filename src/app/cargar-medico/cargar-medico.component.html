@@ -1,51 +1,134 @@
-<div class="container mt-5 p-4 bg-white rounded shadow-sm">
-  <h2 class="mb-4 text-primary text-center">
-    {{ modoEdicion ? '✏️ Editar Médico' : '📋 Alta de Médico' }}
-  </h2>
-
-  <form (ngSubmit)="guardarMedico()">
-    <div class="mb-3">
-      <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombre" [(ngModel)]="medico.nombre" name="nombre" required>
+<div class="page-wrap d-flex align-items-center justify-content-center py-5">
+  <div class="card medico-card shadow-lg">
+    <div class="card-header border-0 bg-transparent text-center pt-4">
+      <h2 class="mb-1 text-primary fw-bold">
+        {{ modoEdicion ? '✏️ Editar Médico' : '🩺 Alta de Médico' }}
+      </h2>
+      <p class="text-muted mb-0">Completá los datos del profesional</p>
     </div>
 
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" [(ngModel)]="medico.email" name="email" required>
-    </div>
+    <div class="card-body p-4 p-lg-5">
+      <form (ngSubmit)="guardarMedico()" #f="ngForm" novalidate>
+        <div class="row g-4">
+          <!-- Nombre -->
+          <div class="col-md-6">
+            <label for="nombre" class="form-label fw-semibold">Nombre</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input
+                type="text"
+                id="nombre"
+                class="form-control"
+                name="nombre"
+                [(ngModel)]="medico.nombre"
+                required
+                minlength="2"
+                #nombre="ngModel"
+                [class.is-invalid]="nombre.invalid && (nombre.dirty || f.submitted)"
+                [class.is-valid]="nombre.valid && (nombre.dirty || f.submitted)"
+                placeholder="Ej.: Dra. Ana López" />
+              <div class="invalid-feedback">Ingresá un nombre válido (mín. 2 caracteres).</div>
+            </div>
+          </div>
 
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono</label>
-      <input type="text" class="form-control" id="telefono" [(ngModel)]="medico.telefono" name="telefono" required>
-    </div>
+          <!-- Email -->
+          <div class="col-md-6">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                name="email"
+                [(ngModel)]="medico.email"
+                required
+                email
+                #email="ngModel"
+                [class.is-invalid]="email.invalid && (email.dirty || f.submitted)"
+                [class.is-valid]="email.valid && (email.dirty || f.submitted)"
+                placeholder="profesional@clinica.com" />
+              <div class="invalid-feedback">Ingresá un email válido.</div>
+            </div>
+          </div>
 
-    <div class="mb-3">
-      <label for="especialidad" class="form-label">Especialidad</label>
-      <select class="form-select" id="especialidad" [(ngModel)]="medico.especialidadId" name="especialidadId" required>
-        <option [ngValue]="null">Seleccione una especialidad</option>
-        <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.name }}</option>
-      </select>
-    </div>
+          <!-- Teléfono -->
+          <div class="col-md-6">
+            <label for="telefono" class="form-label fw-semibold">Teléfono</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+              <input
+                type="tel"
+                id="telefono"
+                class="form-control"
+                name="telefono"
+                [(ngModel)]="medico.telefono"
+                required
+                pattern="^[0-9+\s()-]{7,}$"
+                #telefono="ngModel"
+                [class.is-invalid]="telefono.invalid && (telefono.dirty || f.submitted)"
+                [class.is-valid]="telefono.valid && (telefono.dirty || f.submitted)"
+                placeholder="Ej.: +54 11 5555-5555" />
+              <div class="invalid-feedback">Ingresá un teléfono válido.</div>
+            </div>
+          </div>
 
-    <div class="mb-3">
-      <label for="obraSocial" class="form-label">Obra Social</label>
-      <select class="form-select" id="obraSocial" [(ngModel)]="medico.obraSocialId" name="obraSocialId">
-        <option [ngValue]="null">(Opcional) Seleccione una obra social</option>
-        <option *ngFor="let os of obrasSociales" [ngValue]="os.id">{{ os.nombre }}</option>
-      </select>
-    </div>
+          <!-- Especialidad -->
+          <div class="col-md-6">
+            <label for="especialidad" class="form-label fw-semibold">Especialidad</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text"><i class="bi bi-clipboard2-pulse"></i></span>
+              <select
+                id="especialidad"
+                class="form-select"
+                name="especialidadId"
+                [(ngModel)]="medico.especialidadId"
+                required
+                #especialidad="ngModel"
+                [class.is-invalid]="especialidad.invalid && (especialidad.dirty || f.submitted)"
+                [class.is-valid]="especialidad.valid && (especialidad.dirty || f.submitted)">
+                <option [ngValue]="null" disabled>Seleccione una especialidad</option>
+                <option *ngFor="let esp of especialidades" [ngValue]="esp.id">{{ esp.name }}</option>
+              </select>
+              <div class="invalid-feedback">Seleccioná una especialidad.</div>
+            </div>
+          </div>
 
-    <div class="d-grid gap-2">
-      <button type="submit" class="btn btn-success btn-lg">
-        {{ modoEdicion ? 'Guardar Cambios' : 'Registrar Médico' }}
-      </button>
-    </div>
-  </form>
+          <!-- Obra Social (opcional) -->
+          <div class="col-12">
+            <label for="obraSocial" class="form-label fw-semibold">Obra Social (opcional)</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-building"></i></span>
+              <select
+                id="obraSocial"
+                class="form-select"
+                name="obraSocialId"
+                [(ngModel)]="medico.obraSocialId">
+                <option [ngValue]="null">Seleccione una obra social</option>
+                <option *ngFor="let os of obrasSociales" [ngValue]="os.id">{{ os.nombre }}</option>
+              </select>
+            </div>
+            <div class="form-text">Podés dejarlo vacío y asociarlo más tarde.</div>
+          </div>
+        </div>
 
-  <div *ngIf="mensajeExito" class="alert alert-success mt-3 text-center">
-    {{ mensajeExito }}
-  </div>
-  <div *ngIf="mensajeError" class="alert alert-danger mt-3 text-center">
-    {{ mensajeError }}
+        <!-- Actions -->
+        <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end mt-5">
+          
+          
+          <button type="submit" class="btn btn-primary px-4" [disabled]="f.invalid">
+            <i class="bi bi-save me-1"></i> {{ modoEdicion ? 'Guardar cambios' : 'Registrar médico' }}
+          </button>
+        </div>
+      </form>
+
+      <!-- Mensajes -->
+      <div *ngIf="mensajeExito" class="alert alert-success text-center mt-4" role="alert">
+        <i class="bi bi-check-circle me-2"></i>{{ mensajeExito }}
+      </div>
+      <div *ngIf="mensajeError" class="alert alert-danger text-center mt-4" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ mensajeError }}
+      </div>
+    </div>
   </div>
 </div>
