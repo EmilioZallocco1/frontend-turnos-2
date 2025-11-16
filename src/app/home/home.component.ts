@@ -79,5 +79,17 @@ export class HomeComponent implements OnInit {
 
   verPacientesPorFecha() {}
 
+  cambiarEstado(turno: any, nuevoEstado: string) {
+  const estadoAnterior = turno.estado;
+  turno.estado = nuevoEstado; // UI optimista
+
+  this.turnoService.actualizarTurno(turno.id, { estado: nuevoEstado }).subscribe({
+    next: () => console.log('Estado actualizado correctamente'),
+    error: (err) => {
+      console.error(err);
+      turno.estado = estadoAnterior; // revertir si falla
+    }
+  });
+}
 
 }
