@@ -97,6 +97,19 @@ export class TurnoService {
       );
   }
 
+  getTurnoById(id: number): Observable<any> {
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  return this.http
+    .get<any>(`${this.apiUrl}/${id}`, { headers })
+    .pipe(
+      catchError((err) => {
+        console.error('Error al obtener turno por ID:', err);
+        return throwError(err.error?.message || 'Error en el servidor');
+      })
+    );
+}
+
+
   getHorariosDisponibles(medicoId: number, fechaISO: string): Observable<any> {
     return this.http.get<any>('http://localhost:3000/api/turnos/disponibles', {
       params: { medicoId, fecha: fechaISO },

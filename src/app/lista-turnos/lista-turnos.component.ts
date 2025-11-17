@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TurnoService } from '../turno.service';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-turnos',
@@ -15,7 +16,8 @@ export class ListaTurnosComponent implements OnInit {
 
   constructor(
     private turnoService: TurnoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -55,12 +57,9 @@ export class ListaTurnosComponent implements OnInit {
   }
 
   // 🆕 Inicia la edición de un turno
-  editarTurno(turnoId: number) {
-    const turno = this.turnos.find(t => t.id === turnoId);
-    if (turno) {
-      this.turnoEditando = { ...turno }; // Copia para evitar modificar directamente
-    }
-  }
+  editarTurno(id: number) {
+  this.router.navigate(['/turno-form', id]);
+}
 
   // 🆕 Cancela la edición
   cancelarEdicion() {
