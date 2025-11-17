@@ -1,106 +1,177 @@
 <div class="home-wrapper">
 
-  <!-- ====== SECCIÓN PACIENTE ====== -->
-  <section *ngIf="authService.esPaciente()" class="home-section container py-5">
+<!-- ====== SECCIÓN PACIENTE ====== -->
+<section *ngIf="authService.esPaciente()" class="home-section container py-5">
 
-    <!-- Encabezado + volver -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h1 class="display-6 fw-bold mb-1 text-primary">
-          Sistema de Turnos Médicos
-        </h1>
-        <p class="text-muted mb-0">
-          Administrá tus turnos médicos de forma rápida y sencilla.
-        </p>
-      </div>
+  <!-- Encabezado + volver -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="display-6 fw-bold mb-1 text-primary">
+        Sistema de Turnos Médicos
+      </h1>
+      <p class="text-muted mb-0">
+        Administrá tus turnos médicos de forma rápida y sencilla.
+      </p>
+    </div>
 
+    <button
+      class="btn btn-outline-secondary d-flex align-items-center"
+      (click)="goBack()"
+      aria-label="Volver a la página anterior"
+    >
+      <i class="bi bi-arrow-left-circle me-2 fs-5"></i>
+      Volver
+    </button>
+  </div>
+
+  <!-- Acciones principales -->
+  <div class="row g-3 mb-4 quick-actions">
+    <div class="col-md-4">
       <button
-        class="btn btn-outline-secondary d-flex align-items-center"
-        (click)="goBack()"
-        aria-label="Volver a la página anterior"
+        class="btn btn-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
+        (click)="solicitarTurno()"
       >
-        <i class="bi bi-arrow-left-circle me-2 fs-5"></i>
-        Volver
+        <i class="bi bi-calendar-plus fs-4"></i>
+        <span>Solicitar Turno</span>
       </button>
     </div>
 
-    <!-- Acciones principales -->
-    <div class="row g-3 mb-5">
-      <div class="col-md-4">
-        <button
-          class="btn btn-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
-          (click)="solicitarTurno()"
-        >
-          <i class="bi bi-calendar-plus fs-4"></i>
-          <span>Solicitar Turno</span>
-        </button>
-      </div>
+    <div class="col-md-4">
+      <button
+        class="btn btn-outline-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
+        (click)="verTurnos()"
+      >
+        <i class="bi bi-list-check fs-4"></i>
+        <span>Ver Mis Turnos</span>
+      </button>
+    </div>
 
-      <div class="col-md-4">
-        <button
-          class="btn btn-outline-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
-          (click)="verTurnos()"
-        >
-          <i class="bi bi-list-check fs-4"></i>
-          <span>Ver Mis Turnos</span>
-        </button>
-      </div>
+    <div class="col-md-4">
+      <button
+        class="btn btn-info btn-lg w-100 text-white shadow-sm d-flex align-items-center justify-content-center gap-2"
+        (click)="verPerfil()"
+      >
+        <i class="bi bi-person-circle fs-4"></i>
+        <span>Mi Perfil</span>
+      </button>
+    </div>
+  </div>
 
-      <div class="col-md-4">
-        <button
-          class="btn btn-info btn-lg w-100 text-white shadow-sm d-flex align-items-center justify-content-center gap-2"
-          (click)="verPerfil()"
-        >
-          <i class="bi bi-person-circle fs-4"></i>
-          <span>Mi Perfil</span>
-        </button>
+  <!-- Bloque inferior: Próximos turnos + Info rápida -->
+  <div class="row g-4 mt-1">
+    <!-- Próximos turnos -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-calendar-week text-danger fs-4"></i>
+            <div>
+              <h5 class="mb-0">Próximos turnos</h5>
+              <small class="text-muted">
+                Revisá tus citas agendadas.
+              </small>
+            </div>
+          </div>
+
+          <span
+            class="badge rounded-pill bg-primary-subtle text-primary"
+            *ngIf="proximosTurnos.length"
+          >
+            {{ proximosTurnos.length }} turno(s)
+          </span>
+        </div>
+
+        <div class="card-body">
+          <!-- Si hay turnos -->
+          <div *ngIf="proximosTurnos.length; else sinTurnos">
+            <div
+              class="next-turn-card p-3 mb-3 rounded-3 border position-relative"
+              *ngFor="let t of proximosTurnos"
+            >
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h6 class="text-primary mb-1">{{ t.especialidad }}</h6>
+                  <p class="mb-0 small text-muted">
+                    <i class="bi bi-person-badge me-1"></i>
+                    Profesional: <strong>{{ t.medico }}</strong>
+                  </p>
+                </div>
+
+                <span class="fecha-pill">
+                  <i class="bi bi-calendar-event me-1"></i>
+                  {{ t.fecha }}
+                </span>
+              </div>
+
+              <button
+                class="btn btn-sm btn-outline-primary mt-1"
+                (click)="verTurnos()"
+              >
+                Ver detalle
+              </button>
+            </div>
+          </div>
+
+          <!-- Estado vacío -->
+          <ng-template #sinTurnos>
+            <div class="text-center py-4">
+              <i class="bi bi-emoji-smile fs-1 text-primary mb-2 d-block"></i>
+              <h6 class="mb-1">Todavía no tenés turnos agendados</h6>
+              <p class="text-muted mb-3 small">
+                Cuando solicites un turno, lo vas a ver listado acá.
+              </p>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="solicitarTurno()"
+              >
+                <i class="bi bi-calendar-plus me-1"></i>
+                Solicitar mi primer turno
+              </button>
+            </div>
+          </ng-template>
+        </div>
       </div>
     </div>
 
-    <!-- Próximos turnos -->
-    <div class="mt-4">
-      <div class="d-flex align-items-center mb-3">
-        <h3 class="h5 mb-0 text-secondary">
-          📅 Próximos turnos
-        </h3>
-        <span class="badge bg-soft-primary text-primary ms-3">
-          {{ proximosTurnos.length || 0 }} turno(s)
-        </span>
-      </div>
+    <!-- Info rápida / Tips -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="mb-3">
+            <i class="bi bi-info-circle me-2 text-primary"></i>
+            Consejos rápidos
+          </h5>
 
-      <div *ngIf="proximosTurnos.length; else sinProximos">
-        <div class="row g-4">
-          <div
-            class="col-md-6 col-lg-4"
-            *ngFor="let turno of proximosTurnos"
-          >
-            <div class="card h-100 border-0 shadow-sm turno-card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                  <h5 class="card-title text-primary mb-0">
-                    {{ turno.especialidad }}
-                  </h5>
-                  <span class="badge rounded-pill bg-light text-muted">
-                    {{ turno.fecha }}
-                  </span>
-                </div>
-                <p class="card-text mb-0">
-                  👨‍⚕️ <span class="fw-semibold">Profesional:</span>
-                  {{ turno.medico }}
-                </p>
-              </div>
-            </div>
+          <ul class="list-unstyled small mb-3">
+            <li class="mb-2 d-flex">
+              <i class="bi bi-check-circle me-2 text-success mt-1"></i>
+              <span>Revisá tus turnos en la sección <strong>“Ver Mis Turnos”</strong> para ver el detalle de día y horario.</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <i class="bi bi-bell me-2 text-warning mt-1"></i>
+              <span>Te recomendamos llegar <strong>10 minutos antes</strong> de cada consulta.</span>
+            </li>
+            <li class="mb-2 d-flex">
+              <i class="bi bi-shield-check me-2 text-primary mt-1"></i>
+              <span>Mantené tus datos actualizados desde <strong>“Mi Perfil”</strong> para evitar errores en tus turnos.</span>
+            </li>
+          </ul>
+
+          <div class="p-3 rounded-3 bg-light-subtle border small">
+            <p class="mb-1 fw-semibold">
+              ¿Necesitás cancelar un turno?
+            </p>
+            <p class="mb-0">
+              Podés hacerlo desde <strong>“Ver Mis Turnos”</strong> siempre que sea con suficiente anticipación.
+            </p>
           </div>
         </div>
       </div>
-
-      <ng-template #sinProximos>
-        <div class="alert alert-light border text-center text-muted mt-3">
-          Todavía no tenés próximos turnos registrados.
-        </div>
-      </ng-template>
     </div>
-  </section>
+  </div>
+
+</section>
+
 
   <!-- ====== PANEL ADMINISTRADOR ====== -->
 <section *ngIf="authService.esAdmin()" class="home-section bg-light border-top">

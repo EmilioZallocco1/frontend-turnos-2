@@ -29,21 +29,56 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
-    this.proximosTurnos = [
-      {
-        fecha: '2024-11-10',
-        especialidad: 'Cardiología',
-        medico: 'Dr. González',
-      },
-      {
-        fecha: '2024-11-12',
-        especialidad: 'Dermatología',
-        medico: 'Dra. Fernández',
-      },
-    ];
+
+    if (this.authService.esPaciente()) {
+      this.cargarProximosTurnos();
+    }
+
     if (this.authService.esAdmin()) {
-    this.cargarMedicos();
+      this.cargarMedicos();
+    }
   }
+
+  private cargarProximosTurnos(): void {
+    const pacienteId = this.authService.getPacienteId();
+
+    // Por las dudas, si no hay paciente logueado, no llamamos a la API
+    if (!pacienteId) {
+      console.warn('No se encontró paciente logueado');
+      this.proximosTurnos = [];
+      return;
+    }
+
+    this.turnoService.getTurnosPorPaciente().subscribe({
+      next: (res) => {
+        const turnos = res.data || res;
+
+        const hoy = new Date();
+        this.proximosTurnos = (turnos || [])
+          .filter((t: any) => {
+            const fechaTurno = new Date(t.fecha);
+            const esFuturo =
+              fechaTurno >=
+              new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+            // dejamos sólo pendientes
+            return t.estado
+              ? t.estado.toLowerCase() === 'pendiente' && esFuturo
+              : esFuturo;
+          })
+          .map((t: any) => ({
+            fecha: t.fecha,
+            especialidad:
+              t.medico?.especialidad || t.especialidad || 'Sin especialidad',
+            medico: t.medico?.nombre || t.medico || 'Profesional',
+          }));
+
+        console.log('Próximos turnos en home:', this.proximosTurnos);
+      },
+      error: (err) => {
+        console.error('Error cargando próximos turnos', err);
+        this.proximosTurnos = [];
+      },
+    });
   }
 
   solicitarTurno() {
@@ -111,7 +146,7 @@ export class HomeComponent implements OnInit {
 
   cambiarEstado(turno: any, nuevoEstado: string) {
     const estadoAnterior = turno.estado;
-    turno.estado = nuevoEstado; 
+    turno.estado = nuevoEstado;
     this.turnoService
       .actualizarTurno(turno.id, { estado: nuevoEstado })
       .subscribe({

@@ -19,7 +19,7 @@ export class TurnoFormComponent implements OnInit {
   successMsg = '';
   redirectCountdown = 0; // segundos restantes antes de redirigir
 
-  // 👇 para saber si estoy creando o editando
+  //  para saber si estoy creando o editando
   modoEdicion = false;
   turnoId: number | null = null;
 
@@ -29,11 +29,11 @@ export class TurnoFormComponent implements OnInit {
     private authService: AuthService,
     private obraSocialService: ObraSocialService,
     private router: Router,
-    private route: ActivatedRoute   // 👈 NUEVO
+    private route: ActivatedRoute   // 
   ) {
     this.turnoForm = this.fb.group({
       fecha: ['', [Validators.required]],
-      hora: ['', [Validators.required]],
+      hora: [{ value: '', disabled: true }, [Validators.required]],
       descripcion: ['', [Validators.required]],
       medicoId: [null, [Validators.required]]
     });
@@ -98,47 +98,42 @@ export class TurnoFormComponent implements OnInit {
   }
 
   cargarHorariosDisponibles() {
-    const fecha = this.turnoForm.get('fecha')?.value;
-    const medicoId = this.turnoForm.get('medicoId')?.value;
+  const fecha = this.turnoForm.get('fecha')?.value;
+  const medicoId = this.turnoForm.get('medicoId')?.value;
 
-    // Si falta fecha o médico, limpio horarios y salgo
-    if (!fecha || !medicoId) {
-      this.horariosDisponibles = [];
-      this.turnoForm.get('hora')?.reset('');
-      return;
-    }
+  if (!fecha || !medicoId) {
+    this.horariosDisponibles = [];
+    this.actualizarEstadoHora();
+    return;
+  }
 
-    this.turnoService.getHorariosDisponibles(medicoId, fecha).subscribe({
-      next: (res) => {
-        console.log('🟩 respuesta horarios:', res);
-        let lista = res.data || res;
+  this.turnoService.getHorariosDisponibles(medicoId, fecha).subscribe({
+    next: (res) => {
+      let lista = res.data || res;
+      if (!Array.isArray(lista)) lista = [];
 
-        if (!Array.isArray(lista)) {
-          lista = [];
-        }
+      const horaActual = this.turnoForm.get('hora')?.value;
 
-        const horaActual = this.turnoForm.get('hora')?.value;
+      if (horaActual && !lista.includes(horaActual)) {
+        lista.unshift(horaActual);
+      }
 
-        // si estamos editando y la hora actual no está en la lista (porque bloquea el propio turno),
-        // la sumamos para que el usuario pueda mantener ese horario
-        if (horaActual && !lista.includes(horaActual)) {
-          lista.unshift(horaActual);
-        }
+      this.horariosDisponibles = lista;
 
-        this.horariosDisponibles = lista;
-
-        // si no hay hora seleccionada todavía, reseteo
-        if (!horaActual) {
-          this.turnoForm.get('hora')?.reset('');
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar horarios disponibles:', err);
-        this.horariosDisponibles = [];
+      if (!horaActual) {
         this.turnoForm.get('hora')?.reset('');
       }
-    });
-  }
+
+      this.actualizarEstadoHora();
+    },
+    error: () => {
+      this.horariosDisponibles = [];
+      this.turnoForm.get('hora')?.reset('');
+      this.actualizarEstadoHora();
+    }
+  });
+}
+
 
   volverHome() {
     this.router.navigate(['/home']);
@@ -160,7 +155,7 @@ export class TurnoFormComponent implements OnInit {
     }
   }
 
-  // 👉 lógica para crear (lo que ya tenías, movido a un método)
+  
   private crearTurno() {
     const { fecha, hora, descripcion, medicoId } = this.turnoForm.value;
     const pacienteId = this.authService.getPacienteId();
@@ -217,6 +212,20 @@ export class TurnoFormComponent implements OnInit {
       }
     });
   }
+
+  private actualizarEstadoHora() {
+  const horaCtrl = this.turnoForm.get('hora');
+
+  if (!this.horariosDisponibles.length) {
+    // Deshabilitar y limpiar
+    horaCtrl?.reset('');
+    horaCtrl?.disable({ emitEvent: false });
+  } else {
+    // Habilitar si hay horarios
+    horaCtrl?.enable({ emitEvent: false });
+  }
+}
+
 
   private iniciarRedireccion() {
     this.redirectCountdown = 5;
