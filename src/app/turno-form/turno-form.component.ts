@@ -13,6 +13,7 @@ import { ObraSocialService } from '../obra-social-service.service';
 export class TurnoFormComponent implements OnInit {
   turnoForm: FormGroup;
   medicos: any[] = [];
+  horariosDisponibles: string[] = [];
 
   errorMsg = '';
   successMsg = '';
@@ -35,12 +36,44 @@ export class TurnoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMedicos();
+    this.turnoForm.get('fecha')?.valueChanges.subscribe(() => {
+      this.cargarHorariosDisponibles();
+    });
+    this.turnoForm.get('medicoId')?.valueChanges.subscribe(() => {
+      this.cargarHorariosDisponibles();
+    });
   }
 
   loadMedicos() {
     this.obraSocialService.getMedicos().subscribe({
       next: (response) => (this.medicos = response.data),
       error: (error) => console.error('Error al cargar médicos:', error)
+    });
+  }
+
+    cargarHorariosDisponibles() {
+    const fecha = this.turnoForm.get('fecha')?.value;
+    const medicoId = this.turnoForm.get('medicoId')?.value;
+
+    // Si falta fecha o médico, limpio horarios y salgo
+    if (!fecha || !medicoId) {
+      this.horariosDisponibles = [];
+      this.turnoForm.get('hora')?.reset('');
+      return;
+    }
+
+    this.turnoService.getHorariosDisponibles(medicoId, fecha).subscribe({
+      next: (res) => {
+        console.log('🟩 respuesta horarios:', res);
+        this.horariosDisponibles = res.data || [];
+        // resetear hora cuando cambian los horarios disponibles
+        this.turnoForm.get('hora')?.reset('');
+      },
+      error: (err) => {
+        console.error('Error al cargar horarios disponibles:', err);
+        this.horariosDisponibles = [];
+        this.turnoForm.get('hora')?.reset('');
+      }
     });
   }
 
