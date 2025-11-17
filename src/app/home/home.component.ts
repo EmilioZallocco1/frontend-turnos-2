@@ -2,17 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { TurnoService } from '../turno.service';
+import { MedicoService } from '../medico.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  proximosTurnos: Array<{ fecha: string; especialidad: string; medico: string }> = []; // Define la propiedad
-  
-  constructor(private router: Router,public authService: AuthService, private turnoService: TurnoService) {}
-
+  proximosTurnos: Array<{
+    fecha: string;
+    especialidad: string;
+    medico: string;
+  }> = []; // Define la propiedad
+  medicos: any[] = [];
+  constructor(
+    private router: Router,
+    public authService: AuthService,
+    private turnoService: TurnoService,
+    private medicoService: MedicoService
+  ) {}
 
   medicoId: number | null = null;
   fechaTurno: string = '';
@@ -21,9 +30,20 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
     this.proximosTurnos = [
-      { fecha: '2024-11-10', especialidad: 'Cardiología', medico: 'Dr. González' },
-      { fecha: '2024-11-12', especialidad: 'Dermatología', medico: 'Dra. Fernández' }
+      {
+        fecha: '2024-11-10',
+        especialidad: 'Cardiología',
+        medico: 'Dr. González',
+      },
+      {
+        fecha: '2024-11-12',
+        especialidad: 'Dermatología',
+        medico: 'Dra. Fernández',
+      },
     ];
+    if (this.authService.esAdmin()) {
+    this.cargarMedicos();
+  }
   }
 
   solicitarTurno() {
@@ -31,7 +51,7 @@ export class HomeComponent implements OnInit {
   }
 
   verTurnos() {
-    this.router.navigate(['/listaTurnos']);  // Redirige a la página 'listaTurnos'
+    this.router.navigate(['/listaTurnos']); // Redirige a la página 'listaTurnos'
   }
 
   verPerfil() {
@@ -39,10 +59,10 @@ export class HomeComponent implements OnInit {
   }
 
   goBack(): void {
-  this.router.navigate(['/login']);
-}
+    this.router.navigate(['/login']);
+  }
 
-    irACargarMedico() {
+  irACargarMedico() {
     this.router.navigate(['/admin/medicos']);
   }
 
@@ -51,14 +71,24 @@ export class HomeComponent implements OnInit {
   }
 
   verListaMedicos() {
-  this.router.navigate(['/lista-medicos']);
-}
+    this.router.navigate(['/lista-medicos']);
+  }
 
+  //-------------------------------------------------------- PRUEBAS --------------------------------------------------------
 
-
-//-------------------------------------------------------- PRUEBAS --------------------------------------------------------
-
-   verTurnosMedico(): void {
+  private cargarMedicos(): void {
+    this.medicoService.obtenerTodos().subscribe({
+      next: (res) => {
+        // tu backend devuelve { message: 'ok', data: [...] }
+        this.medicos = res.data;
+        console.log('Médicos cargados:', this.medicos);
+      },
+      error: (err) => {
+        console.error('Error cargando médicos', err);
+      },
+    });
+  }
+  verTurnosMedico(): void {
     if (!this.medicoId) {
       alert('Debes ingresar un ID de médico');
       return;
@@ -80,16 +110,16 @@ export class HomeComponent implements OnInit {
   verPacientesPorFecha() {}
 
   cambiarEstado(turno: any, nuevoEstado: string) {
-  const estadoAnterior = turno.estado;
-  turno.estado = nuevoEstado; // UI optimista
-
-  this.turnoService.actualizarTurno(turno.id, { estado: nuevoEstado }).subscribe({
-    next: () => console.log('Estado actualizado correctamente'),
-    error: (err) => {
-      console.error(err);
-      turno.estado = estadoAnterior; // revertir si falla
-    }
-  });
-}
-
+    const estadoAnterior = turno.estado;
+    turno.estado = nuevoEstado; 
+    this.turnoService
+      .actualizarTurno(turno.id, { estado: nuevoEstado })
+      .subscribe({
+        next: () => console.log('Estado actualizado correctamente'),
+        error: (err) => {
+          console.error(err);
+          turno.estado = estadoAnterior; // revertir si falla
+        },
+      });
+  }
 }
