@@ -1,0 +1,76 @@
+/* --- 1. Corrección del Fondo de la Página (Asegura la altura y el centrado) --- */
+/* NOTA: Usamos :host para asegurar que el componente ocupe todo el espacio. */
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    /* Aplicamos el degradado al host para que cubra toda la vista */
+    background: linear-gradient(135deg, #72EDF2 10%, #515AFE 100%); 
+}
+
+/* --- 2. Estilos de la Tarjeta de Login (col-md-4) --- */
+.login-card {
+    background-color: #ffffff;
+    padding: 30px; 
+    border-radius: 12px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2); 
+    
+    /* 🛑 CORRECCIÓN CLAVE DE ANCHURA: */
+    /* Aseguramos que la tarjeta no sea más ancha que 400px y esté centrada */
+    max-width: 400px; 
+    min-width: 300px; /* Para evitar que se comprima demasiado */
+}
+
+/* --- 3. Campos de Entrada (Input Fields) --- */
+/* Aseguramos que los inputs ocupen el 100% del ancho disponible */
+.login-card .form-control {
+    width: 100%; /* ⬅️ ESTO FALTABA O SE ESTABA SOBREESCRIBIENDO */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px; 
+    transition: border-color 0.2s;
+}
+
+/* --- 4. Botón de Login (Reemplazando btn-primary) --- */
+.login-button {
+    /* Mantenemos el estilo del botón */
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #515AFE 0%, #72EDF2 100%) !important; 
+    color: white;
+    border: none !important; 
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(81, 90, 254, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(81, 90, 254, 0.6);
+}
+
+/* --- 5. Título y Enlace (Ajustes de espaciado) --- */
+.login-title {
+    font-size: 2em;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 1rem !important; /* Ajustamos el espaciado si es necesario */
+}
+
+.register-link {
+    margin-top: 25px;
+    font-size: 0.9em;
+}
+
+.register-link a {
+    color: #515AFE;
+    text-decoration: none;
+    font-weight: 700;
+}
