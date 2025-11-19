@@ -16,6 +16,7 @@ describe('ObraSocialFormComponent', () => {
   });
 
   it('should create', () => {
+    // @ts-ignore
     expect(component).toBeTruthy();
   });
 });
