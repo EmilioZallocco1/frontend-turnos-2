@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MedicoService } from 'src/app/Services/medico.service';
+import { MedicoService } from '../../Services/medico.service';
 import { EspecialidadService } from 'src/app/Services/especialidad.service';
 import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
 

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
-import { RegistroComponent } from './registro/registro.component'; // Corrige la importación
-import { TurnoFormComponent } from './turno-form/turno-form.component';
-import {ListaTurnosComponent  } from './lista-turnos/lista-turnos.component';
-import { PerfilComponent } from './perfil/perfil.component';
-import { CargarMedicoComponent } from './cargar-medico/cargar-medico.component';
-import { ListaMedicosComponent } from './lista-medicos/lista-medicos.component';
-import { ObraSocialFormComponent } from './obra-social-form/obra-social-form.component';
+import { LoginComponent } from './Componentes/login/login.component';
+import { HomeComponent } from './Componentes/home/home.component';
+import { RegistroComponent } from './Componentes/registro/registro.component'; // Corrige la importación
+import { TurnoFormComponent } from './Componentes/turno-form/turno-form.component';
+import {ListaTurnosComponent  } from './Componentes/lista-turnos/lista-turnos.component';
+import { PerfilComponent } from './Componentes/perfil/perfil.component';
+import { CargarMedicoComponent } from './Componentes/cargar-medico/cargar-medico.component';
+import { ListaMedicosComponent } from './Componentes/lista-medicos/lista-medicos.component';
+import { ObraSocialFormComponent } from './Componentes/obra-social-form/obra-social-form.component';
 
 
 const routes: Routes = [

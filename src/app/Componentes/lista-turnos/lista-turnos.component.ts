@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TurnoService } from '../turno.service';
-import { AuthService } from '../Services/auth.service';
+import { TurnoService } from '../../Services/turno.service';
+import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({

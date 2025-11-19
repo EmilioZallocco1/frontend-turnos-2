@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
-import { ObraSocial } from '../models/obra-social.interface'; // ajustá la ruta si difiere
+import { ObraSocial } from '../../models/obra-social.interface'; // ajustá la ruta si difiere
 
 @Component({
   selector: 'app-obra-social-form',
