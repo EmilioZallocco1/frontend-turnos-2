@@ -1,16 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TurnoService } from './turno.service';
+import { PacienteService } from './paciente.service';
 
-describe('TurnoService', () => {
-  let service: TurnoService;
+describe('PacienteService', () => {
+  let service: PacienteService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TurnoService);
+    service = TestBed.inject(PacienteService);
   });
 
   it('should be created', () => {
+    //@ts-ignore
     expect(service).toBeTruthy();
   });
 });

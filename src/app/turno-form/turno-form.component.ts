@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TurnoService } from '../turno.service';
-import { AuthService } from '../auth.service';
-import { ObraSocialService } from '../obra-social-service.service';
+import { AuthService } from '../Services/auth.service';
+import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
 
 @Component({
   selector: 'app-turno-form',

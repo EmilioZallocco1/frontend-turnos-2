@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../auth.service'; // Servicio de autenticación
-import { ObraSocialService } from '../obra-social-service.service'; // Servicio de obra social
+import { AuthService } from '../Services/auth.service'; // Servicio de autenticación
+import { ObraSocialService } from 'src/app/Services/obra-social-service.service'; // Servicio de obra social
 import { Router } from '@angular/router';
 import { ObraSocialResponse } from '../models/obra-social.interface'; // Importa la interfaz
 

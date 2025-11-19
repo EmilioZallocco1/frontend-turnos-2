@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MedicoService } from '../medico.service';
-import { EspecialidadService } from '../especialidad.service';
-import { ObraSocialService } from '../obra-social-service.service';
+import { MedicoService } from 'src/app/Services/medico.service';
+import { EspecialidadService } from 'src/app/Services/especialidad.service';
+import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
 
 @Component({
   selector: 'app-cargar-medico',

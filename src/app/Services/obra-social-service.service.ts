@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ObraSocialResponse } from './models/obra-social.interface';
-import { ObraSocial } from './models/obra-social.interface';
+import { ObraSocialResponse } from 'src/app/models/obra-social.interface';
+import { ObraSocial } from 'src/app/models/obra-social.interface';
 import { map } from 'rxjs/operators';
 
 @Injectable({
