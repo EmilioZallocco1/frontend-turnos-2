@@ -6,7 +6,7 @@
     </button>
   </div>
 
-  <h2 class="text-primary fw-bold mb-4 text-center">📋 Mis Turnos</h2>
+  <h2 class="text-primary fw-bold mb-4 text-center">📋 MIS TURNOS</h2>
 
   <!-- Mensajes -->
   <div *ngIf="successMessage" class="alert alert-success text-center animate__animated animate__fadeIn">
@@ -21,7 +21,7 @@
     <div *ngFor="let turno of turnos" class="card-turno shadow-sm p-3 mb-4 animate__animated animate__fadeInUp">
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class="info">
-          <h5 class="text-primary mb-2">Turno #{{ turno.id }}</h5>
+          <h5 class="text-primary mb-2">TURNO #{{ turno.id }}</h5>
           <p class="mb-1"><strong>📅 Fecha:</strong> {{ turno.fecha | date:'shortDate' }}</p>
           <p class="mb-1"><strong>⏰ Hora:</strong> {{ turno.hora }}</p>
           <p class="mb-1">
