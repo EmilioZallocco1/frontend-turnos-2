@@ -3,7 +3,7 @@
 <!-- ====== SECCIÓN PACIENTE ====== -->
 <!-- ====== SECCIÓN PACIENTE ====== -->
 <section
-  *ngIf="authService.esPaciente()"
+  *ngIf="authService.esPaciente()" 
   class="home-section container py-5"
   data-cy="home-paciente-section"
 >
@@ -194,7 +194,7 @@
 
 
   <!-- ====== PANEL ADMINISTRADOR ====== -->
-<section *ngIf="authService.esAdmin()" class="home-section bg-light border-top">
+<section *ngIf="authService.esAdmin()" class="home-section">
     <div class="container py-5">
       <div class="card border-0 shadow-sm admin-card">
         <div class="card-body">

@@ -1,18 +1,27 @@
 
 :host {
-  
+    /* Propiedades necesarias para que el componente se estire */
     min-height: 100vh;
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    /* 🛑 FONDO DIVIDIDO: Blanco (Arriba) y Degradado (Abajo) */
+    background: linear-gradient(
+        to bottom, 
+        white 0%,       /* Blanco desde el inicio */
+        white 50%,      /* Blanco termina exactamente al 50% */
+        #a9bec4 50%,    /* Degradado empieza inmediatamente al 50% */
+        #8cd1f1 100%    /* Degradado termina al 100% */
+    ) !important;
 }
 
+/* 2. ENVOLTORIO INTERNO (Debe ser transparente) */
 .home-wrapper {
-    
-    background: linear-gradient(135deg, #a9bec4 10%, #8cd1f1 100%) !important; 
+    /* Hacemos el wrapper transparente para que se vea el fondo dividido */
+    background: transparent !important; 
     min-height: 100vh;
-    width: 100%;
-}
+    width: 100%; }
 
 
 .admin-card {
