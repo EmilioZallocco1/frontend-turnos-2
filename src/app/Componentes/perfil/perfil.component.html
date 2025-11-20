@@ -1,80 +1,72 @@
-<div *ngIf="paciente && paciente.nombre" class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
+<div class="perfil-card"> 
 
-      <!-- Encabezado -->
-      <div class="card mb-4">
-        <div class="card-header text-center">
-          <h2>Perfil del Paciente</h2>
-        </div>
-        <div class="card-body">
-          <!-- Información del paciente -->
-          <div class="row">
-            <div class="col-12 mb-3">
-              <h4>Información Personal</h4>
-              <ul class="list-unstyled">
-                <li><strong>Nombre:</strong> {{ paciente.nombre }}</li>
-                <li><strong>Apellido:</strong> {{ paciente.apellido }}</li>
-                <li><strong>Email:</strong> {{ paciente.email }}</li>
-                <li><strong>Teléfono:</strong> {{ paciente.telefono || 'No informado' }}</li>
-                <li><strong>Obra Social:</strong> {{ paciente.obraSocial?.nombre }}</li>
-              </ul>
-            </div>
-            <div class="col-12">
-              <h4>Acciones</h4>
-              <button class="btn btn-warning me-2" (click)="actualizarPerfil()">Actualizar Perfil</button>
-              <button class="btn btn-danger" (click)="eliminarCuenta()">Eliminar Cuenta</button>
-            </div>
+  <div *ngIf="paciente && paciente.nombre">
+    <div class="card mb-4">
+      <div class="card-header text-center">
+        <h2>PERFIL DEL PACIENTE</h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <h4>INFORMACIÓN PERSONAL</h4>
+            <ul class="list-unstyled">
+              <li><strong>Nombre:</strong> {{ paciente.nombre }}</li>
+              <li><strong>Apellido:</strong> {{ paciente.apellido }}</li>
+              <li><strong>Email:</strong> {{ paciente.email }}</li>
+              <li><strong>Teléfono:</strong> {{ paciente.telefono || 'No informado' }}</li>
+              <li><strong>Obra Social:</strong> {{ paciente.obraSocial?.nombre }}</li>
+            </ul>
+          </div>
+          <div class="col-12">
+            <h4>ACCIONES</h4>
+            <button class="btn btn-warning me-2" (click)="actualizarPerfil()">Actualizar Perfil</button>
+            <button class="btn btn-danger" (click)="eliminarCuenta()">Eliminar Cuenta</button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Formulario de edición -->
-      <div *ngIf="editandoPerfil" class="card p-3 mt-4 border border-info">
-        <h4>Editar Perfil</h4>
-        <form (ngSubmit)="guardarPerfilActualizado()">
-          <div class="mb-2">
-            <label>Nombre:</label>
-            <input type="text" class="form-control" [(ngModel)]="pacienteEditando.nombre" name="nombre" required>
-          </div>
-          <div class="mb-2">
-            <label>Apellido:</label>
-            <input type="text" class="form-control" [(ngModel)]="pacienteEditando.apellido" name="apellido" required>
-          </div>
-          <div class="mb-2">
-            <label>Email:</label>
-            <input type="email" class="form-control" [(ngModel)]="pacienteEditando.email" name="email" required>
-          </div>
-          <div class="mb-2">
-            <label>Teléfono:</label>
-            <input type="text" class="form-control" [(ngModel)]="pacienteEditando.telefono" name="telefono">
-          </div>
-          <div class="d-flex justify-content-end gap-2 mt-3">
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-          </div>
-        </form>
-      </div>
+    <div *ngIf="editandoPerfil" class="card p-3 mt-4 border border-info">
+      <h4>Editar Perfil</h4>
+      <form (ngSubmit)="guardarPerfilActualizado()">
+        <div class="mb-2">
+          <label>Nombre:</label>
+          <input type="text" class="form-control" [(ngModel)]="pacienteEditando.nombre" name="nombre" required>
+        </div>
+        <div class="mb-2">
+          <label>Apellido:</label>
+          <input type="text" class="form-control" [(ngModel)]="pacienteEditando.apellido" name="apellido" required>
+        </div>
+        <div class="mb-2">
+          <label>Email:</label>
+          <input type="email" class="form-control" [(ngModel)]="pacienteEditando.email" name="email" required>
+        </div>
+        <div class="mb-2">
+          <label>Teléfono:</label>
+          <input type="text" class="form-control" [(ngModel)]="pacienteEditando.telefono" name="telefono">
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+        </div>
+      </form>
+    </div>
 
-      <!-- Mensajes de éxito -->
-      <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-        {{ successMessage }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 
-      <!-- Mensajes de error -->
-      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-        {{ error }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+      {{ error }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   </div>
-</div>
 
-<!-- En caso de que no se haya cargado el paciente -->
-<ng-template #cargando>
-  <div class="text-center mt-5">
-    <p>Cargando perfil...</p>
-  </div>
-</ng-template>
+  <ng-template #cargando>
+    <div class="text-center mt-5">
+      <p>Cargando perfil...</p>
+    </div>
+  </ng-template>
+
+</div>
