@@ -1,6 +1,27 @@
+:host {
+   
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+
+    
+    background: linear-gradient(
+        to bottom, 
+        white 0%,
+        white 50%,
+        #a9bec4 50%, 
+        #8cd1f1 100% 
+    ) !important;
+}
 .container {
-  background: linear-gradient(135deg, #f0f8ff, #e6f2ff);
-  min-height: 100vh;
+    max-width: 550px !important; 
+    width: 90% !important;    
+    
+    background: transparent !important; 
+    
+    padding: 0 15px; 
 }
 
 .card {
@@ -35,4 +56,8 @@ button {
 .alert {
   border-radius: 10px;
   font-size: 0.95rem;
+}
+.text-primary {
+    /* 🟢 Ejemplo: Color verde vibrante */
+    color: #190faa !important;
 }
