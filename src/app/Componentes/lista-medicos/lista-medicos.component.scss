@@ -1,31 +1,101 @@
-body.modo-oscuro {
-  background-color: #121212 !important;
-  color: #ffffff;
+:host {
+    
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+
+    background: linear-gradient(
+        to bottom, 
+        white 0%,
+        white 50%,
+        #a9bec4 50%, 
+        #8cd1f1 100% 
+    ) !important;
 }
 
-body.modo-oscuro .card {
-  background-color: #1e1e1e;
-  color: #fff;
+.page-wrap {
+    background: transparent !important; 
+    width: 80%;
+    padding-bottom: 50px; 
+}
+h2.text-primary {
+    color: #0d15a8 !important; 
+    font-size: 2rem !important;
+    font-weight: 700 !important;
 }
 
-body.modo-oscuro .form-control,
-body.modo-oscuro .form-select {
-  background-color: #2a2a2a;
-  color: #fff;
-  border: 1px solid #444;
+
+.form-control {
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 1.1rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    &:focus {
+        border-color: #515AFE;
+        box-shadow: 0 0 0 0.2rem rgba(81, 90, 254, 0.25);
+    }
 }
 
-body.modo-oscuro .btn-outline-warning {
-  color: #ffc107;
-  border-color: #ffc107;
+
+.card {
+    border-radius: 16px !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1) !important;
+    background-color: rgb(253, 255, 255) !important; 
+    transition: transform 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-3px); 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+    }
 }
 
-body.modo-oscuro .btn-outline-danger {
-  color: #dc3545;
-  border-color: #dc3545;
+
+.card-title.text-primary {
+    color: #2E6B83 !important; 
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
 }
 
-body.modo-oscuro .btn-dark {
-  background-color: #f8f9fa;
-  color: #000;
+
+.card-body p.card-text {
+    line-height: 1.8;
+    i {
+        color: #55AFA8; 
+        margin-right: 5px;
+    }
+}
+
+
+.card-body .mt-3 button {
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.btn-outline-warning {
+    background-color: #fda102 !important; /* Naranja Sólido */
+    color: white !important;
+    border: none !important;
+
+    &:hover {
+        background-color: #e69500 !important;
+    }
+}
+
+/* 2. Botón Eliminar (Original: btn-outline-danger) -> ROJO SÓLIDO */
+.btn-outline-danger {
+    background-color: #dc3545 !important; 
+    color: white !important;
+    border: none !important;
+    
+    &:hover {
+        background-color: #bb2d3b !important;
+    }
 }
