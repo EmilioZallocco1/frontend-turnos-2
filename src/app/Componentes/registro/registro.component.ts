@@ -8,7 +8,7 @@ import { ObraSocialResponse } from '../../models/obra-social.interface'; // Impo
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
-  styleUrls: ['./registro.component.scss']
+  styleUrls: ['./registro.component.scss'],
 })
 export class RegistroComponent implements OnInit {
   registroForm: FormGroup;
@@ -27,7 +27,7 @@ export class RegistroComponent implements OnInit {
       apellido: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      obraSocialId: ['', [Validators.required]]
+      obraSocialId: ['', [Validators.required]],
     });
   }
 
@@ -39,7 +39,7 @@ export class RegistroComponent implements OnInit {
     this.obraSocialService.getObrasSociales().subscribe(
       (response: ObraSocialResponse) => {
         if (response.data && Array.isArray(response.data)) {
-          this.obrasSociales = response.data; 
+          this.obrasSociales = response.data;
           console.log('Obras sociales:', this.obrasSociales); // Verifica que esto sea un arrayyy
         } else {
           this.errorMessage = 'No se encontraron obras sociales.';
@@ -54,20 +54,25 @@ export class RegistroComponent implements OnInit {
 
   onSubmit() {
     if (this.registroForm.valid) {
-      const { nombre, apellido, email, password, obraSocialId } = this.registroForm.value;
+      const { nombre, apellido, email, password, obraSocialId } =
+        this.registroForm.value;
 
-      this.authService.register(nombre, apellido, email, password, obraSocialId).subscribe(
-        response => {
-          console.log('Registro exitoso:', response);
-          this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
-          this.registroForm.reset();
-          this.router.navigate(['/login']);
-        },
-        error => {
-          console.error('Error en el registro:', error);
-          this.errorMessage = error;
-        }
-      );
+      this.authService
+        .register(nombre, apellido, email, password, obraSocialId)
+        .subscribe(
+          (response) => {
+            console.log('Registro exitoso:', response);
+            this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
+            this.registroForm.reset();
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 2000);
+          },
+          (error) => {
+            console.error('Error en el registro:', error);
+            this.errorMessage = error;
+          }
+        );
     } else {
       console.log('Formulario inválido');
       this.errorMessage = 'Por favor, complete todos los campos requeridos.';

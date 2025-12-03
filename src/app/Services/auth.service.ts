@@ -31,7 +31,7 @@ export class AuthService {
 
   // Registrar nuevo paciente
   register(nombre: string, apellido: string, email: string, password: string, obraSocialId: number): Observable<any> {
-    const body = { nombre, apellido, email, password, obraSocialId };
+    const body = { nombre, apellido, email, password, obraSocialId: Number(obraSocialId) };
     return this.http.post<any>(`${this.apiUrl}/pacientes/register`, body).pipe(
       tap(user => this.setCurrentUser(user)),
       catchError(err => {
