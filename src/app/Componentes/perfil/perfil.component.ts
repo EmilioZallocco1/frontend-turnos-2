@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PacienteService } from 'src/app/Services/paciente.service';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';  
 
 @Component({
   selector: 'app-perfil',
@@ -18,7 +19,8 @@ export class PerfilComponent implements OnInit {
   constructor(
     private pacienteService: PacienteService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location 
   ) {}
 
   ngOnInit() {
@@ -89,5 +91,10 @@ export class PerfilComponent implements OnInit {
     } else {
       this.error = 'ID de paciente no disponible';
     }
+  }
+
+  
+  goBack() {
+    this.location.back();  
   }
 }
