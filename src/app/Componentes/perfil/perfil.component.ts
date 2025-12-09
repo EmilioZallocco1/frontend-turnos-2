@@ -76,22 +76,32 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  eliminarCuenta() {
-    const pacienteId = this.authService.getPacienteId();
-    if (pacienteId !== null) {
-      this.pacienteService.eliminarPaciente(pacienteId).subscribe(
-        () => {
-          this.router.navigate(['/']);
-        },
-        (error) => {
-          this.error = 'Error al eliminar la cuenta';
-          console.error('Error:', error);
-        }
-      );
-    } else {
-      this.error = 'ID de paciente no disponible';
-    }
+eliminarCuenta() {
+  const confirmado = confirm(
+    '¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.'
+  );
+
+  if (!confirmado) {
+    return; // El usuario canceló
   }
+
+  const pacienteId = this.authService.getPacienteId();
+
+  if (pacienteId !== null) {
+    this.pacienteService.eliminarPaciente(pacienteId).subscribe(
+      () => {
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        this.error = 'Error al eliminar la cuenta';
+        console.error('Error:', error);
+      }
+    );
+  } else {
+    this.error = 'ID de paciente no disponible';
+  }
+}
+
 
   
   goBack() {
