@@ -4,12 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurnoService {
-  private apiUrl = 'http://localhost:3000/api/turnos'; // Cambia esta URL si es necesario
+  private apiUrl = `${environment.apiBaseUrl}/api/turnos`; 
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

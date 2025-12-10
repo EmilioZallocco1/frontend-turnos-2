@@ -2,12 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedicoService {
-  private apiUrl = 'http://localhost:3000/api/medicos'; // Ajusta si cambia tu endpoint
+  private apiUrl = `${environment.apiBaseUrl}/api/medicos`;
 
   constructor(private http: HttpClient) {}
 

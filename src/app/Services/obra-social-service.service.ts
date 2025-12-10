@@ -5,12 +5,14 @@ import { Observable } from 'rxjs';
 import { ObraSocialResponse } from 'src/app/models/obra-social.interface';
 import { ObraSocial } from 'src/app/models/obra-social.interface';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ObraSocialService {
-  private apiUrl = 'http://localhost:3000/api/obras-sociales'; // URL base de tu API
+  private apiUrl = `${environment.apiBaseUrl}/api/obras-sociales`;
+; // URL base de tu API
 
   constructor(private http: HttpClient) {}
 
