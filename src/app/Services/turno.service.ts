@@ -38,7 +38,7 @@ export class TurnoService {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http
-      .get<any>(`http://localhost:3000/api/pacientes/${pacienteId}/turnos`, {
+      .get<any>(`${environment.apiBaseUrl}/api/pacientes/${pacienteId}/turnos`, {
         headers,
       })
       .pipe(
@@ -112,7 +112,7 @@ export class TurnoService {
 
 
   getHorariosDisponibles(medicoId: number, fechaISO: string): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/turnos/disponibles', {
+    return this.http.get<any>(`${environment.apiBaseUrl}/api/turnos/disponibles`, {
       params: { medicoId, fecha: fechaISO },
     });
   }

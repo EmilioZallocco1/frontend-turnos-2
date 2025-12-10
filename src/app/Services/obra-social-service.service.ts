@@ -23,7 +23,7 @@ export class ObraSocialService {
 
   // Método para obtener los médicos
   getMedicos(): Observable<any> {
-    return this.http.get<any>('http://localhost:3000/api/medicos');
+    return this.http.get<any>(`${environment.apiBaseUrl}/api/medicos`);
   }
 
 
