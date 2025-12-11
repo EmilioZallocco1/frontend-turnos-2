@@ -99,3 +99,28 @@ h2.text-primary {
         background-color: #bb2d3b !important;
     }
 }
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-go-back {
+    background-color: transparent !important;
+    color: #6c757d !important;
+    border: 1px solid #6c757d !important;
+    box-shadow: none !important;
+    position: absolute;
+    top: 15px;
+    left: 5px;
+    z-index: 100;
+    
+    &:hover {
+        background-color: #6c757d !important;
+        color: white !important;
+        border-color: #6c757d !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
+}
