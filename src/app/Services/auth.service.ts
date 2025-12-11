@@ -52,9 +52,14 @@ export class AuthService {
     this.currentUser = user;
     localStorage.setItem('currentUser', JSON.stringify(user));
     //   (esto permite sacar localStorage del componente de login)
-    if (user?.token) {
-      localStorage.setItem('token', user.token);
-    }
+    const token = user?.data?.token;
+
+  if (token) {
+    localStorage.setItem('token', token);
+    console.log("TOKEN guardado:", token);
+  } else {
+    console.error("❌ No se encontró token en la respuesta:", user);
+  }
   }
 
     // si hay token en localStorage, recreamos el user en memoria
