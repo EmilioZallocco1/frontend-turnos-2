@@ -1,15 +1,13 @@
-
 .page-wrap {
-
-    background: linear-gradient(
-        to bottom, 
-        white 0%,        
-        white 50%,     
-        #a9bec4 50%,    
-        #8cd1f1 100%    
-    ) !important;
-    min-height: 100vh; 
-    width: 100%;
+  background: linear-gradient(
+      to bottom, 
+      white 0%,        
+      white 50%,     
+      #a9bec4 50%,    
+      #8cd1f1 100%    
+  ) !important;
+  min-height: 100vh; 
+  width: 100%;
 }
 
 .medico-card {
@@ -24,7 +22,7 @@
     font-weight: 700;
     font-size: 1.5rem;
     border-radius: 12px 12px 0 0; 
-}
+  }
 
   .input-group-text {
     background-color: #f7f9fc;
@@ -52,26 +50,32 @@
     font-size: .9rem;
   }
 }
+
 .text-primary {
     color: #eaeff0 !important;
 }
 
-.btn-volver {
-  position: absolute;
-  top: 30px;        /* distancia desde arriba */
-  left: 30px;       /* mover a la izquierda */
-  z-index: 2000;
-  border-radius: 12px;
-  padding: 0.6rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #3b82f6; /* celeste */
-  color: white;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.btn {
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-.btn-volver:hover {
-  background-color: #2563eb;
+.btn-go-back {
+    background-color: transparent !important;
+    color: #6c757d !important;
+    border: 1px solid #6c757d !important;
+    box-shadow: none !important;
+    position: absolute;
+    top: 15px;
+    left: 5px;
+    z-index: 100;
+    
+    &:hover {
+        background-color: #6c757d !important;
+        color: white !important;
+        border-color: #6c757d !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    }
 }
