@@ -46,6 +46,23 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  //LISTA DE MEDICOS ORDENADOS POR ESPECIALIDAD PARA MOSTRAR AL PACIENTE
+  get medicosOrdenadosPorEspecialidad() {
+    return [...this.medicos].sort((a, b) => {
+      const espA = (a.especialidad?.name || a.especialidad || '').toLowerCase();
+      const espB = (b.especialidad?.name || b.especialidad || '').toLowerCase();
+
+      if (espA < espB) return -1;
+      if (espA > espB) return 1;
+
+      const nomA = (a.nombre || '').toLowerCase();
+      const nomB = (b.nombre || '').toLowerCase();
+
+      return nomA.localeCompare(nomB);
+    });
+  }
+
+  //CARGA DE PROXIMOS TURNOS
   private cargarProximosTurnos(): void {
     const pacienteId = this.authService.getPacienteId();
 
