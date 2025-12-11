@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
 
     if (this.authService.esPaciente()) {
       this.cargarProximosTurnos();
+      this.cargarMedicos();
     }
 
     if (this.authService.esAdmin()) {

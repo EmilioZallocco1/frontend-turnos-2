@@ -11,10 +11,11 @@ import { environment } from '../../environments/environment';
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/api`;
   private currentUser: any;
+   private tokenKey = 'token';
 
   constructor(private http: HttpClient) {
      // al crear el servicio, intentamos reconstruir el usuario 
-    this.restoreUserFromJwt();
+   // this.restoreUserFromJwt();
   }
 
   // Login para pacientes o admin
@@ -25,9 +26,16 @@ export class AuthService {
 
    return this.http.post<any>(url, body, { headers }).pipe(
       // lógica de guardar usuario en el servicio
-      tap(user => {
-        this.setCurrentUser(user);
-        console.log('Usuario almacenado en localStorage:', user);
+      tap(res => {
+        //this.setCurrentUser(user);
+        //console.log('Usuario almacenado en localStorage:', user);
+        const token = res?.token ?? res?.data?.token;
+        if (!token) {
+          console.error('❌ No se recibió token en la respuesta:', res);
+          throw new Error('No se recibió token de autenticación');
+        }
+        localStorage.setItem(this.tokenKey, token);
+        console.log('✅ TOKEN guardado:', token);
       }),
       //  uso moderno de throwError con función
       catchError(err => {
@@ -40,27 +48,21 @@ export class AuthService {
   register(nombre: string, apellido: string, email: string, password: string, obraSocialId: number): Observable<any> {
     const body = { nombre, apellido, email, password, obraSocialId: Number(obraSocialId) };
     return this.http.post<any>(`${this.apiUrl}/pacientes/register`, body).pipe(
-      tap(user => this.setCurrentUser(user)),
-      catchError(err => {
-        return throwError(() => err?.error?.message || 'Error en el servidor');
-      })
+      tap((res: any) => {
+        // si tu API de register devuelve token, lo guardás igual que en login
+        const token = res?.token ?? res?.data?.token;
+        if (token) {
+          localStorage.setItem(this.tokenKey, token);
+          console.log('TOKEN guardado (register):', token);
+        }
+      }),
+      catchError(err =>
+        throwError(() => err?.error?.message || 'Error en el servidor')
+      )
     );
   }
 
-  // Guardar usuario actual
-  private setCurrentUser(user: any) {
-    this.currentUser = user;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    //   (esto permite sacar localStorage del componente de login)
-    const token = user?.data?.token;
-
-  if (token) {
-    localStorage.setItem('token', token);
-    console.log("TOKEN guardado:", token);
-  } else {
-    console.error("❌ No se encontró token en la respuesta:", user);
-  }
-  }
+  
 
     // si hay token en localStorage, recreamos el user en memoria
   private restoreUserFromJwt() {
@@ -146,7 +148,7 @@ export class AuthService {
         this.logout();
         return false;
       }
-    }
+    } 
 
     return true;
   }

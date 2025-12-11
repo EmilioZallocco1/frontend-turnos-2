@@ -1,353 +1,398 @@
 <div class="home-wrapper">
+  <!-- ====== SECCIÓN PACIENTE ====== -->
+  <!-- ====== SECCIÓN PACIENTE ====== -->
+  <section
+    *ngIf="authService.esPaciente()"
+    class="home-section container py-5"
+    data-cy="home-paciente-section"
+  >
+    <!-- Encabezado + volver -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="display-6 fw-bold mb-1 text-primary" data-cy="home-titulo">
+          SISTEMA DE TURNOS MÉDICOS
+        </h1>
+        <p class="text-muted mb-0">
+          Administrá tus turnos médicos de forma rápida y sencilla.
+        </p>
+      </div>
 
-<!-- ====== SECCIÓN PACIENTE ====== -->
-<!-- ====== SECCIÓN PACIENTE ====== -->
-<section
-  *ngIf="authService.esPaciente()" 
-  class="home-section container py-5"
-  data-cy="home-paciente-section"
->
-
-  <!-- Encabezado + volver -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1
-        class="display-6 fw-bold mb-1 text-primary"
-        data-cy="home-titulo"
-      >
-        SISTEMA DE TURNOS MÉDICOS
-      </h1>
-      <p class="text-muted mb-0">
-        Administrá tus turnos médicos de forma rápida y sencilla.
-      </p>
-    </div>
-
-    <button
-      class="btn btn-outline-secondary d-flex align-items-center"
-      (click)="goBack()"
-      aria-label="Volver a la página anterior"
-      data-cy="btn-volver"
-    >
-      <i class="bi bi-arrow-left-circle me-2 fs-5"></i>
-      Volver
-    </button>
-  </div>
-
-  <!-- Acciones principales -->
-  <div class="row g-3 mb-4 quick-actions">
-    <div class="col-md-4">
       <button
-        class="btn btn-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
-        (click)="solicitarTurno()"
-        data-cy="btn-solicitar-turno"
+        class="btn btn-outline-secondary d-flex align-items-center"
+        (click)="goBack()"
+        aria-label="Volver a la página anterior"
+        data-cy="btn-volver"
       >
-        <i class="bi bi-calendar-plus fs-4"></i>
-        <span>Solicitar Turno</span>
+        <i class="bi bi-arrow-left-circle me-2 fs-5"></i>
+        Volver
       </button>
     </div>
 
-    <div class="col-md-4">
-      <button
-        class="btn btn-outline-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
-        (click)="verTurnos()"
-        data-cy="btn-ver-mis-turnos"
+    <!-- Acciones principales -->
+    <div class="row g-3 mb-4 quick-actions">
+      <!-- DROPDOWN DE MÉDICOS PARA PACIENTES -->
+      <div
+        class="dropdown mt-4"
+        *ngIf="authService.esPaciente() && medicos.length"
       >
-        <i class="bi bi-list-check fs-4"></i>
-        <span>Ver Mis Turnos</span>
-      </button>
-    </div>
-
-    <div class="col-md-4">
-      <button
-        class="btn btn-info btn-lg w-100 text-white shadow-sm d-flex align-items-center justify-content-center gap-2"
-        (click)="verPerfil()"
-        data-cy="btn-mi-perfil"
-      >
-        <i class="bi bi-person-circle fs-4"></i>
-        <span>Mi Perfil</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- Bloque inferior: Próximos turnos + Info rápida -->
-  <div class="row g-4 mt-1">
-    <!-- Próximos turnos -->
-    <div class="col-lg-7">
-      <div class="card border-0 shadow-sm h-100">
-        <div
-          class="card-header bg-white d-flex align-items-center justify-content-between"
-          data-cy="card-proximos-turnos"
+        <button
+          class="btn btn-secondary dropdown-toggle w-100 py-2"
+          type="button"
+          data-bs-toggle="dropdown"
         >
-          <div class="d-flex align-items-center gap-2">
-            <i class="bi bi-calendar-week text-danger fs-4"></i>
-            <div>
-              <h5 class="mb-0">Próximos turnos</h5>
-              <small class="text-muted">
-                Revisá tus citas agendadas.
-              </small>
+          🩺 Ver médicos y especialidades
+        </button>
+
+        <ul class="dropdown-menu w-100 p-2">
+          <li
+            *ngFor="let m of medicos"
+            class="dropdown-item d-flex flex-column py-2"
+          >
+            <strong>{{ m.nombre }}</strong>
+            <small class="text-muted">
+              {{
+                m.especialidad?.name || m.especialidad || "Sin especialidad"
+              }}
+            </small>
+          </li>
+        </ul> 
+      </div>
+
+      <div class="col-md-4">
+        <button
+          class="btn btn-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
+          (click)="solicitarTurno()"
+          data-cy="btn-solicitar-turno"
+        >
+          <i class="bi bi-calendar-plus fs-4"></i>
+          <span>Solicitar Turno</span>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button
+          class="btn btn-outline-primary btn-lg w-100 shadow-sm d-flex align-items-center justify-content-center gap-2"
+          (click)="verTurnos()"
+          data-cy="btn-ver-mis-turnos"
+        >
+          <i class="bi bi-list-check fs-4"></i>
+          <span>Ver Mis Turnos</span>
+        </button>
+      </div>
+
+      <div class="col-md-4">
+        <button
+          class="btn btn-info btn-lg w-100 text-white shadow-sm d-flex align-items-center justify-content-center gap-2"
+          (click)="verPerfil()"
+          data-cy="btn-mi-perfil"
+        >
+          <i class="bi bi-person-circle fs-4"></i>
+          <span>Mi Perfil</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bloque inferior: Próximos turnos + Info rápida -->
+    <div class="row g-4 mt-1">
+      <!-- Próximos turnos -->
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm h-100">
+          <div
+            class="card-header bg-white d-flex align-items-center justify-content-between"
+            data-cy="card-proximos-turnos"
+          >
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-calendar-week text-danger fs-4"></i>
+              <div>
+                <h5 class="mb-0">Próximos turnos</h5>
+                <small class="text-muted"> Revisá tus citas agendadas. </small>
+              </div>
             </div>
+
+            <span
+              class="badge rounded-pill bg-primary-subtle text-primary"
+              *ngIf="proximosTurnos.length"
+              data-cy="badge-cantidad-turnos"
+            >
+              {{ proximosTurnos.length }} turno(s)
+            </span>
           </div>
 
-          <span
-            class="badge rounded-pill bg-primary-subtle text-primary"
-            *ngIf="proximosTurnos.length"
-            data-cy="badge-cantidad-turnos"
-          >
-            {{ proximosTurnos.length }} turno(s)
-          </span>
-        </div>
+          <div class="card-body">
+            <!-- Si hay turnos -->
+            <div *ngIf="proximosTurnos.length; else sinTurnos">
+              <div
+                class="next-turn-card p-3 mb-3 rounded-3 border position-relative"
+                *ngFor="let t of proximosTurnos"
+                data-cy="card-turno"
+              >
+                <div
+                  class="d-flex justify-content-between align-items-start mb-2"
+                >
+                  <div>
+                    <h6 class="text-primary mb-1">{{ t.especialidad }}</h6>
+                    <p class="mb-0 small text-muted">
+                      <i class="bi bi-person-badge me-1"></i>
+                      Profesional: <strong>{{ t.medico }}</strong>
+                    </p>
+                  </div>
 
-        <div class="card-body">
-          <!-- Si hay turnos -->
-          <div *ngIf="proximosTurnos.length; else sinTurnos">
-            <div
-              class="next-turn-card p-3 mb-3 rounded-3 border position-relative"
-              *ngFor="let t of proximosTurnos"
-              data-cy="card-turno"
-            >
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <h6 class="text-primary mb-1">{{ t.especialidad }}</h6>
-                  <p class="mb-0 small text-muted">
-                    <i class="bi bi-person-badge me-1"></i>
-                    Profesional: <strong>{{ t.medico }}</strong>
-                  </p>
+                  <span class="fecha-pill">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    {{ t.fecha }}
+                  </span>
                 </div>
 
-                <span class="fecha-pill">
-                  <i class="bi bi-calendar-event me-1"></i>
-                  {{ t.fecha }}
-                </span>
+                <button
+                  class="btn btn-sm btn-outline-primary mt-1"
+                  (click)="verTurnos()"
+                  data-cy="btn-ver-detalle-turnos"
+                >
+                  Ver detalle
+                </button>
               </div>
-
-              <button
-                class="btn btn-sm btn-outline-primary mt-1"
-                (click)="verTurnos()"
-                data-cy="btn-ver-detalle-turnos"
-              >
-                Ver detalle
-              </button>
             </div>
-          </div>
 
-          <!-- Estado vacío -->
-          <ng-template #sinTurnos>
-            <div class="text-center py-4" data-cy="sin-turnos">
-              <i class="bi bi-emoji-smile fs-1 text-primary mb-2 d-block"></i>
-              <h6 class="mb-1">Todavía no tenés turnos agendados</h6>
-              <p class="text-muted mb-3 small">
-                Cuando solicites un turno, lo vas a ver listado acá.
-              </p>
-              <button
-                class="btn btn-primary btn-sm"
-                (click)="solicitarTurno()"
-                data-cy="btn-solicitar-primer-turno"
-              >
-                <i class="bi bi-calendar-plus me-1"></i>
-                Solicitar mi primer turno
-              </button>
-            </div>
-          </ng-template>
-        </div>
-      </div>
-    </div>
-
-    <!-- Info rápida / Tips -->
-    <div class="col-lg-5">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <h5 class="mb-3">
-            <i class="bi bi-info-circle me-2 text-primary"></i>
-            Consejos rápidos
-          </h5>
-
-          <ul class="list-unstyled small mb-3">
-            <li class="mb-2 d-flex">
-              <i class="bi bi-check-circle me-2 text-success mt-1"></i>
-              <span>Revisá tus turnos en la sección <strong>“Ver Mis Turnos”</strong> para ver el detalle de día y horario.</span>
-            </li>
-            <li class="mb-2 d-flex">
-              <i class="bi bi-bell me-2 text-warning mt-1"></i>
-              <span>Te recomendamos llegar <strong>10 minutos antes</strong> de cada consulta.</span>
-            </li>
-            <li class="mb-2 d-flex">
-              <i class="bi bi-shield-check me-2 text-primary mt-1"></i>
-              <span>Mantené tus datos actualizados desde <strong>“Mi Perfil”</strong> para evitar errores en tus turnos.</span>
-            </li>
-          </ul>
-
-          <div class="p-3 rounded-3 bg-light-subtle border small">
-            <p class="mb-1 fw-semibold">
-              ¿Necesitás cancelar un turno?
-            </p>
-            <p class="mb-0">
-              Podés hacerlo desde <strong>“Ver Mis Turnos”</strong> siempre que sea con suficiente anticipación.
-            </p>
+            <!-- Estado vacío -->
+            <ng-template #sinTurnos>
+              <div class="text-center py-4" data-cy="sin-turnos">
+                <i class="bi bi-emoji-smile fs-1 text-primary mb-2 d-block"></i>
+                <h6 class="mb-1">Todavía no tenés turnos agendados</h6>
+                <p class="text-muted mb-3 small">
+                  Cuando solicites un turno, lo vas a ver listado acá.
+                </p>
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="solicitarTurno()"
+                  data-cy="btn-solicitar-primer-turno"
+                >
+                  <i class="bi bi-calendar-plus me-1"></i>
+                  Solicitar mi primer turno
+                </button>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
-</section>
-
-
-
-<!-- ====== PANEL ADMINISTRADOR ====== -->
-<section
-  *ngIf="authService.esAdmin()"
-  class="home-section"
-  data-cy="home-admin-section"
->
-  <div class="container py-5">
-    <div class="card border-0 shadow-sm admin-card">
-      <div class="card-body">
-
-        <!-- Encabezado admin -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h4 class="card-title text-dark mb-1" data-cy="admin-titulo">
-              <i class="bi bi-shield-lock me-2 text-primary"></i>
-              Panel de administración
-            </h4>
-            <p class="text-muted mb-0">
-              Gestioná médicos, obras sociales y turnos desde un solo lugar.
-            </p>
-          </div>
-        </div>
-
-        <!-- Botones principales admin -->
-        <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <button
-              class="btn btn-outline-primary w-100 h-100 d-flex align-items-center justify-content-center gap-2"
-              (click)="irACargarMedico()"
-              data-cy="btn-cargar-medico"
-            >
-              <i class="bi bi-person-plus fs-5"></i>
-              <span>Cargar Médico</span>
-            </button>
-          </div>
-
-          <div class="col-md-4">
-            <button
-              class="btn btn-outline-success w-100 h-100 d-flex align-items-center justify-content-center gap-2"
-              (click)="irACargarObraSocial()"
-              data-cy="btn-cargar-obra-social"
-            >
-              <i class="bi bi-building fs-5"></i>
-              <span>Cargar Obra Social</span>
-            </button>
-          </div>
-
-          <div class="col-md-4">
-            <button
-              class="btn btn-outline-warning w-100 h-100 d-flex align-items-center justify-content-center gap-2"
-              (click)="verListaMedicos()"
-              data-cy="btn-ver-medicos"
-            >
-              <i class="bi bi-people fs-5"></i>
-              <span>Ver Todos los Médicos</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Filtro: turnos por médico -->
-        <div class="row g-3 align-items-end mb-4">
-          <div class="col-md-8">
-            <label for="medicoId" class="form-label fw-semibold">
-              Ver turnos por médico
-            </label>
-            <select
-              id="medicoId"
-              class="form-select"
-              [(ngModel)]="medicoId"
-              data-cy="select-medico"
-            >
-              <option [ngValue]="null">Seleccioná un médico</option>
-              <option *ngFor="let m of medicos" [ngValue]="m.id">
-                {{ m.nombre }} (ID: {{ m.id }})
-              </option>
-            </select>
-          </div>
-
-          <div class="col-md-4 d-grid">
-            <button
-              class="btn btn-outline-info d-flex align-items-center justify-content-center gap-2"
-              (click)="verTurnosMedico()"
-              data-cy="btn-ver-turnos-medico"
-            >
-              <i class="bi bi-search"></i>
-              <span>Ver Turnos</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Resultados -->
-        <div
-          *ngIf="resultadoAdmin !== undefined"
-          class="mt-4"
-          data-cy="admin-resultados"
-        >
-          <div *ngIf="resultadoAdmin.length > 0; else sinResultadosAdmin">
-            <h5 class="text-secondary mb-3">
-              Resultados ({{ resultadoAdmin.length }})
+      <!-- Info rápida / Tips -->
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="mb-3">
+              <i class="bi bi-info-circle me-2 text-primary"></i>
+              Consejos rápidos
             </h5>
 
-            <div class="row g-3">
-              <div
-                class="col-md-6 col-lg-4"
-                *ngFor="let item of resultadoAdmin"
-                data-cy="admin-turno-card"
+            <ul class="list-unstyled small mb-3">
+              <li class="mb-2 d-flex">
+                <i class="bi bi-check-circle me-2 text-success mt-1"></i>
+                <span
+                  >Revisá tus turnos en la sección
+                  <strong>“Ver Mis Turnos”</strong> para ver el detalle de día y
+                  horario.</span
+                >
+              </li>
+              <li class="mb-2 d-flex">
+                <i class="bi bi-bell me-2 text-warning mt-1"></i>
+                <span
+                  >Te recomendamos llegar <strong>10 minutos antes</strong> de
+                  cada consulta.</span
+                >
+              </li>
+              <li class="mb-2 d-flex">
+                <i class="bi bi-shield-check me-2 text-primary mt-1"></i>
+                <span
+                  >Mantené tus datos actualizados desde
+                  <strong>“Mi Perfil”</strong> para evitar errores en tus
+                  turnos.</span
+                >
+              </li>
+            </ul>
+
+            <div class="p-3 rounded-3 bg-light-subtle border small">
+              <p class="mb-1 fw-semibold">¿Necesitás cancelar un turno?</p>
+              <p class="mb-0">
+                Podés hacerlo desde <strong>“Ver Mis Turnos”</strong> siempre
+                que sea con suficiente anticipación.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PANEL ADMINISTRADOR ====== -->
+  <section
+    *ngIf="authService.esAdmin()"
+    class="home-section"
+    data-cy="home-admin-section"
+  >
+    <div class="container py-5">
+      <div class="card border-0 shadow-sm admin-card">
+        <div class="card-body">
+          <!-- Encabezado admin -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h4 class="card-title text-dark mb-1" data-cy="admin-titulo">
+                <i class="bi bi-shield-lock me-2 text-primary"></i>
+                Panel de administración
+              </h4>
+              <p class="text-muted mb-0">
+                Gestioná médicos, obras sociales y turnos desde un solo lugar.
+              </p>
+            </div>
+          </div>
+
+          <!-- Botones principales admin -->
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <button
+                class="btn btn-outline-primary w-100 h-100 d-flex align-items-center justify-content-center gap-2"
+                (click)="irACargarMedico()"
+                data-cy="btn-cargar-medico"
               >
-                <!-- ... resto igual ... -->
+                <i class="bi bi-person-plus fs-5"></i>
+                <span>Cargar Médico</span>
+              </button>
+            </div>
+
+            <div class="col-md-4">
+              <button
+                class="btn btn-outline-success w-100 h-100 d-flex align-items-center justify-content-center gap-2"
+                (click)="irACargarObraSocial()"
+                data-cy="btn-cargar-obra-social"
+              >
+                <i class="bi bi-building fs-5"></i>
+                <span>Cargar Obra Social</span>
+              </button>
+            </div>
+
+            <div class="col-md-4">
+              <button
+                class="btn btn-outline-warning w-100 h-100 d-flex align-items-center justify-content-center gap-2"
+                (click)="verListaMedicos()"
+                data-cy="btn-ver-medicos"
+              >
+                <i class="bi bi-people fs-5"></i>
+                <span>Ver Todos los Médicos</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filtro: turnos por médico -->
+          <div class="row g-3 align-items-end mb-4">
+            <div class="col-md-8">
+              <label for="medicoId" class="form-label fw-semibold">
+                Ver turnos por médico
+              </label>
+              <select
+                id="medicoId"
+                class="form-select"
+                [(ngModel)]="medicoId"
+                data-cy="select-medico"
+              >
+                <option [ngValue]="null">Seleccioná un médico</option>
+                <option *ngFor="let m of medicos" [ngValue]="m.id">
+                  {{ m.nombre }} (ID: {{ m.id }})
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-4 d-grid">
+              <button
+                class="btn btn-outline-info d-flex align-items-center justify-content-center gap-2"
+                (click)="verTurnosMedico()"
+                data-cy="btn-ver-turnos-medico"
+              >
+                <i class="bi bi-search"></i>
+                <span>Ver Turnos</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultados -->
+          <div
+            *ngIf="resultadoAdmin !== undefined"
+            class="mt-4"
+            data-cy="admin-resultados"
+          >
+            <div *ngIf="resultadoAdmin.length > 0; else sinResultadosAdmin">
+              <h5 class="text-secondary mb-3">
+                Resultados ({{ resultadoAdmin.length }})
+              </h5>
+
+              <div class="row g-3">
+                <div
+                  class="col-md-6 col-lg-4"
+                  *ngFor="let item of resultadoAdmin"
+                  data-cy="admin-turno-card"
+                >
+                  <!-- ... resto igual ... -->
 
                   <div class="card turno-admin-card shadow-sm h-100">
                     <div class="card-body d-flex flex-column">
-
                       <!-- Header -->
-                      <div class="d-flex justify-content-between align-items-start mb-2">
+                      <div
+                        class="d-flex justify-content-between align-items-start mb-2"
+                      >
                         <div>
                           <h6 class="text-uppercase text-muted small mb-1">
                             {{ item.especialidad || "Turno" }}
                           </h6>
                           <h5 class="card-title mb-0">
-                            {{ item.paciente?.nombre || item.paciente || "Paciente sin nombre" }}
+                            {{
+                              item.paciente?.nombre ||
+                                item.paciente ||
+                                "Paciente sin nombre"
+                            }}
                           </h5>
                         </div>
 
                         <span
                           class="badge estado-badge"
                           [ngClass]="{
-                            'bg-pendiente': (item.estado || 'pendiente') === 'pendiente',
+                            'bg-pendiente':
+                              (item.estado || 'pendiente') === 'pendiente',
                             'bg-realizado': item.estado === 'realizado',
                             'bg-cancelado': item.estado === 'cancelado'
                           }"
                         >
-                          {{ item.estado || 'pendiente' | titlecase }}
+                          {{ item.estado || "pendiente" | titlecase }}
                         </span>
                       </div>
 
                       <!-- Fecha y hora -->
-                      <div class="d-flex align-items-center mb-2 small text-muted">
+                      <div
+                        class="d-flex align-items-center mb-2 small text-muted"
+                      >
                         <i class="bi bi-calendar-event me-2"></i>
-                        <span>{{ item.fecha || 'Sin fecha' }}</span>
+                        <span>{{ item.fecha || "Sin fecha" }}</span>
                       </div>
-                      <div class="d-flex align-items-center mb-3 small text-muted">
+                      <div
+                        class="d-flex align-items-center mb-3 small text-muted"
+                      >
                         <i class="bi bi-clock me-2"></i>
-                        <span>{{ item.hora || 'Sin hora' }}</span>
+                        <span>{{ item.hora || "Sin hora" }}</span>
                       </div>
 
                       <!-- Médico -->
                       <p class="card-text mb-3 small">
                         <i class="bi bi-person-badge me-1"></i>
                         <strong>Médico:</strong>
-                        {{ item.medico?.nombre || item.medico || 'No disponible' }}
+                        {{
+                          item.medico?.nombre || item.medico || "No disponible"
+                        }}
                       </p>
 
                       <!-- Estado editable -->
-                      <div class="mt-auto pt-2 d-flex align-items-center justify-content-between">
-                        <span class="small text-muted me-2">Cambiar estado:</span>
+                      <div
+                        class="mt-auto pt-2 d-flex align-items-center justify-content-between"
+                      >
+                        <span class="small text-muted me-2"
+                          >Cambiar estado:</span
+                        >
                         <select
                           class="form-select form-select-sm w-auto"
                           [ngModel]="item.estado || 'pendiente'"
@@ -358,7 +403,6 @@
                           <option value="cancelado">Cancelado</option>
                         </select>
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -380,4 +424,4 @@
   <footer class="home-footer text-center text-muted py-3 mt-4">
     &copy; 2025 Sistema de Turnos Médicos
   </footer>
-</div>  
+</div>
