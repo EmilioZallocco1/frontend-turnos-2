@@ -10,12 +10,12 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/api`;
-  private currentUser: any;
+  private currentUser: any | null = null;
    private tokenKey = 'token';
 
   constructor(private http: HttpClient) {
-     // al crear el servicio, intentamos reconstruir el usuario 
-   // this.restoreUserFromJwt();
+    // al crear el servicio, intentamos reconstruir el usuario 
+    this.restoreUserFromJwt();
   }
 
   // Login para pacientes o admin
@@ -35,6 +35,7 @@ export class AuthService {
           throw new Error('No se recibió token de autenticación');
         }
         localStorage.setItem(this.tokenKey, token);
+        this.restoreUserFromJwt();
         console.log('✅ TOKEN guardado:', token);
       }),
       //  uso moderno de throwError con función
@@ -53,6 +54,7 @@ export class AuthService {
         const token = res?.token ?? res?.data?.token;
         if (token) {
           localStorage.setItem(this.tokenKey, token);
+          this.restoreUserFromJwt();
           console.log('TOKEN guardado (register):', token);
         }
       }),
@@ -66,30 +68,30 @@ export class AuthService {
 
     // si hay token en localStorage, recreamos el user en memoria
   private restoreUserFromJwt() {
-    const storedUser = localStorage.getItem('currentUser');
+    //const storedUser = localStorage.getItem('currentUser');
     const token = localStorage.getItem('token');
 
-    if (storedUser) {
-      // ya tengo la info completa, solo la levanto
-      this.currentUser = JSON.parse(storedUser);
-      return;
-    }
+     if (!token) {
+    this.currentUser = null;
+    // limpiar restos viejos de versiones anteriores
+    localStorage.removeItem('currentUser');
+    return;
+  }
 
-    if (token) {
-      const decoded = this.getDecodedToken();
-      if (decoded) {
-        // armamos un "mini user" consistente con lo que usa el front
-        this.currentUser = {
-          message: 'Restaurado desde JWT',
-          data: {
-            id: decoded.id,
-            role: decoded.role
-          },
-          token
-        };
-        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-      }
-    }
+     const decoded = this.getDecodedToken();
+  if (!decoded) {
+    this.currentUser = null;
+    return;
+  }
+  // recreamos el usuario SOLO en memoria
+  this.currentUser = {
+    id: decoded.id,
+    role: decoded.role,
+    email: decoded.email,
+    nombre: decoded.nombre,
+    apellido: decoded.apellido
+  };
+   
   }
 
 
