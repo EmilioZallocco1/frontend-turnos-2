@@ -56,6 +56,28 @@ export class ListaTurnosComponent implements OnInit {
     });
   }
 
+puedeModificar(turno: any): boolean {
+  if (!turno.fecha || !turno.hora) return false;
+
+  // turno.fecha puede venir como "2025-12-13T00:00:00.000Z"
+  const soloFecha = String(turno.fecha).split('T')[0]; // "2025-12-13"
+
+  const [year, month, day] = soloFecha.split('-').map(Number);
+  const [hour, minute] = String(turno.hora).split(':').map(Number);
+
+  // Fecha y hora del turno (en horario local)
+  const fechaHoraTurno = new Date(year, month - 1, day, hour, minute, 0, 0);
+
+  const ahora = new Date();
+  const diffMs = fechaHoraTurno.getTime() - ahora.getTime();
+  const diffHoras = diffMs / (1000 * 60 * 60);
+
+  // Solo se puede modificar/eliminar si faltan 24 hs o más
+  return diffHoras >= 24;
+}
+
+
+
   // 🆕 Inicia la edición de un turno
   editarTurno(id: number) {
   this.router.navigate(['/turno-form', id]);

@@ -9,66 +9,118 @@
   <h2 class="text-primary fw-bold mb-4 text-center">📋 MIS TURNOS</h2>
 
   <!-- Mensajes -->
-  <div *ngIf="successMessage" class="alert alert-success text-center animate__animated animate__fadeIn">
+  <div
+    *ngIf="successMessage"
+    class="alert alert-success text-center animate__animated animate__fadeIn"
+  >
     {{ successMessage }}
   </div>
-  <div *ngIf="error" class="alert alert-danger text-center animate__animated animate__shakeX">
+  <div
+    *ngIf="error"
+    class="alert alert-danger text-center animate__animated animate__shakeX"
+  >
     {{ error }}
   </div>
 
   <!-- Lista de turnos -->
   <div *ngIf="turnos && turnos.length > 0; else noTurnos" class="turnos-list">
-    <div *ngFor="let turno of turnos" class="card-turno shadow-sm p-3 mb-4 animate__animated animate__fadeInUp">
+    <div
+      *ngFor="let turno of turnos"
+      class="card-turno shadow-sm p-3 mb-4 animate__animated animate__fadeInUp"
+    >
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class="info">
           <h5 class="text-primary mb-2">TURNO #{{ turno.id }}</h5>
-          <p class="mb-1"><strong>📅 Fecha:</strong> {{ turno.fecha | date:'shortDate' }}</p>
+          <p class="mb-1">
+            <strong>📅 Fecha:</strong>
+            {{ turno.fecha | date : "dd/MM/yy" : "UTC" }}
+          </p>
           <p class="mb-1"><strong>⏰ Hora:</strong> {{ turno.hora }}</p>
           <p class="mb-1">
             <strong>⚙️ Estado:</strong>
             <span
               class="badge"
               [ngClass]="{
-                'bg-warning text-dark': turno.estado === 'Pendiente' || turno.estado === 'pendiente',
-                'bg-success': turno.estado === 'Confirmado' || turno.estado === 'confirmado',
-                'bg-danger': turno.estado === 'Cancelado' || turno.estado === 'cancelado'
+                'bg-warning text-dark':
+                  turno.estado === 'Pendiente' || turno.estado === 'pendiente',
+                'bg-success':
+                  turno.estado === 'Confirmado' ||
+                  turno.estado === 'confirmado',
+                'bg-danger':
+                  turno.estado === 'Cancelado' || turno.estado === 'cancelado'
               }"
             >
               {{ turno.estado | titlecase }}
             </span>
           </p>
-          <p class="mb-1"><strong>🩺 Médico:</strong> {{ turno.medico?.nombre }}</p>
-          <p class="mb-1"><strong>👤 Paciente:</strong> {{ turno.paciente?.nombre }}</p>
-          <p class="mb-0"><strong>📝 Descripción:</strong> {{ turno.descripcion }}</p>
+          <p class="mb-1">
+            <strong>🩺 Médico:</strong> {{ turno.medico?.nombre }}
+          </p>
+          <p class="mb-1">
+            <strong>👤 Paciente:</strong> {{ turno.paciente?.nombre }}
+          </p>
+          <p class="mb-0">
+            <strong>📝 Descripción:</strong> {{ turno.descripcion }}
+          </p>
         </div>
 
         <div class="actions mt-3 mt-md-0">
-          <button class="btn btn-outline-primary me-2" (click)="editarTurno(turno.id)">
+          <button
+            class="btn btn-outline-primary me-2"
+            (click)="editarTurno(turno.id)"
+            [disabled]="!puedeModificar(turno)"
+          >
             ✏️ Editar
           </button>
-          <button class="btn btn-outline-danger" (click)="eliminarTurno(turno.id)">
+
+          <button
+            class="btn btn-outline-danger"
+            (click)="eliminarTurno(turno.id)"
+            [disabled]="!puedeModificar(turno)"
+          >
             🗑️ Eliminar
           </button>
         </div>
       </div>
     </div>
 
+    
     <!-- Formulario de edición -->
-    <div *ngIf="turnoEditando" class="card p-4 border-0 shadow-lg mt-5 animate__animated animate__fadeInUp">
-      <h4 class="text-center text-primary mb-3">✏️ Editar Turno (ID: {{ turnoEditando.id }})</h4>
+    <div
+      *ngIf="turnoEditando"
+      class="card p-4 border-0 shadow-lg mt-5 animate__animated animate__fadeInUp"
+    >
+      <h4 class="text-center text-primary mb-3">
+        ✏️ Editar Turno (ID: {{ turnoEditando.id }})
+      </h4>
       <form (ngSubmit)="guardarEdicion()" novalidate>
         <div class="row g-3">
-          <div class="col-md-6">
-            <label class="form-label fw-semibold">📅 Fecha</label>
-            <input type="date" class="form-control" [(ngModel)]="turnoEditando.fecha" name="fecha" required>
-          </div>
+          <input
+            type="date"
+            class="form-control"
+            [ngModel]="turnoEditando.fecha | date : 'yyyy-MM-dd' : 'UTC'"
+            (ngModelChange)="turnoEditando.fecha = $event"
+            name="fecha"
+            required
+          />
           <div class="col-md-6">
             <label class="form-label fw-semibold">⏰ Hora</label>
-            <input type="time" class="form-control" [(ngModel)]="turnoEditando.hora" name="hora" required>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="turnoEditando.hora"
+              name="hora"
+              required
+            />
           </div>
           <div class="col-md-6">
             <label class="form-label fw-semibold">⚙️ Estado</label>
-            <select class="form-select" [(ngModel)]="turnoEditando.estado" name="estado" required>
+            <select
+              class="form-select"
+              [(ngModel)]="turnoEditando.estado"
+              name="estado"
+              required
+            >
               <option value="pendiente">Pendiente</option>
               <option value="confirmado">Confirmado</option>
               <option value="cancelado">Cancelado</option>
@@ -76,13 +128,24 @@
           </div>
           <div class="col-md-6">
             <label class="form-label fw-semibold">📝 Descripción</label>
-            <input type="text" class="form-control" [(ngModel)]="turnoEditando.descripcion" name="descripcion">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="turnoEditando.descripcion"
+              name="descripcion"
+            />
           </div>
         </div>
 
         <div class="d-flex justify-content-end gap-3 mt-4">
           <button type="submit" class="btn btn-success">💾 Guardar</button>
-          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancelarEdicion()"
+          >
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
