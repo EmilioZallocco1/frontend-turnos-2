@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';  // Import agregado para goBack
 import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
 import { ObraSocial } from '../../models/obra-social.interface'; // ajustá la ruta si difiere
 
@@ -22,7 +23,8 @@ export class ObraSocialFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: ObraSocialService,
-    private router: Router
+    private router: Router,
+    private location: Location  // Inyectado para goBack
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,6 @@ export class ObraSocialFormComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  
   verObrasSociales() {
     this.service.listar().subscribe({
       next: (data) => {
@@ -69,5 +70,10 @@ export class ObraSocialFormComponent implements OnInit {
         console.error('Error al cargar obras sociales:', e);
       }
     });
+  }
+
+  // Método para el botón (agregado al final)
+  goBack() {
+    this.location.back();  // Vuelve a la página anterior (como en perfil)
   }
 }
