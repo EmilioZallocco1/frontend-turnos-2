@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -17,6 +16,11 @@ import { PerfilComponent } from './Componentes/perfil/perfil.component';
 import { CargarMedicoComponent } from './Componentes/cargar-medico/cargar-medico.component';
 import { ListaMedicosComponent } from './Componentes/lista-medicos/lista-medicos.component';
 import { ObraSocialFormComponent } from './Componentes/obra-social-form/obra-social-form.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { LoaderComponent } from './Componentes/loader/loader.component';
+import { LoadingInterceptor } from './Services/loading.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -31,6 +35,7 @@ import { ObraSocialFormComponent } from './Componentes/obra-social-form/obra-soc
     CargarMedicoComponent,
     ListaMedicosComponent,
     ObraSocialFormComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +44,18 @@ import { ObraSocialFormComponent } from './Componentes/obra-social-form/obra-soc
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

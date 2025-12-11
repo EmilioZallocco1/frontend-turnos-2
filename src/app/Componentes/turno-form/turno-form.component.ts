@@ -19,6 +19,12 @@ export class TurnoFormComponent implements OnInit {
   successMsg = '';
   redirectCountdown = 0; // segundos restantes antes de redirigir
 
+   // NUEVO: flags de carga específicos
+  cargandoMedicos = false;
+  cargandoTurno = false;
+  cargandoHorarios = false;
+  guardandoTurno = false;
+
   //  para saber si estoy creando o editando
   modoEdicion = false;
   turnoId: number | null = null;
@@ -42,7 +48,7 @@ export class TurnoFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadMedicos();
 
-    // 👇 si viene /turno-form/:id => modo edición
+    //  si viene /turno-form/:id => modo edición
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -62,14 +68,23 @@ export class TurnoFormComponent implements OnInit {
   }
 
   loadMedicos() {
-    this.obraSocialService.getMedicos().subscribe({
-      next: (response) => (this.medicos = response.data),
-      error: (error) => console.error('Error al cargar médicos:', error)
-    });
-  }
+  this.cargandoMedicos = true;
+
+  this.obraSocialService.getMedicos().subscribe({
+    next: (response) => {
+      this.medicos = response.data;
+      this.cargandoMedicos = false;
+    },
+    error: () => {
+      this.errorMsg = 'No se pudieron cargar los médicos';
+      this.cargandoMedicos = false;
+    }
+  });
+}
 
   // 👇 carga el turno desde la API y llena el formulario
   cargarTurnoParaEditar(id: number) {
+    this.cargandoTurno = true;
     this.turnoService.getTurnoById(id).subscribe({
       next: (res) => {
         const t = res.data;
@@ -89,6 +104,7 @@ export class TurnoFormComponent implements OnInit {
 
         // cargar horarios para esa fecha/médico (manteniendo la hora actual si hace falta)
         this.cargarHorariosDisponibles();
+        this.cargandoTurno = false;
       },
       error: (err) => {
         console.error('Error al cargar turno para edición:', err);
