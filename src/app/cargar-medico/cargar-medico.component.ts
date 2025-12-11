@@ -109,4 +109,8 @@ export class CargarMedicoComponent implements OnInit {
       });
     }
   }
+
+  goBack(): void {
+    window.history.back();
+  }
 }

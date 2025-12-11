@@ -1,0 +1,77 @@
+
+.page-wrap {
+
+    background: linear-gradient(
+        to bottom, 
+        white 0%,        
+        white 50%,     
+        #a9bec4 50%,    
+        #8cd1f1 100%    
+    ) !important;
+    min-height: 100vh; 
+    width: 100%;
+}
+
+.medico-card {
+  width: min(920px, 95%);
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+
+  .card-header {
+    background: linear-gradient(90deg, #1083c5 0%, #03141b 100%); 
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-radius: 12px 12px 0 0; 
+}
+
+  .input-group-text {
+    background-color: #f7f9fc;
+    border-right: 0;
+  }
+
+  .form-control, .form-select {
+    border-left: 0;
+    border-radius: 10px;
+  }
+
+  .form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(123, 147, 184, 0.15);
+  }
+
+  .is-valid {
+    border-color: #198754 !important;
+  }
+
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+
+  .invalid-feedback {
+    font-size: .9rem;
+  }
+}
+.text-primary {
+    color: #eaeff0 !important;
+}
+
+.btn-volver {
+  position: absolute;
+  top: 30px;        /* distancia desde arriba */
+  left: 30px;       /* mover a la izquierda */
+  z-index: 2000;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b82f6; /* celeste */
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-volver:hover {
+  background-color: #2563eb;
+}
