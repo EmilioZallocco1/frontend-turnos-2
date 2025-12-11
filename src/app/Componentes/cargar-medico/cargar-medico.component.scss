@@ -55,3 +55,23 @@
 .text-primary {
     color: #eaeff0 !important;
 }
+
+.btn-volver {
+  position: absolute;
+  top: 30px;        /* distancia desde arriba */
+  left: 30px;       /* mover a la izquierda */
+  z-index: 2000;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3b82f6; /* celeste */
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-volver:hover {
+  background-color: #2563eb;
+}

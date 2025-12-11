@@ -28,6 +28,12 @@ export class HomeComponent implements OnInit {
   resultadoAdmin: any[] = [];
 
   ngOnInit() {
+
+    console.log('DEBUG ROL (JWT):', this.authService.getRole());
+    console.log('DEBUG ID (JWT):', this.authService.getPacienteId());
+    console.log('DEBUG LOGGED IN (JWT):', this.authService.isLoggedIn());
+    console.log("DEBUG currentUser en memoria:", this.authService["currentUser"]);
+
     // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
 
     if (this.authService.esPaciente()) {

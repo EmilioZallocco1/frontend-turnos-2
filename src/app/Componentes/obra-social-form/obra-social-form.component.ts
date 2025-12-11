@@ -70,4 +70,8 @@ export class ObraSocialFormComponent implements OnInit {
       }
     });
   }
+
+  goBack(): void {
+    window.history.back();
+  }
 }

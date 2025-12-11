@@ -33,6 +33,8 @@ export class ListaMedicosComponent implements OnInit {
     );
   }
 
+  
+
 
   eliminarMedico(id: number) {
   if (!confirm('¿Seguro que deseas eliminar este médico?')) return;

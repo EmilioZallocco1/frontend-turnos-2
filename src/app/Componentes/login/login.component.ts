@@ -6,7 +6,7 @@ import { AuthService } from '../../Services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -31,28 +31,29 @@ export class LoginComponent implements OnInit {
     console.log('Rol de usuario:', this.role); // Para verificar si es paciente o medico
   }
 
-  onSubmit() {
-    console.log('Formulario enviado', this.loginForm);
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-  
-      // Llama al servicio de autenticación sin pasar el rol
-      this.authService.login(email, password).subscribe(
-        response => {
-          console.log('Login exitoso:', response);
-          // Guardar el token si está en la respuesta
-          localStorage.setItem('token', response.token);
-          this.router.navigate(['/home']);
-        },
-        error => {
-          console.error('Login failed:', error);
-          this.errorMessage = error.message || 'Correo o contraseña son incorrectos.';
-        }
-      );
-    } else {
-      console.log('Form is invalid');
-      this.errorMessage = 'Por favor completa todos los campos correctamente.';
-    }
+ onSubmit() {
+  console.log('Formulario enviado', this.loginForm);
+  if (this.loginForm.valid) {
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
+        console.log('Login exitoso:', response);
+        console.log("RESPUESTA LOGIN:", response);
+        // El token ya fue guardado por el AuthService
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        this.errorMessage =
+          error?.message || 'Correo o contraseña son incorrectos.';
+      }
+    });
+
+  } else {
+    console.log('Form is invalid');
+    this.errorMessage = 'Por favor completa todos los campos correctamente.';
   }
-  
+}
+
 }
