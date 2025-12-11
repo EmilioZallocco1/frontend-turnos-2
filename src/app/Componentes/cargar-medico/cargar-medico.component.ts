@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { MedicoService } from '../../Services/medico.service';
 import { EspecialidadService } from 'src/app/Services/especialidad.service';
 import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
@@ -30,10 +31,9 @@ export class CargarMedicoComponent implements OnInit {
     private especialidadService: EspecialidadService,
     private obraSocialService: ObraSocialService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
-
-  
 
   ngOnInit(): void {
     this.idMedico = this.route.snapshot.params['id'];
@@ -110,5 +110,9 @@ export class CargarMedicoComponent implements OnInit {
         }
       });
     }
+  }
+
+  goBack() {
+    this.location.back();  
   }
 }
