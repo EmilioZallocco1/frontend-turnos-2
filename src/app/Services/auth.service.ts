@@ -3,6 +3,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+//import { Paciente } from '../models/paciente.interface';
+import { Paciente } from '../models/patient.interface.js';
+import { LoginResponse } from '../models/login-response.interface';
+
 
 
 @Injectable({
@@ -10,7 +14,8 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/api`;
-  private currentUser: any | null = null;
+  private currentUser: Paciente | null = null;
+
    private tokenKey = 'token';
 
   constructor(private http: HttpClient) {
@@ -19,7 +24,7 @@ export class AuthService {
   }
 
   // Login para pacientes o admin
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<LoginResponse> {
     const url = `${this.apiUrl}/pacientes/login`;
     const body = { email, password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -64,6 +69,19 @@ export class AuthService {
     );
   }
 
+    // registro hecho por un ADMIN
+  registerByAdmin(
+    nombre: string,
+    apellido: string,
+    email: string,
+    password: string,
+    obraSocialId: number,
+    role: 'admin' | 'paciente' = 'admin'
+  ): Observable<any> {
+    const url = `${this.apiUrl}/pacientes/admin/create`; 
+    const body = { nombre, apellido, email, password, obraSocialId, role };
+    return this.http.post(url, body);
+  }
   
 
     // si hay token en localStorage, recreamos el user en memoria

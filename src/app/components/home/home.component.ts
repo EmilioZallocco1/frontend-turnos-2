@@ -105,6 +105,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  irAAltaPacienteAdmin() {
+   // Navega al mismo componente de registro, pero en modo admin
+   this.router.navigate(['/admin/alta-paciente']);
+ }
+
   solicitarTurno() {
     this.router.navigate(['/turno-form']); // Redirige al formulario de turno
   }

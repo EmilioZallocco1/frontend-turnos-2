@@ -36,6 +36,11 @@ const routes: Routes = [
   { path: 'lista-medicos', component: ListaMedicosComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'cargar-medico/:id', component: CargarMedicoComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'admin/obras-sociales/nueva', component: ObraSocialFormComponent, canActivate: [AuthGuard, AdminGuard] },
+  {
+   path: 'admin/alta-paciente',
+   component: RegistroComponent,
+   data: { modoAdmin: true }
+ },
 
   { path: '**', redirectTo: '' } // Ruta por defecto
 ];
