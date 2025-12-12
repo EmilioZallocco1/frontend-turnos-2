@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Services/auth.service';
-import { TurnoService } from '../../Services/turno.service';
-import { MedicoService } from 'src/app/Services/medico.service';
+import { TurnoService } from '../../Services/shift.service';
+import { MedicoService } from 'src/app/Services/doctor.service';
 
 @Component({
   selector: 'app-home',

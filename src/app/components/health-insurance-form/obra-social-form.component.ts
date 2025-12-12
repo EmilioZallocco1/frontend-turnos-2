@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';  // Import agregado para goBack
-import { ObraSocialService } from 'src/app/Services/obra-social-service.service';
-import { ObraSocial } from '../../models/obra-social.interface'; // ajustá la ruta si difiere
+import { ObraSocialService } from 'src/app/Services/health-insurance.service';
+import { ObraSocial } from '../../models/health-insurance.interface'; // ajustá la ruta si difiere
 
 @Component({
   selector: 'app-obra-social-form',

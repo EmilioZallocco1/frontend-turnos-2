@@ -1,5 +1,5 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { MedicoService } from '../../Services/medico.service';
+import { MedicoService } from '../../Services/doctor.service';
 
 @Component({
   selector: 'app-lista-medicos',

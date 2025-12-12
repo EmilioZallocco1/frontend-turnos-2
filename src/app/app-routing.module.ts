@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LoginComponent } from './Componentes/login/login.component';
-import { HomeComponent } from './Componentes/home/home.component';
-import { RegistroComponent } from './Componentes/registro/registro.component';
-import { TurnoFormComponent } from './Componentes/turno-form/turno-form.component';
-import { ListaTurnosComponent } from './Componentes/lista-turnos/lista-turnos.component';
-import { PerfilComponent } from './Componentes/perfil/perfil.component';
-import { CargarMedicoComponent } from './Componentes/cargar-medico/cargar-medico.component';
-import { ListaMedicosComponent } from './Componentes/lista-medicos/lista-medicos.component';
-import { ObraSocialFormComponent } from './Componentes/obra-social-form/obra-social-form.component';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
+import { RegistroComponent } from './components/register/registro.component';
+import { TurnoFormComponent } from './components/shift-form/turno-form.component';
+import { ListaTurnosComponent } from './components/list-shift/lista-turnos.component';
+import { PerfilComponent } from './components/profile/perfil.component';
+import { CargarMedicoComponent } from './components/load-doctor/cargar-medico.component';
+import { ListaMedicosComponent } from './components/list-doctor/lista-medicos.component';
+import { ObraSocialFormComponent } from './components/health-insurance-form/obra-social-form.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
-import { PacienteGuard } from './guards/paciente.guard';
+import { PacienteGuard } from './guards/patient.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

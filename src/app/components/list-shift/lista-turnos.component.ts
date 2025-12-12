@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TurnoService } from '../../Services/turno.service';
+import { TurnoService } from '../../Services/shift.service';
 import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
 

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../Services/auth.service'; // Servicio de autenticación
-import { ObraSocialService } from 'src/app/Services/obra-social-service.service'; // Servicio de obra social
+import { ObraSocialService } from 'src/app/Services/health-insurance.service'; // Servicio de obra social
 import { Router } from '@angular/router';
-import { ObraSocialResponse } from '../../models/obra-social.interface'; // Importa la interfaz
+import { ObraSocialResponse } from '../../models/health-insurance.interface'; // Importa la interfaz
 
 @Component({
   selector: 'app-registro',
