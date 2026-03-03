@@ -16,8 +16,8 @@
   <div *ngIf="mensajeError" class="alert alert-danger text-center">{{ mensajeError }}</div>
 
   <!-- Lista -->
-  <div class="row g-4" *ngIf="medicosFiltrados.length > 0">
-    <div class="col-md-6 col-lg-4" *ngFor="let medico of medicosFiltrados">
+  <div class="row g-4" *ngIf="filteredDoctors.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let medico of filteredDoctors">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
           <div>
@@ -39,7 +39,7 @@
             <button
                 class="btn btn-outline-danger btn-sm"
                 title="Eliminar médico"
-                (click)="eliminarMedico(medico.id)">
+                (click)="deleteDoctor(medico.id)">
                 <i class="bi bi-trash me-1"></i> Eliminar
                 </button>
           </div>
@@ -49,7 +49,7 @@
   </div>
 
   <!-- Mensaje si no hay resultados -->
-  <div *ngIf="medicosFiltrados.length === 0 && !mensajeError" class="alert alert-info text-center">
+  <div *ngIf="filteredDoctors.length === 0 && !mensajeError" class="alert alert-info text-center">
     No hay médicos registrados o no hay coincidencias con la búsqueda.
   </div>
 
