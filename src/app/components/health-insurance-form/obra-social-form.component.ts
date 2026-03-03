@@ -42,7 +42,7 @@ export class ObraSocialFormComponent implements OnInit {
     this.cargando = true;
     const { nombre } = this.form.value as { nombre: string };
 
-    this.service.registrar({ nombre })
+    this.service.register({ nombre })
       .subscribe({
         next: () => {
           this.cargando = false;

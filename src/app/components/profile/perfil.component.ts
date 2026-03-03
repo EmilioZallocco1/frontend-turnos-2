@@ -24,10 +24,10 @@ export class PerfilComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.obtenerPerfil();
+    this.getPerfil();
   }
 
-  obtenerPerfil() {
+  getPerfil() {
     const pacienteId = this.authService.getPacienteId();
     if (pacienteId !== null) {
       this.pacienteService.getPacienteData().subscribe(
@@ -45,7 +45,7 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  actualizarPerfil() {
+  updatePerfil() {
     this.pacienteEditando = { ...this.paciente };
     this.editandoPerfil = true;
   }
@@ -58,7 +58,7 @@ export class PerfilComponent implements OnInit {
   guardarPerfilActualizado() {
     const pacienteId = this.authService.getPacienteId();
     if (pacienteId !== null && this.pacienteEditando) {
-      this.pacienteService.actualizarPaciente(pacienteId, this.pacienteEditando).subscribe(
+      this.pacienteService.updatePaciente(pacienteId, this.pacienteEditando).subscribe(
         () => {
           this.successMessage = 'Perfil actualizado con éxito';
           this.error = null;
@@ -76,7 +76,7 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-eliminarCuenta() {
+deleteCuenta() {
   const confirmado = confirm(
     '¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.'
   );
@@ -88,7 +88,7 @@ eliminarCuenta() {
   const pacienteId = this.authService.getPacienteId();
 
   if (pacienteId !== null) {
-    this.pacienteService.eliminarPaciente(pacienteId).subscribe(
+    this.pacienteService.deletePaciente(pacienteId).subscribe(
       () => {
         this.router.navigate(['/']);
       },

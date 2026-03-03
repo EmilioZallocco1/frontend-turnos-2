@@ -15,7 +15,7 @@ export class ListaMedicosComponent implements OnInit {
   constructor(private medicoService: MedicoService, private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    this.medicoService.obtenerTodos().subscribe({
+    this.medicoService.getAll().subscribe({
       next: res => {
         this.medicos = res.data;
       },
@@ -26,7 +26,7 @@ export class ListaMedicosComponent implements OnInit {
     });
   }
 
-  get medicosFiltrados() {
+  get filteredDoctors() {   // MEDICOS FILTRADOS
     return this.medicos.filter(m =>
       m.nombre.toLowerCase().includes(this.filtro.toLowerCase()) ||
       m.especialidad?.name?.toLowerCase().includes(this.filtro.toLowerCase())
@@ -36,10 +36,10 @@ export class ListaMedicosComponent implements OnInit {
   
 
 
-  eliminarMedico(id: number) {
+  deleteDoctor(id: number) {
   if (!confirm('¿Seguro que deseas eliminar este médico?')) return;
 
-  this.medicoService.eliminar(id).subscribe({
+  this.medicoService.delete(id).subscribe({
     next: () => {
       this.medicos = this.medicos.filter(m => m.id !== id);
       this.mensajeError = '';

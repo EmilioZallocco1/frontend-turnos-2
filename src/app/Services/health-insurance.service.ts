@@ -27,12 +27,12 @@ export class ObraSocialService {
   }
 
 
-  crear(payload: Pick<ObraSocial, 'nombre'>): Observable<ObraSocial> {
+  create(payload: Pick<ObraSocial, 'nombre'>): Observable<ObraSocial> {
     return this.http.post<{message: string; data: ObraSocial}>(this.apiUrl, payload)
       .pipe(map(r => r.data));
   }
 
- registrar(obraSocial: any): Observable<any> {
+ register(obraSocial: any): Observable<any> {
     return this.http.post(this.apiUrl, obraSocial);
   }
 

@@ -36,12 +36,12 @@ export class PacienteService {
   }
 
 
-  actualizarPaciente(pacienteId: number, datos: any): Observable<any> {
+  updatePaciente(pacienteId: number, datos: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${pacienteId}`, datos);
   }
 
   // Método para eliminar paciente
-  eliminarPaciente(pacienteId: number): Observable<void> {
+  deletePaciente(pacienteId: number): Observable<void> {
     console.log(`Intentando eliminar paciente con ID: ${pacienteId}`);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     

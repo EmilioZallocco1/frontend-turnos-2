@@ -15,7 +15,7 @@ export class TurnoService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   // Método para crear un turno
-  crearTurno(turno: any): Observable<any> {
+  createTurno(turno: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(`${this.apiUrl}`, turno, { headers }).pipe(
       catchError((err) => {
@@ -51,7 +51,7 @@ export class TurnoService {
 
   // // Método para actualizar un turno
   // Método para actualizar un turno
-  actualizarTurno(turnoId: number, turnoData: any): Observable<any> {
+  updateTurno(turnoId: number, turnoData: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     // Enviamos los datos bajo la clave "sanitizedInput" como espera el backend
@@ -70,7 +70,7 @@ export class TurnoService {
   }
 
   // // Método para eliminar un turno
-  eliminarTurno(turnoId: number): Observable<void> {
+  deleteTurno(turnoId: number): Observable<void> {
     console.log(`Intentando eliminar turno con ID: ${turnoId}`);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http

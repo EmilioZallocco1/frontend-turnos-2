@@ -37,17 +37,17 @@ export class HomeComponent implements OnInit {
     // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
 
     if (this.authService.esPaciente()) {
-      this.cargarProximosTurnos();
-      this.cargarMedicos();
+      this.LoadNextshifts();
+      this.loadDoctors();
     }
 
     if (this.authService.esAdmin()) {
-      this.cargarMedicos();
+      this.loadDoctors();
     }
   }
 
   //LISTA DE MEDICOS ORDENADOS POR ESPECIALIDAD PARA MOSTRAR AL PACIENTE
-  get medicosOrdenadosPorEspecialidad() {
+  get doctorsOrderedBySpecialty() {
     return [...this.medicos].sort((a, b) => {
       const espA = (a.especialidad?.name || a.especialidad || '').toLowerCase();
       const espB = (b.especialidad?.name || b.especialidad || '').toLowerCase();
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
   }
 
   //CARGA DE PROXIMOS TURNOS
-  private cargarProximosTurnos(): void {
+  private LoadNextshifts(): void {
     const pacienteId = this.authService.getPacienteId();
 
     // Por las dudas, si no hay paciente logueado, no llamamos a la API
@@ -105,20 +105,20 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  irAAltaPacienteAdmin() {
+  goToAdminPatientRegistration() {
    // Navega al mismo componente de registro, pero en modo admin
    this.router.navigate(['/admin/alta-paciente']);
  }
 
-  solicitarTurno() {
+  requestAppointment() { //solicitar turno
     this.router.navigate(['/turno-form']); // Redirige al formulario de turno
   }
 
-  verTurnos() {
+  viewAppointments() {
     this.router.navigate(['/listaTurnos']); // Redirige a la página 'listaTurnos'
   }
 
-  verPerfil() {
+  viewProfile() {
     this.router.navigate(['/perfil']);
   }
 
@@ -126,22 +126,22 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  irACargarMedico() {
+  goToAddDoctor() {
     this.router.navigate(['/admin/medicos']);
   }
 
-  irACargarObraSocial() {
+  goToAddInsurance() { //ir a cargar obra social
     this.router.navigate(['/admin/obras-sociales/nueva']);
   }
 
-  verListaMedicos() {
+  viewDoctorsList() {
     this.router.navigate(['/lista-medicos']);
   }
 
   //-------------------------------------------------------- PRUEBAS --------------------------------------------------------
 
-  private cargarMedicos(): void {
-    this.medicoService.obtenerTodos().subscribe({
+  private loadDoctors(): void {
+    this.medicoService.getAll().subscribe({
       next: (res) => {
         // tu backend devuelve { message: 'ok', data: [...] }
         this.medicos = res.data;
@@ -152,7 +152,7 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-  verTurnosMedico(): void {
+  viewDoctorAppointments(): void {  //VER TURNOS POR MEDICO
     if (!this.medicoId) {
       alert('Debes ingresar un ID de médico');
       return;
@@ -173,11 +173,11 @@ export class HomeComponent implements OnInit {
 
   verPacientesPorFecha() {}
 
-  cambiarEstado(turno: any, nuevoEstado: string) {
+  changeStatus(turno: any, nuevoEstado: string) {
     const estadoAnterior = turno.estado;
     turno.estado = nuevoEstado;
     this.turnoService
-      .actualizarTurno(turno.id, { estado: nuevoEstado })
+      .updateTurno(turno.id, { estado: nuevoEstado })
       .subscribe({
         next: () => console.log('Estado actualizado correctamente'),
         error: (err) => {

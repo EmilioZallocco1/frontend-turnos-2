@@ -12,26 +12,26 @@ export class MedicoService {
 
   constructor(private http: HttpClient) {}
 
-  obtenerTodos(): Observable<any> {
+  getAll(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
 
-  obtenerPorId(id: number): Observable<any> {
+  getById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  registrar(medico: any): Observable<any> {
+  register(medico: any): Observable<any> {
     return this.http.post(this.apiUrl, medico);
   }
 
- actualizar(id: number, medico: any): Observable<any> {
+ update(id: number, medico: any): Observable<any> {
   return this.http.put(`${this.apiUrl}/${id}`, {
     sanitizedInput: medico
   });
 }
 
 
-  eliminar(id: number): Observable<any> {
+  delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

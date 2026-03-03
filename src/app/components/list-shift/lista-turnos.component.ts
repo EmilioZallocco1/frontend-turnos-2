@@ -21,10 +21,10 @@ export class ListaTurnosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.obtenerTurnos();
+    this.getTurnos();
   }
 
-  obtenerTurnos() {
+  getTurnos() {
     this.turnoService.getTurnosPorPaciente().subscribe({
       next: (response: any) => {
         this.turnos = response.data;
@@ -37,9 +37,9 @@ export class ListaTurnosComponent implements OnInit {
     });
   }
 
-  eliminarTurno(turnoId: number) {
+  deleteTurno(turnoId: number) {
     console.log(`Intentando eliminar turno con ID: ${turnoId}`);
-    this.turnoService.eliminarTurno(turnoId).subscribe({
+    this.turnoService.deleteTurno(turnoId).subscribe({
       next: () => {
         this.turnos = this.turnos.filter(turno => turno.id !== turnoId);
         this.successMessage = `Turno con ID ${turnoId} eliminado con éxito`;
@@ -78,12 +78,12 @@ puedeModificar(turno: any): boolean {
 
 
 
-  // 🆕 Inicia la edición de un turno
+  // Inicia la edición de un turno
   editarTurno(id: number) {
   this.router.navigate(['/turno-form', id]);
 }
 
-  // 🆕 Cancela la edición
+  //  Cancela la edición
   cancelarEdicion() {
     this.turnoEditando = null;
   }
@@ -92,7 +92,7 @@ puedeModificar(turno: any): boolean {
   guardarEdicion() {
     if (!this.turnoEditando) return;
 
-    this.turnoService.actualizarTurno(this.turnoEditando.id, {
+    this.turnoService.updateTurno(this.turnoEditando.id, {
       fecha: this.turnoEditando.fecha,
       hora: this.turnoEditando.hora,
       estado: this.turnoEditando.estado,
@@ -104,7 +104,7 @@ puedeModificar(turno: any): boolean {
         this.successMessage = 'Turno actualizado con éxito';
         this.error = null;
         this.turnoEditando = null;
-        this.obtenerTurnos(); // Refresca lista actualizada
+        this.getTurnos(); // Refresca lista actualizada
       },
       error: err => {
         this.error = 'Error al actualizar el turno';

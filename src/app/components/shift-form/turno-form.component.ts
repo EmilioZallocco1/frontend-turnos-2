@@ -198,7 +198,7 @@ export class TurnoFormComponent implements OnInit {
       duracionMin: 30,
     };
 
-    this.turnoService.crearTurno(nuevoTurno).subscribe({
+    this.turnoService.createTurno(nuevoTurno).subscribe({
       next: () => {
         this.successMsg =
           '✅ Turno creado con éxito. Serás redirigido al inicio en 5 segundos...';
@@ -225,7 +225,7 @@ export class TurnoFormComponent implements OnInit {
     };
 
     this.turnoService
-      .actualizarTurno(this.turnoId!, turnoActualizado)
+      .updateTurno(this.turnoId!, turnoActualizado)
       .subscribe({
         next: () => {
           this.successMsg =

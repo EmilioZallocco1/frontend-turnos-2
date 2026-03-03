@@ -50,7 +50,7 @@ export class CargarMedicoComponent implements OnInit {
     });
 
     if (this.modoEdicion && this.idMedico) {
-      this.medicoService.obtenerPorId(this.idMedico).subscribe({
+      this.medicoService.getById(this.idMedico).subscribe({
         next: res => {
           const m = res.data;
           this.medico = {
@@ -79,7 +79,7 @@ export class CargarMedicoComponent implements OnInit {
     };
 
     if (this.modoEdicion && this.idMedico) {
-      this.medicoService.actualizar(this.idMedico, medicoData).subscribe({
+      this.medicoService.update(this.idMedico, medicoData).subscribe({
         next: res => {
           this.mensajeExito = '✅ Médico actualizado exitosamente.';
           this.mensajeError = null;
@@ -91,7 +91,7 @@ export class CargarMedicoComponent implements OnInit {
         }
       });
     } else {
-      this.medicoService.registrar(medicoData).subscribe({
+      this.medicoService.register(medicoData).subscribe({
         next: res => {
           this.mensajeExito = '✅ Médico registrado exitosamente.';
           this.mensajeError = null;
