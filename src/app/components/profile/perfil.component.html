@@ -5,7 +5,7 @@
 
 <div class="perfil-card"> 
 
-  <div *ngIf="paciente && paciente.nombre">
+  <div *ngIf="paciente?.nombre; else cargando">
     <div class="card mb-4">
       <div class="card-header text-center">
         <h2>PERFIL DEL PACIENTE</h2>
@@ -26,6 +26,7 @@
             <h4>ACCIONES</h4>
             <button class="btn btn-warning me-2" (click)="updatePerfil()">Actualizar Perfil</button>
             <button class="btn btn-danger" (click)="deleteCuenta()">Eliminar Cuenta</button>
+            <button class="btn btn-danger" (click)="logout()">Cerrar Sesión</button>
           </div>
         </div>
       </div>

@@ -1,10 +1,8 @@
 // paciente.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { AuthService } from './auth.service';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -13,47 +11,36 @@ import { environment } from 'src/environments/environment';
 export class PacienteService {
   private apiUrl = `${environment.apiBaseUrl}/api/pacientes`;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-  // Método para obtener los datos de un paciente autenticado
+  // ✅ MI PERFIL (usa token)
   getPacienteData(): Observable<any> {
-    const pacienteId = this.authService.getPacienteId(); // Obtiene el ID del paciente desde AuthService
-    console.log('Paciente ID en Servicio:', pacienteId);  // Verifica el pacienteId aquí
-    
-
-    if (!pacienteId) {
-      return throwError('Paciente no autenticado');
-    }
-
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.apiUrl}/${pacienteId}`, { headers })
-      .pipe(
-        catchError(err => {
-          console.error('Error al obtener los datos del paciente:', err);
-          return throwError(err.error.message || 'Error en el servidor');
-        })
-      );
+    return this.http.get<any>(`${this.apiUrl}/me`).pipe(
+      catchError(err => {
+        console.error('Error al obtener los datos del paciente:', err);
+        return throwError(() => err.error?.message || 'Error en el servidor');
+      })
+    );
   }
 
-
-  updatePaciente(pacienteId: number, datos: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${pacienteId}`, datos);
+  // ✅ ACTUALIZAR MI PERFIL (usa token)
+  updatePaciente(datos: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/me`, datos).pipe(
+      catchError(err => {
+        console.error('Error al actualizar el paciente:', err);
+        return throwError(() => err.error?.message || 'Error en el servidor');
+      })
+    );
   }
 
-  // Método para eliminar paciente
-  deletePaciente(pacienteId: number): Observable<void> {
-    console.log(`Intentando eliminar paciente con ID: ${pacienteId}`);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    
-    return this.http.delete<void>(`${this.apiUrl}/${pacienteId}`, { headers })
-      .pipe(
-        tap(() => {
-          console.log(`Paciente con ID ${pacienteId} eliminado en la API`);
-        }),
-        catchError(err => {
-          console.error('Error al eliminar el paciente en el servicio:', err);
-          return throwError(err.error.message || 'Error en el servidor');
-        })
-      );
+  // ✅ ELIMINAR MI CUENTA (usa token)
+  deletePaciente(): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/me`).pipe(
+      tap(() => console.log(`Cuenta eliminada en la API`)),
+      catchError(err => {
+        console.error('Error al eliminar el paciente en el servicio:', err);
+        return throwError(() => err.error?.message || 'Error en el servidor');
+      })
+    );
   }
 }

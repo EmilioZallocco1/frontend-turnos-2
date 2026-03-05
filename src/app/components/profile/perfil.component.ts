@@ -27,24 +27,19 @@ export class PerfilComponent implements OnInit {
     this.getPerfil();
   }
 
-  getPerfil() {
-    const pacienteId = this.authService.getPacienteId();
-    if (pacienteId !== null) {
-      this.pacienteService.getPacienteData().subscribe(
-        (response) => {
-          this.paciente = response.data;
-          this.error = null;
-        },
-        (error) => {
-          this.error = 'Error al cargar el perfil';
-          console.error('Error:', error);
-        }
-      );
-    } else {
-      this.error = 'ID de paciente no disponible';
+getPerfil() {
+  this.pacienteService.getPacienteData().subscribe({
+    next: (response) => {
+      // si el backend devuelve {message, data}
+      this.paciente = response.data ?? response;
+      this.error = null;
+    },
+    error: (err) => {
+      this.error = err?.error?.message || 'Error al cargar el perfil';
+      console.error('Error:', err);
     }
-  }
-
+  });
+}
   updatePerfil() {
     this.pacienteEditando = { ...this.paciente };
     this.editandoPerfil = true;
@@ -55,53 +50,49 @@ export class PerfilComponent implements OnInit {
     this.pacienteEditando = null;
   }
 
-  guardarPerfilActualizado() {
-    const pacienteId = this.authService.getPacienteId();
-    if (pacienteId !== null && this.pacienteEditando) {
-      this.pacienteService.updatePaciente(pacienteId, this.pacienteEditando).subscribe(
-        () => {
-          this.successMessage = 'Perfil actualizado con éxito';
-          this.error = null;
-          this.paciente = { ...this.pacienteEditando };
-          this.editandoPerfil = false;
-          setTimeout(() => (this.successMessage = null), 3000);
-        },
-        (error) => {
-          this.error = 'Error al actualizar el perfil';
-          console.error('Error:', error);
-        }
-      );
-    } else {
-      this.error = 'ID de paciente no disponible';
-    }
+guardarPerfilActualizado() {
+  if (!this.pacienteEditando) {
+    this.error = 'No hay datos para actualizar';
+    return;
   }
+
+  this.pacienteService.updatePaciente(this.pacienteEditando).subscribe({
+    next: () => {
+      this.successMessage = 'Perfil actualizado con éxito';
+      this.error = null;
+      this.paciente = { ...this.pacienteEditando };
+      this.editandoPerfil = false;
+      setTimeout(() => (this.successMessage = null), 3000);
+    },
+    error: (err) => {
+      this.error = err?.error?.message || 'Error al actualizar el perfil';
+      console.error('Error:', err);
+    }
+  });
+}
 
 deleteCuenta() {
   const confirmado = confirm(
     '¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.'
   );
+  if (!confirmado) return;
 
-  if (!confirmado) {
-    return; // El usuario canceló
-  }
-
-  const pacienteId = this.authService.getPacienteId();
-
-  if (pacienteId !== null) {
-    this.pacienteService.deletePaciente(pacienteId).subscribe(
-      () => {
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        this.error = 'Error al eliminar la cuenta';
-        console.error('Error:', error);
-      }
-    );
-  } else {
-    this.error = 'ID de paciente no disponible';
-  }
+  this.pacienteService.deletePaciente().subscribe({
+    next: () => {
+      this.authService.logout();
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      this.error = err?.error?.message || 'Error al eliminar la cuenta';
+      console.error('Error:', err);
+    }
+  });
 }
 
+logout(): void {
+  this.authService.logout();
+  this.router.navigate(['/login']);
+}
 
   
   goBack() {

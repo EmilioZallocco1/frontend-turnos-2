@@ -148,13 +148,29 @@ export class AuthService {
   }
 
   //  Saber si el usuario es administrador
-  esAdmin(): boolean {
-    return this.getRole() === 'admin';
-  }
+ esAdmin(): boolean {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
 
-  esPaciente(): boolean {
-    return this.getRole() === 'paciente';
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload?.role === 'admin';
+  } catch {
+    return false;
   }
+}
+
+ esPaciente(): boolean {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload?.role === 'paciente';
+  } catch {
+    return false;
+  }
+}
 
   // Saber si hay sesión iniciada
   isLoggedIn(): boolean {

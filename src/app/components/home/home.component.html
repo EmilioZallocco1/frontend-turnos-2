@@ -225,6 +225,18 @@
   </section>
 
   <!-- ====== PANEL ADMINISTRADOR ====== -->
+  
+  <div class="mb-3">
+  <button
+    class="btn btn-outline-secondary d-flex align-items-center gap-2"
+    (click)="goBack()"
+    data-cy="btn-volver"
+  >
+    <i class="bi bi-arrow-left"></i>
+    <span>Volver a Login</span>
+  </button>
+</div>
+  
   <section
     *ngIf="authService.esAdmin()"
     class="home-section"

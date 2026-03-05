@@ -30,24 +30,24 @@ export class TurnoService {
 
   // Método para obtener los turnos de un paciente según su ID
   getTurnosPorPaciente(): Observable<any> {
-    const pacienteId = this.authService.getPacienteId(); // Obtiene el ID del paciente desde AuthService
-    console.log('Paciente ID:', pacienteId); // Verifica el ID del paciente
-    if (!pacienteId) {
-      return throwError('Paciente no autenticado');
-    }
-
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http
-      .get<any>(`${environment.apiBaseUrl}/api/pacientes/${pacienteId}/turnos`, {
-        headers,
-      })
-      .pipe(
-        catchError((err) => {
-          console.error('Error al obtener los turnos:', err);
-          return throwError(err.error.message || 'Error en el servidor');
-        })
-      );
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return throwError(() => 'Paciente no autenticado');
   }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  return this.http
+    .get<any>(`${environment.apiBaseUrl}/api/pacientes/me/turnos`, { headers })
+    .pipe(
+      catchError((err) => {
+        console.error('Error al obtener los turnos:', err);
+        return throwError(() => err.error?.message || 'Error en el servidor');
+      })
+    );
+}
 
   // // Método para actualizar un turno
   // Método para actualizar un turno
