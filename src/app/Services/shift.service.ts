@@ -28,9 +28,12 @@ export class TurnoService {
     );
   }
 
-  // Método para obtener los turnos de un paciente según su ID
-  getTurnosPorPaciente(): Observable<any> {
+  // Método para obtener los turnos de un paciente según su ID - TOKEN
+// turno.service.ts
+
+getTurnosPorPaciente(page: number = 1, limit: number = 5): Observable<any> {
   const token = localStorage.getItem('token');
+
   if (!token) {
     return throwError(() => 'Paciente no autenticado');
   }
@@ -40,7 +43,10 @@ export class TurnoService {
   });
 
   return this.http
-    .get<any>(`${environment.apiBaseUrl}/api/pacientes/me/turnos`, { headers })
+    .get<any>(
+      `${environment.apiBaseUrl}/api/pacientes/me/turnos?page=${page}&limit=${limit}`,
+      { headers }
+    )
     .pipe(
       catchError((err) => {
         console.error('Error al obtener los turnos:', err);

@@ -151,6 +151,36 @@
     </div>
   </div>
 
+  <!-- agregar al final del HTML de lista-turnos.component.html -->
+
+<div class="d-flex justify-content-between align-items-center mt-4" *ngIf="totalPages > 0">
+
+  <div>
+    Página {{ page }} de {{ totalPages }} | Total: {{ total }} turnos
+  </div>
+
+  <div class="btn-group">
+
+    <button
+      class="btn btn-outline-primary"
+      (click)="paginaAnterior()"
+      [disabled]="page === 1"
+    >
+      ⬅️ Anterior
+    </button>
+
+    <button
+      class="btn btn-outline-primary"
+      (click)="paginaSiguiente()"
+      [disabled]="page === totalPages"
+    >
+      Siguiente ➡️
+    </button>
+
+  </div>
+
+</div>
+
   <ng-template #noTurnos>
     <div class="text-center mt-5 text-muted">
       <p>🚫 No tienes turnos registrados aún.</p>

@@ -9,3 +9,12 @@ export interface ObraSocial {
     message: string;
   }
   
+
+export interface PaginatedObraSocialResponse {
+  message: string;
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  data: ObraSocial[];
+}

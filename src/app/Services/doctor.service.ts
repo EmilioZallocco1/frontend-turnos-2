@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { MedicoResponse,Medico } from '../models/medico.interface.js';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class MedicoService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<any> {
-    return this.http.get(this.apiUrl);
+  getAll(page: number = 1, limit: number = 10): Observable<MedicoResponse> {
+    return this.http.get<MedicoResponse>(this.apiUrl, { params: { page, limit } });
   }
 
   getById(id: number): Observable<any> {

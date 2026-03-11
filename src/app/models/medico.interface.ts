@@ -10,3 +10,12 @@ export interface Medico {
   especialidad: Especialidad;
   obraSocial?: ObraSocial | null;
 }
+
+export interface MedicoResponse {
+  message: string;
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  data: Medico[];
+}

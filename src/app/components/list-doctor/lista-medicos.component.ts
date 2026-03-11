@@ -12,18 +12,53 @@ export class ListaMedicosComponent implements OnInit {
   filtro = '';
   modoOscuro = false;
 
+  // paginación
+  page = 1;
+  limit = 5;
+  total = 0;
+  totalPages = 0;
+  cargando = false;
+
   constructor(private medicoService: MedicoService, private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    this.medicoService.getAll().subscribe({
-      next: res => {
+    this.listarMedicos();
+  }
+
+
+   listarMedicos(): void {
+    this.cargando = true;
+    this.mensajeError = null;
+
+    this.medicoService.getAll(this.page, this.limit).subscribe({
+      next: (res) => {
         this.medicos = res.data;
+        this.page = res.page;
+        this.limit = res.limit;
+        this.total = res.total;
+        this.totalPages = res.totalPages;
+        this.cargando = false;
       },
-      error: err => {
+      error: (err) => {
         this.mensajeError = 'Error al cargar los médicos';
+        this.cargando = false;
         console.error(err);
       }
     });
+  }
+
+  paginaAnterior(): void {
+    if (this.page > 1) {
+      this.page--;
+      this.listarMedicos();
+    }
+  }
+
+  paginaSiguiente(): void {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.listarMedicos();
+    }
   }
 
   get filteredDoctors() {   // MEDICOS FILTRADOS

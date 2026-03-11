@@ -16,6 +16,11 @@ export class ObraSocialFormComponent implements OnInit {
   errorMsg = '';
   obrasSociales: ObraSocial[] = []; // 👈 lista de obras sociales
 
+  page = 1;
+  limit = 5;
+  total = 0;
+  totalPages = 0;
+
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(2)]],
   });
@@ -48,7 +53,10 @@ export class ObraSocialFormComponent implements OnInit {
           this.cargando = false;
           alert('Obra social registrada con éxito');
           this.form.reset();
-          this.verObrasSociales(); // 🔄 refrescar lista
+          
+          // opcional: volver a primera página para ver la nueva carga
+          this.page = 1;
+          this.verObrasSociales(); // refrescar lista
         },
         error: (e) => {
           this.cargando = false;
@@ -62,9 +70,13 @@ export class ObraSocialFormComponent implements OnInit {
   }
 
   verObrasSociales() {
-    this.service.listar().subscribe({
-      next: (data) => {
-        this.obrasSociales = data;
+    this.service.listar(this.page, this.limit).subscribe({
+      next: (resp) => {
+        this.obrasSociales = resp.data;
+        this.total = resp.total;
+        this.totalPages = resp.totalPages;
+        this.page = resp.page; // actualizar página actual
+        this.limit = resp.limit; // actualizar límite actual
       },
       error: (e) => {
         console.error('Error al cargar obras sociales:', e);
@@ -72,6 +84,22 @@ export class ObraSocialFormComponent implements OnInit {
     });
   }
 
+
+  paginaSiguiente() {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.verObrasSociales();
+    }
+  }
+
+  paginaAnterior() {
+    if (this.page > 1) {
+      this.page--;
+      this.verObrasSociales();
+    }
+  }
+
+  
   // Método para el botón (agregado al final)
   goBack() {
     this.location.back();  // Vuelve a la página anterior (como en perfil)

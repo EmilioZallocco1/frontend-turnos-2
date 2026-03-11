@@ -14,6 +14,13 @@ export class ListaTurnosComponent implements OnInit {
   error: string | null = null;
   successMessage: string | null = null;
 
+  page = 1;
+  limit = 5;
+  total = 0;
+  totalPages = 0;
+  cargando = false;
+
+
   constructor(
     private turnoService: TurnoService,
     private authService: AuthService,
@@ -25,25 +32,48 @@ export class ListaTurnosComponent implements OnInit {
   }
 
   getTurnos() {
-    this.turnoService.getTurnosPorPaciente().subscribe({
+    this.cargando = true;
+
+    this.turnoService.getTurnosPorPaciente(this.page, this.limit).subscribe({
       next: (response: any) => {
         this.turnos = response.data;
+        this.page = response.page;
+        this.limit = response.limit;
+        this.total = response.total;
+        this.totalPages = response.totalPages;
         this.error = null;
+        this.cargando = false;
       },
-      error: err => {
+      error: (err) => {
         this.error = err;
+        this.cargando = false;
         console.error('Error al obtener los turnos:', err);
       }
     });
   }
 
+  paginaAnterior() {
+    if (this.page > 1) {
+      this.page--;
+      this.getTurnos();
+    }
+  }
+
+  paginaSiguiente() {
+    if (this.page < this.totalPages) {
+      this.page++;
+      this.getTurnos();
+    }
+  }
+
   deleteTurno(turnoId: number) {
-    console.log(`Intentando eliminar turno con ID: ${turnoId}`);
     this.turnoService.deleteTurno(turnoId).subscribe({
       next: () => {
-        this.turnos = this.turnos.filter(turno => turno.id !== turnoId);
+        if (this.turnos.length === 1 && this.page > 1) {
+          this.page--;
+        }
+        this.getTurnos();
         this.successMessage = `Turno con ID ${turnoId} eliminado con éxito`;
-        console.log(`Turno con ID ${turnoId} eliminado`);
 
         setTimeout(() => {
           this.successMessage = null;
@@ -51,7 +81,7 @@ export class ListaTurnosComponent implements OnInit {
       },
       error: err => {
         this.error = 'Error al eliminar el turno';
-        console.error('Error al eliminar el turno en el componente:', err);
+        console.error(err);
       }
     });
   }

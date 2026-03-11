@@ -1,11 +1,21 @@
 // obra-social.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ObraSocialResponse } from 'src/app/models/health-insurance.interface';
 import { ObraSocial } from 'src/app/models/health-insurance.interface';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+
+export interface PaginatedObraSocialResponse {
+  message: string;
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  data: ObraSocial[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +27,12 @@ export class ObraSocialService {
   constructor(private http: HttpClient) {}
 
   // Método para obtener las obras sociales
-  getObrasSociales(): Observable<ObraSocialResponse> {
-    return this.http.get<ObraSocialResponse>(`${this.apiUrl}`);
+  getObrasSociales(page:number = 1, limit:number = 10): Observable<ObraSocialResponse> {
+    const params = new HttpParams()
+    .set('page', page.toString())
+    .set('limit', limit.toString());
+    
+    return this.http.get<ObraSocialResponse>(`${this.apiUrl}`, { params });
   }
 
   // Método para obtener los médicos
@@ -36,9 +50,12 @@ export class ObraSocialService {
     return this.http.post(this.apiUrl, obraSocial);
   }
 
-  listar(): Observable<ObraSocial[]> {
-    return this.http.get<{message: string; data: ObraSocial[]}>(this.apiUrl)
-      .pipe(map(r => r.data));
+  listar(page: number = 1, limit: number = 10): Observable<PaginatedObraSocialResponse> {
+    const params = new HttpParams()
+      .set('page', page)
+      .set('limit', limit);
+
+    return this.http.get<PaginatedObraSocialResponse>(this.apiUrl, { params });
   }
 
 
