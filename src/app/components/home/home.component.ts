@@ -14,8 +14,13 @@ export class HomeComponent implements OnInit {
     fecha: string;
     especialidad: string;
     medico: string;
-  }> = []; // Define la propiedad
+  }> = [];
   medicos: any[] = [];
+
+  medicoId: number | null = null;
+  fechaTurno: string = '';
+  resultadoAdmin: any[] = [];
+
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -23,21 +28,9 @@ export class HomeComponent implements OnInit {
     private medicoService: MedicoService
   ) {}
 
-  medicoId: number | null = null;
-  fechaTurno: string = '';
-  resultadoAdmin: any[] = [];
-
   ngOnInit() {
-
-    console.log('DEBUG ROL (JWT):', this.authService.getRole());
-    console.log('DEBUG ID (JWT):', this.authService.getPacienteId());
-    console.log('DEBUG LOGGED IN (JWT):', this.authService.isLoggedIn());
-    console.log("DEBUG currentUser en memoria:", this.authService["currentUser"]);
-
-    // Aquí puedes cargar los próximos turnos, por ejemplo, llamando a un servicio.
-
     if (this.authService.esPaciente()) {
-      this.LoadNextshifts();
+      this.loadNextShifts();
       this.loadDoctors();
     }
 
@@ -46,7 +39,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  //LISTA DE MEDICOS ORDENADOS POR ESPECIALIDAD PARA MOSTRAR AL PACIENTE
   get doctorsOrderedBySpecialty() {
     return [...this.medicos].sort((a, b) => {
       const espA = (a.especialidad?.name || a.especialidad || '').toLowerCase();
@@ -62,13 +54,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  //CARGA DE PROXIMOS TURNOS
-  private LoadNextshifts(): void {
+  private loadNextShifts(): void {
     const pacienteId = this.authService.getPacienteId();
 
-    // Por las dudas, si no hay paciente logueado, no llamamos a la API
     if (!pacienteId) {
-      console.warn('No se encontró paciente logueado');
       this.proximosTurnos = [];
       return;
     }
@@ -76,15 +65,14 @@ export class HomeComponent implements OnInit {
     this.turnoService.getTurnosPorPaciente().subscribe({
       next: (res) => {
         const turnos = res.data || res;
-
         const hoy = new Date();
+
         this.proximosTurnos = (turnos || [])
           .filter((t: any) => {
             const fechaTurno = new Date(t.fecha);
             const esFuturo =
-              fechaTurno >=
-              new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-            // dejamos sólo pendientes
+              fechaTurno >= new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
             return t.estado
               ? t.estado.toLowerCase() === 'pendiente' && esFuturo
               : esFuturo;
@@ -95,27 +83,24 @@ export class HomeComponent implements OnInit {
               t.medico?.especialidad || t.especialidad || 'Sin especialidad',
             medico: t.medico?.nombre || t.medico || 'Profesional',
           }));
-
-        console.log('Próximos turnos en home:', this.proximosTurnos);
       },
       error: (err) => {
-        console.error('Error cargando próximos turnos', err);
+        console.error('Error cargando proximos turnos', err);
         this.proximosTurnos = [];
       },
     });
   }
 
   goToAdminPatientRegistration() {
-   // Navega al mismo componente de registro, pero en modo admin
-   this.router.navigate(['/admin/alta-paciente']);
- }
+    this.router.navigate(['/admin/alta-paciente']);
+  }
 
-  requestAppointment() { //solicitar turno
-    this.router.navigate(['/turno-form']); // Redirige al formulario de turno
+  requestAppointment() {
+    this.router.navigate(['/turno-form']);
   }
 
   viewAppointments() {
-    this.router.navigate(['/listaTurnos']); // Redirige a la página 'listaTurnos'
+    this.router.navigate(['/listaTurnos']);
   }
 
   viewProfile() {
@@ -130,7 +115,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/admin/medicos']);
   }
 
-  goToAddInsurance() { //ir a cargar obra social
+  goToAddInsurance() {
     this.router.navigate(['/admin/obras-sociales/nueva']);
   }
 
@@ -138,34 +123,30 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/lista-medicos']);
   }
 
-  //-------------------------------------------------------- PRUEBAS --------------------------------------------------------
-
   private loadDoctors(): void {
     this.medicoService.getAll().subscribe({
       next: (res) => {
-        // tu backend devuelve { message: 'ok', data: [...] }
         this.medicos = res.data;
-        console.log('Médicos cargados:', this.medicos);
       },
       error: (err) => {
-        console.error('Error cargando médicos', err);
+        console.error('Error cargando medicos', err);
       },
     });
   }
-  viewDoctorAppointments(): void {  //VER TURNOS POR MEDICO
+
+  viewDoctorAppointments(): void {
     if (!this.medicoId) {
-      alert('Debes ingresar un ID de médico');
+      alert('Debes ingresar un ID de medico');
       return;
     }
 
     this.turnoService.getTurnosPorMedico(this.medicoId).subscribe(
       (res) => {
-        console.log('Turnos del médico:', res);
-        this.resultadoAdmin = res.data; // Asigna los turnos a la lista
+        this.resultadoAdmin = res.data;
       },
       (error) => {
         console.error(error);
-        this.resultadoAdmin = []; // Limpia en caso de error
+        this.resultadoAdmin = [];
         alert(error);
       }
     );
@@ -179,10 +160,10 @@ export class HomeComponent implements OnInit {
     this.turnoService
       .updateTurno(turno.id, { estado: nuevoEstado })
       .subscribe({
-        next: () => console.log('Estado actualizado correctamente'),
+        next: () => undefined,
         error: (err) => {
           console.error(err);
-          turno.estado = estadoAnterior; // revertir si falla
+          turno.estado = estadoAnterior;
         },
       });
   }

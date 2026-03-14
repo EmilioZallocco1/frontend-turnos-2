@@ -1,75 +1,77 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-//import { Paciente } from '../models/paciente.interface';
 import { Paciente } from '../models/patient.interface.js';
 import { LoginResponse } from '../models/login-response.interface';
 
-
+interface SessionResponse {
+  data?: Paciente;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = `${environment.apiBaseUrl}/api`;
-  private currentUser: Paciente | null = null;
+  private currentUserSubject = new BehaviorSubject<Paciente | null>(null);
 
-   private tokenKey = 'token';
+  currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    // al crear el servicio, intentamos reconstruir el usuario 
-    this.restoreUserFromJwt();
+  constructor(private http: HttpClient) {}
+
+  initializeSession(): Promise<void> {
+    return new Promise((resolve) => {
+      this.fetchCurrentUser().subscribe({
+        next: () => resolve(),
+        error: () => resolve(),
+      });
+    });
   }
 
-  // Login para pacientes o admin
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string): Observable<Paciente> {
     const url = `${this.apiUrl}/pacientes/login`;
     const body = { email, password };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-   return this.http.post<any>(url, body, { headers }).pipe(
-      // lógica de guardar usuario en el servicio
-      tap(res => {
-        //this.setCurrentUser(user);
-        //console.log('Usuario almacenado en localStorage:', user);
-        const token = res?.token ?? res?.data?.token;
-        if (!token) {
-          console.error('❌ No se recibió token en la respuesta:', res);
-          throw new Error('No se recibió token de autenticación');
+    return this.http.post<LoginResponse>(url, body).pipe(
+      switchMap((response) => {
+        const responseUser = response?.data ?? null;
+        if (responseUser) {
+          this.setCurrentUser(responseUser);
+          return of(responseUser);
         }
-        localStorage.setItem(this.tokenKey, token);
-        this.restoreUserFromJwt();
-        console.log('✅ TOKEN guardado:', token);
+
+        return this.fetchCurrentUser().pipe(
+          map((user) => {
+            if (!user) {
+              throw new Error('No se pudo recuperar la sesion del usuario.');
+            }
+            return user;
+          })
+        );
       }),
-      //  uso moderno de throwError con función
-      catchError(err => {
-        return throwError(() => err?.error?.message || 'Error en el servidor');
-      })
+      catchError((err) =>
+        throwError(() => err?.error?.message || err?.message || 'Error en el servidor')
+      )
     );
   }
 
-  // Registrar nuevo paciente
-  register(nombre: string, apellido: string, email: string, password: string, obraSocialId: number): Observable<any> {
+  register(
+    nombre: string,
+    apellido: string,
+    email: string,
+    password: string,
+    obraSocialId: number
+  ): Observable<any> {
     const body = { nombre, apellido, email, password, obraSocialId: Number(obraSocialId) };
     return this.http.post<any>(`${this.apiUrl}/pacientes/register`, body).pipe(
-      tap((res: any) => {
-        // si tu API de register devuelve token, lo guardás igual que en login
-        const token = res?.token ?? res?.data?.token;
-        if (token) {
-          localStorage.setItem(this.tokenKey, token);
-          this.restoreUserFromJwt();
-          console.log('TOKEN guardado (register):', token);
-        }
-      }),
-      catchError(err =>
+      catchError((err) =>
         throwError(() => err?.error?.message || 'Error en el servidor')
       )
     );
   }
 
-    // registro hecho por un ADMIN
   registerByAdmin(
     nombre: string,
     apellido: string,
@@ -78,121 +80,71 @@ export class AuthService {
     obraSocialId: number,
     role: 'admin' | 'paciente' = 'admin'
   ): Observable<any> {
-    const url = `${this.apiUrl}/pacientes/admin/create`; 
+    const url = `${this.apiUrl}/pacientes/admin/create`;
     const body = { nombre, apellido, email, password, obraSocialId, role };
-    return this.http.post(url, body);
-  }
-  
-
-    // si hay token en localStorage, recreamos el user en memoria
-  private restoreUserFromJwt() {
-    //const storedUser = localStorage.getItem('currentUser');
-    const token = localStorage.getItem('token');
-
-     if (!token) {
-    this.currentUser = null;
-    // limpiar restos viejos de versiones anteriores
-    localStorage.removeItem('currentUser');
-    return;
+    return this.http.post(url, body).pipe(
+      catchError((err) =>
+        throwError(() => err?.error?.message || 'Error en el servidor')
+      )
+    );
   }
 
-     const decoded = this.getDecodedToken();
-  if (!decoded) {
-    this.currentUser = null;
-    return;
-  }
-  // recreamos el usuario SOLO en memoria
-  this.currentUser = {
-    id: decoded.id,
-    role: decoded.role,
-    email: decoded.email,
-    nombre: decoded.nombre,
-    apellido: decoded.apellido
-  };
-   
+  fetchCurrentUser(): Observable<Paciente | null> {
+    return this.http.get<SessionResponse>(environment.authMeUrl).pipe(
+      map((response) => response?.data ?? null),
+      tap((user) => this.setCurrentUser(user)),
+      catchError((err) => {
+        this.setCurrentUser(null);
+        if (err?.status === 401 || err?.status === 403) {
+          return of(null);
+        }
+        return throwError(() => err);
+      })
+    );
   }
 
-
-  // NUEVO: helper para decodificar el JWT de forma segura
-  private getDecodedToken(): any | null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-      // JWT = header.payload.signature -> queremos el payload (posición 1)
-      const payload = token.split('.')[1];
-
-      // Base64Url -> Base64
-      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-
-      // atob decodifica base64 a string
-      const jsonPayload = atob(base64);
-
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      console.error('Error al decodificar el token JWT', e);
-      return null;
-    }
+  getCurrentUser(): Paciente | null {
+    return this.currentUserSubject.value;
   }
 
-  // Obtener ID del paciente logueado
   getPacienteId(): number | null {
-    const decoded = this.getDecodedToken();
-    return decoded?.id ?? null;
+    return this.getCurrentUser()?.id ?? null;
   }
 
-  // Obtener el rol del usuario actual
   getRole(): string | null {
-    const decoded = this.getDecodedToken();
-    return decoded?.role ?? null;
+    return this.getCurrentUser()?.role ?? null;
   }
 
-  //  Saber si el usuario es administrador
- esAdmin(): boolean {
-  const token = localStorage.getItem('token');
-  if (!token) return false;
-
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload?.role === 'admin';
-  } catch {
-    return false;
+  esAdmin(): boolean {
+    return this.getRole() === 'admin';
   }
-}
 
- esPaciente(): boolean {
-  const token = localStorage.getItem('token');
-  if (!token) return false;
-
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload?.role === 'paciente';
-  } catch {
-    return false;
+  esPaciente(): boolean {
+    return this.getRole() === 'paciente';
   }
-}
 
-  // Saber si hay sesión iniciada
   isLoggedIn(): boolean {
-    const decoded = this.getDecodedToken();
-    if (!decoded) return false;
-    // validar expiración si el token tiene "exp"
-    if (decoded.exp) {
-      const now = Math.floor(Date.now() / 1000); // segundos
-      if (decoded.exp < now) {
-        // Token vencido -> limpiar sesión
-        this.logout();
-        return false;
-      }
-    } 
-
-    return true;
+    return !!this.getCurrentUser();
   }
 
-  // Cerrar sesión
-  logout() {
-    this.currentUser = null;
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('token'); 
+  logout(): Observable<void> {
+    return this.http.post<void>(environment.logoutUrl, {}).pipe(
+      tap(() => this.setCurrentUser(null)),
+      catchError((err) => {
+        this.setCurrentUser(null);
+        if (err?.status === 401 || err?.status === 403) {
+          return of(void 0);
+        }
+        return throwError(() => err?.error?.message || 'Error al cerrar sesión');
+      })
+    );
+  }
+
+  clearSession(): void {
+    this.setCurrentUser(null);
+  }
+
+  private setCurrentUser(user: Paciente | null): void {
+    this.currentUserSubject.next(user);
   }
 }

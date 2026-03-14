@@ -11,12 +11,12 @@ import { AuthService } from '../../Services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string | null = null;
-  role: string = 'paciente'; // Rol por defecto
+  role: string = 'paciente';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute, // Para obtener parámetros de la URL
+    private route: ActivatedRoute,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
@@ -26,34 +26,23 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Obtiene el rol de la URL
     this.role = this.route.snapshot.paramMap.get('role') || 'paciente';
-    console.log('Rol de usuario:', this.role); // Para verificar si es paciente o medico
   }
 
- onSubmit() {
-  console.log('Formulario enviado', this.loginForm);
-  if (this.loginForm.valid) {
-    const { email, password } = this.loginForm.value;
+  onSubmit() {
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
 
-    this.authService.login(email, password).subscribe({
-      next: (response) => {
-        console.log('Login exitoso:', response);
-        console.log("RESPUESTA LOGIN:", response);
-        // El token ya fue guardado por el AuthService
-        this.router.navigate(['/home']);
-      },
-      error: (error) => {
-        console.error('Login failed:', error);
-        this.errorMessage =
-          error?.message || 'Correo o contraseña son incorrectos.';
-      }
-    });
-
-  } else {
-    console.log('Form is invalid');
-    this.errorMessage = 'Por favor completa todos los campos correctamente.';
+      this.authService.login(email, password).subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          this.errorMessage = error || 'Correo o contrasena son incorrectos.';
+        }
+      });
+    } else {
+      this.errorMessage = 'Por favor completa todos los campos correctamente.';
+    }
   }
-}
-
 }

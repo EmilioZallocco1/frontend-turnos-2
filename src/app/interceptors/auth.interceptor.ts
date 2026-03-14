@@ -1,35 +1,37 @@
 import { Injectable } from '@angular/core';
 import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpHandler,
-  HttpEvent
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { AuthService } from '../Services/auth.service';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    const token = localStorage.getItem('token');
-
-    // Opcional: solo agregar header si la request va a tu API
     const isApiUrl = req.url.startsWith(environment.apiBaseUrl);
+    const authReq = isApiUrl ? req.clone({ withCredentials: true }) : req;
 
-    if (token && isApiUrl) {
-      const authReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (isApiUrl && (error.status === 401 || error.status === 403)) {
+          this.authService.clearSession();
+          this.router.navigate(['/login']);
         }
-      });
-      return next.handle(authReq);
-    }
 
-    return next.handle(req);
+        return throwError(() => error);
+      })
+    );
   }
 }

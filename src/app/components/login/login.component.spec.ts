@@ -6,7 +6,6 @@ import { AuthService } from '../../Services/auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
-import { LoginResponse } from '../../models/login-response.interface';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -14,8 +13,6 @@ describe('LoginComponent', () => {
   let authServiceSpy: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
-    // Crear un spy del AuthService
-    
     const spy = jasmine.createSpyObj('AuthService', ['login']);
 
     await TestBed.configureTestingModule({
@@ -32,12 +29,12 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('deberia crear el componente', () => {
     // @ts-ignore - Jasmine toBeTruthy typing conflict
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con campos requeridos', () => {
+  it('deberia inicializar el formulario con campos requeridos', () => {
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.loginForm).toBeDefined();
     // @ts-ignore - Jasmine toBeFalsy typing conflict
@@ -46,50 +43,44 @@ describe('LoginComponent', () => {
     expect(component.loginForm.get('password')).toBeDefined();
   });
 
-  it('debería tener el formulario inválido inicialmente', () => {
+  it('deberia tener el formulario invalido inicialmente', () => {
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.loginForm.valid).toBeFalsy();
   });
 
-  it('debería validar email correctamente', () => {
+  it('deberia validar email correctamente', () => {
     const emailControl = component.loginForm.get('email');
 
-    // Email vacío - inválido
     emailControl?.setValue('');
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(emailControl?.valid).toBeFalsy();
 
-    // Email inválido - inválido
     emailControl?.setValue('invalid-email');
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(emailControl?.valid).toBeFalsy();
 
-    // Email válido - válido
     emailControl?.setValue('usuario@example.com');
     // @ts-ignore - Jasmine toBeTruthy typing conflict
     expect(emailControl?.valid).toBeTruthy();
   });
 
-  it('debería validar password correctamente', () => {
+  it('deberia validar password correctamente', () => {
     const passwordControl = component.loginForm.get('password');
 
-    // Password vacío - inválido
     passwordControl?.setValue('');
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(passwordControl?.valid).toBeFalsy();
 
-    // Password corto - inválido
     passwordControl?.setValue('12345');
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(passwordControl?.valid).toBeFalsy();
 
-    // Password válido - válido
     passwordControl?.setValue('123456');
     // @ts-ignore - Jasmine toBeTruthy typing conflict
     expect(passwordControl?.valid).toBeTruthy();
   });
 
-  it('debería tener el formulario válido con datos correctos', () => {
+  it('deberia tener el formulario valido con datos correctos', () => {
     component.loginForm.patchValue({
       email: 'usuario@example.com',
       password: 'password123'
@@ -98,19 +89,13 @@ describe('LoginComponent', () => {
     expect(component.loginForm.valid).toBeTruthy();
   });
 
-  it('debería llamar al servicio de login cuando el formulario es válido', () => {
-    // Configurar el spy para devolver un observable exitoso con la estructura correcta de LoginResponse
-    const mockLoginResponse: LoginResponse = {
-      message: 'Login exitoso',
-      data: {
-        id: 1,
-        nombre: 'Juan',
-        apellido: 'Pérez',
-        email: 'usuario@example.com'
-      },
-      token: 'fake-token'
-    };
-    authServiceSpy.login.and.returnValue(of(mockLoginResponse));
+  it('deberia llamar al servicio de login cuando el formulario es valido', () => {
+    authServiceSpy.login.and.returnValue(of({
+      id: 1,
+      nombre: 'Juan',
+      apellido: 'Perez',
+      email: 'usuario@example.com'
+    }));
 
     component.loginForm.patchValue({
       email: 'usuario@example.com',
@@ -123,7 +108,7 @@ describe('LoginComponent', () => {
     expect(authServiceSpy.login).toHaveBeenCalledWith('usuario@example.com', 'password123');
   });
 
-  it('no debería llamar al servicio de login cuando el formulario es inválido', () => {
+  it('no deberia llamar al servicio de login cuando el formulario es invalido', () => {
     component.loginForm.patchValue({
       email: 'invalid-email',
       password: ''
@@ -135,8 +120,8 @@ describe('LoginComponent', () => {
     expect(authServiceSpy.login).not.toHaveBeenCalled();
   });
 
-  it('debería mostrar mensaje de error cuando el login falla', () => {
-    authServiceSpy.login.and.returnValue(throwError(() => ({ message: 'Credenciales inválidas' })));
+  it('deberia mostrar mensaje de error cuando el login falla', () => {
+    authServiceSpy.login.and.returnValue(throwError(() => ({ message: 'Credenciales invalidas' })));
 
     component.loginForm.patchValue({
       email: 'usuario@example.com',
@@ -144,20 +129,18 @@ describe('LoginComponent', () => {
     });
 
     component.onSubmit();
-// @ts-ignore - Jasmine toBeFalsy typing conflict
-    expect(component.errorMessage).toBe('Credenciales inválidas');
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
+    expect(component.errorMessage).toBe('Credenciales invalidas');
   });
 
-  it('debería mostrar mensaje de validación cuando el formulario es inválido', () => {
+  it('deberia mostrar mensaje de validacion cuando el formulario es invalido', () => {
     component.loginForm.patchValue({
       email: '',
       password: ''
     });
 
     component.onSubmit();
-// @ts-ignore - Jasmine toBeFalsy typing conflict
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.errorMessage).toBe('Por favor completa todos los campos correctamente.');
   });
 });
-
-    

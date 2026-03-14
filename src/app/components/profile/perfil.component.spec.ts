@@ -22,7 +22,7 @@ describe('PerfilComponent (simple)', () => {
       'updatePaciente',
       'deletePaciente',
     ]);
-    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['logout']);
+    authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', ['logout', 'clearSession']);
     routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
     locationSpy = jasmine.createSpyObj<Location>('Location', ['back']);
 
@@ -40,25 +40,25 @@ describe('PerfilComponent (simple)', () => {
     component = fixture.componentInstance;
   });
 
-  it('debería crear el componente', () => {
-    // @ts-ignore - Jasmine toBeFalsy typing conflict
+  it('deberia crear el componente', () => {
+    // @ts-ignore - Jasmine toBeTruthy typing conflict
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit debería llamar a getPerfil()', () => {
+  it('ngOnInit deberia llamar a getPerfil()', () => {
     spyOn(component, 'getPerfil');
     component.ngOnInit();
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.getPerfil).toHaveBeenCalled();
   });
 
-  it('getPerfil success: debería setear paciente y limpiar error', () => {
+  it('getPerfil success: deberia setear paciente y limpiar error', () => {
     pacienteServiceSpy.getPacienteData.and.returnValue(
       of({ data: { nombre: 'Emilio', email: 'e@e.com' } })
     );
 
     component.getPerfil();
-// @ts-ignore - Jasmine toBeFalsy typing conflict
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(pacienteServiceSpy.getPacienteData).toHaveBeenCalled();
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.paciente).toEqual({ nombre: 'Emilio', email: 'e@e.com' });
@@ -66,27 +66,29 @@ describe('PerfilComponent (simple)', () => {
     expect(component.error).toBeNull();
   });
 
-  it('getPerfil error: debería setear error', () => {
+  it('getPerfil error: deberia setear error', () => {
     pacienteServiceSpy.getPacienteData.and.returnValue(
       throwError(() => ({ error: { message: 'Fallo' } }))
     );
 
     component.getPerfil();
-// @ts-ignore - Jasmine toBeFalsy typing conflict
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(component.error).toBe('Fallo');
   });
 
-  it('logout: debería llamar authService.logout y navegar a /login', () => {
+  it('logout: deberia llamar authService.logout y navegar a /login', () => {
+    authServiceSpy.logout.and.returnValue(of(void 0));
+
     component.logout();
-// @ts-ignore - Jasmine toBeFalsy typing conflict
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(authServiceSpy.logout).toHaveBeenCalled();
- // @ts-ignore - Jasmine toBeFalsy typing conflict
+    // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('goBack: debería volver atrás', () => {
+  it('goBack: deberia volver atras', () => {
     component.goBack();
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(locationSpy.back).toHaveBeenCalled();
   });
-});
+}

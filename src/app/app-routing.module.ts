@@ -39,6 +39,7 @@ const routes: Routes = [
   {
    path: 'admin/alta-paciente',
    component: RegistroComponent,
+   canActivate: [AuthGuard, AdminGuard],
    data: { modoAdmin: true }
  },
 

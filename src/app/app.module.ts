@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,6 +20,11 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoadingInterceptor } from './Services/loading.interceptor';
+import { AuthService } from './Services/auth.service';
+
+export function initializeAuth(authService: AuthService) {
+  return () => authService.initializeSession();
+}
 
 
 @NgModule({
@@ -53,6 +58,12 @@ import { LoadingInterceptor } from './Services/loading.interceptor';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuth,
+      deps: [AuthService],
       multi: true,
     },
   ],
