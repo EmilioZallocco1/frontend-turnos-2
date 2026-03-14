@@ -20,6 +20,9 @@ export class HomeComponent implements OnInit {
   medicoId: number | null = null;
   fechaTurno: string = '';
   resultadoAdmin: any[] = [];
+  adminStatusMessage = '';
+  adminStatusError = '';
+  updatingTurnoId: number | null = null;
 
   constructor(
     private router: Router,
@@ -142,11 +145,16 @@ export class HomeComponent implements OnInit {
 
     this.turnoService.getTurnosPorMedico(this.medicoId).subscribe(
       (res) => {
-        this.resultadoAdmin = res.data;
+        this.resultadoAdmin = (res.data || []).map((turno: any) => ({
+          ...turno,
+          estado: this.normalizeEstado(turno.estado),
+        }));
+        this.adminStatusError = '';
       },
       (error) => {
         console.error(error);
         this.resultadoAdmin = [];
+        this.adminStatusError = 'No se pudieron cargar los turnos del medico.';
         alert(error);
       }
     );
@@ -155,16 +163,46 @@ export class HomeComponent implements OnInit {
   verPacientesPorFecha() {}
 
   changeStatus(turno: any, nuevoEstado: string) {
-    const estadoAnterior = turno.estado;
-    turno.estado = nuevoEstado;
+    const estadoNormalizado = this.normalizeEstado(nuevoEstado);
+    const estadoAnterior = this.normalizeEstado(turno.estado);
+    turno.estado = estadoNormalizado;
+    this.updatingTurnoId = turno.id;
+    this.adminStatusMessage = 'Actualizando estado del turno...';
+    this.adminStatusError = '';
+
     this.turnoService
-      .updateTurno(turno.id, { estado: nuevoEstado })
+      .updateTurno(turno.id, { estado: estadoNormalizado })
       .subscribe({
-        next: () => undefined,
+        next: () => {
+          this.adminStatusMessage = 'Estado actualizado correctamente.';
+          this.updatingTurnoId = null;
+          this.viewDoctorAppointments();
+        },
         error: (err) => {
           console.error(err);
           turno.estado = estadoAnterior;
+          this.updatingTurnoId = null;
+          this.adminStatusMessage = '';
+          this.adminStatusError = 'No se pudo actualizar el estado del turno.';
         },
       });
+  }
+
+  normalizeEstado(estado: string | null | undefined): string {
+    const estadoNormalizado = (estado || 'pendiente').toLowerCase();
+
+    if (estadoNormalizado === 'realizado') {
+      return 'confirmado';
+    }
+
+    if (
+      estadoNormalizado === 'pendiente' ||
+      estadoNormalizado === 'confirmado' ||
+      estadoNormalizado === 'cancelado'
+    ) {
+      return estadoNormalizado;
+    }
+
+    return 'pendiente';
   }
 }

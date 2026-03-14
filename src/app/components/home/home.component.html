@@ -331,6 +331,14 @@
             class="mt-4"
             data-cy="admin-resultados"
           >
+            <div *ngIf="adminStatusMessage" class="alert alert-success">
+              {{ adminStatusMessage }}
+            </div>
+
+            <div *ngIf="adminStatusError" class="alert alert-danger">
+              {{ adminStatusError }}
+            </div>
+
             <div *ngIf="resultadoAdmin.length > 0; else sinResultadosAdmin">
               <h5 class="text-secondary mb-3">
                 Resultados ({{ resultadoAdmin.length }})
@@ -366,13 +374,12 @@
                         <span
                           class="badge estado-badge"
                           [ngClass]="{
-                            'bg-pendiente':
-                              (item.estado || 'pendiente') === 'pendiente',
-                            'bg-realizado': item.estado === 'realizado',
-                            'bg-cancelado': item.estado === 'cancelado'
+                            'bg-pendiente': normalizeEstado(item.estado) === 'pendiente',
+                            'bg-realizado': normalizeEstado(item.estado) === 'confirmado',
+                            'bg-cancelado': normalizeEstado(item.estado) === 'cancelado'
                           }"
                         >
-                          {{ item.estado || "pendiente" | titlecase }}
+                          {{ normalizeEstado(item.estado) | titlecase }}
                         </span>
                       </div>
 
@@ -408,11 +415,12 @@
                         >
                         <select
                           class="form-select form-select-sm w-auto"
-                          [ngModel]="item.estado || 'pendiente'"
+                          [ngModel]="normalizeEstado(item.estado)"
                           (ngModelChange)="changeStatus(item, $event)"
+                          [disabled]="updatingTurnoId === item.id"
                         >
                           <option value="pendiente">Pendiente</option>
-                          <option value="realizado">Realizado</option>
+                          <option value="confirmado">Confirmado</option>
                           <option value="cancelado">Cancelado</option>
                         </select>
                       </div>

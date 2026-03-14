@@ -40,11 +40,7 @@ export class TurnoService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http
-      .put<any>(
-        `${this.apiUrl}/${turnoId}`,
-        { sanitizedInput: turnoData },
-        { headers }
-      )
+      .put<any>(`${this.apiUrl}/${turnoId}`, turnoData, { headers })
       .pipe(
         catchError((err) => {
           console.error('Error al actualizar el turno:', err);

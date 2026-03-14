@@ -97,7 +97,7 @@ describe('TurnoService', () => {
     req.flush(mockTurnos);
   });
 
-  it('updateTurno: deberia hacer PUT a /api/turnos/:id y enviar sanitizedInput', () => {
+  it('updateTurno: deberia hacer PUT a /api/turnos/:id y enviar el payload en raiz', () => {
     const id = 10;
     const data = { estado: 'confirmado' };
     const mockResponse = { ok: true };
@@ -113,7 +113,7 @@ describe('TurnoService', () => {
     // @ts-ignore - Jasmine toBeFalsy typing conflict
     expect(req.request.headers.get('Content-Type')).toBe('application/json');
     // @ts-ignore - Jasmine toBeFalsy typing conflict
-    expect(req.request.body).toEqual({ sanitizedInput: data });
+    expect(req.request.body).toEqual(data);
 
     req.flush(mockResponse);
   });
