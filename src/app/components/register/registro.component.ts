@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../Services/auth.service'; // Servicio de autenticación
-import { ObraSocialService } from 'src/app/Services/health-insurance.service'; // Servicio de obra social
-import { ActivatedRoute,Router } from '@angular/router';
-import { ObraSocialResponse } from '../../models/health-insurance.interface'; // Importa la interfaz
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../Services/auth.service';
+import {
+  ObraSocialResponse,
+  ObraSocial,
+} from '../../models/health-insurance.interface';
+import { ObraSocialService } from 'src/app/Services/health-insurance.service';
 
 @Component({
   selector: 'app-registro',
@@ -13,144 +15,132 @@ import { ObraSocialResponse } from '../../models/health-insurance.interface'; //
 })
 export class RegistroComponent implements OnInit {
   registroForm: FormGroup;
-  obrasSociales: any[] = []; // Para almacenar las obras sociales
-  errorMessage: string = '';
-  successMessage: string = '';
+  obrasSociales: ObraSocial[] = [];
+  errorMessage = '';
+  successMessage = '';
+  infoMessage = 'Completa tus datos para crear una cuenta.';
+  cargandoObrasSociales = false;
+  enviando = false;
+  modoAdmin = false;
 
-  //  para saber si estoy en modo admin
- modoAdmin: boolean = false;
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private obraSocialService: ObraSocialService,
     private router: Router,
-     private route: ActivatedRoute
+    private route: ActivatedRoute
   ) {
     this.registroForm = this.fb.group({
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
-      email: ['',[Validators.required,Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),],],
-       password: ['',[Validators.required,Validators.minLength(8),Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),],],
-      obraSocialId: ['', [Validators.required]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+        ],
+      ],
+      obraSocialId: [null, [Validators.required]],
     });
   }
 
   ngOnInit() {
-    this.loadObrasSociales(); // Cargar las obras sociales al inicializar el componente
     this.modoAdmin = this.route.snapshot.data['modoAdmin'] === true;
-
-
-   this.loadObrasSociales();
-
+    this.loadObrasSociales();
   }
 
-loadObrasSociales() {
-  this.obraSocialService.getObrasSociales().subscribe({
-    next: (response: ObraSocialResponse) => {
-      if (response.data && Array.isArray(response.data)) {
-        this.obrasSociales = response.data;
-        console.log('Obras sociales:', this.obrasSociales); 
-      } else {
-        this.errorMessage = 'No se encontraron obras sociales.';
-      }
-    },
+  loadObrasSociales() {
+    this.cargandoObrasSociales = true;
+    this.errorMessage = '';
+    this.infoMessage = 'Cargando obras sociales disponibles...';
 
-    error: (error) => {
-      console.error('Error al cargar obras sociales', error);
-      this.errorMessage = 'No se pudieron cargar las obras sociales.';
-    }
-  });
-}
+    this.obraSocialService.getObrasSociales().subscribe({
+      next: (response: ObraSocialResponse) => {
+        this.obrasSociales = Array.isArray(response.data) ? response.data : [];
+        this.cargandoObrasSociales = false;
 
+        if (this.obrasSociales.length) {
+          this.infoMessage = 'Selecciona la obra social y finaliza el registro.';
+        } else {
+          this.errorMessage = 'No se encontraron obras sociales disponibles.';
+          this.infoMessage = 'No podemos continuar hasta tener una obra social.';
+        }
+      },
+      error: () => {
+        this.cargandoObrasSociales = false;
+        this.errorMessage = 'No se pudieron cargar las obras sociales.';
+        this.infoMessage = 'Intenta nuevamente en unos segundos.';
+      },
+    });
+  }
 
   onSubmit() {
-    if (this.registroForm.valid) {
-      const { nombre, apellido, email, password, obraSocialId } =
-        this.registroForm.value;
-        if (!this.registroForm.valid) {
-     this.registroForm.markAllAsTouched();
-     if (this.registroForm.get('email')?.invalid) {
-       this.errorMessage ='El email no tiene un formato válido. Debe ser algo como ejemplo@mail.com';
-     } else {
-       this.errorMessage = 'Por favor, complete todos los campos requeridos.';
-     }
-     return;
-   }
-  }
-
-
-   const { nombre, apellido, email, password, obraSocialId } =
-     this.registroForm.value;
-
-
-      this.authService
-        .register(nombre, apellido, email, password, obraSocialId)
-        .subscribe(
-          (response) => {
-            console.log('Registro exitoso:', response);
-            this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
-            this.registroForm.reset();
-            setTimeout(() => {
-              this.router.navigate(['/login']);
-            }, 2000);
-          },
-          (error) => {
-            console.error('Error en el registro:', error);
-            this.errorMessage = error;
-          }
-        );
-         //  elegimos observable según si es admin o no
-   let request$;
-
-
-   if (this.modoAdmin) {
-     //  Alta hecha desde el panel admin → crea rol ADMIN
-     request$ = this.authService.registerByAdmin(
-       nombre,
-       apellido,
-       email,
-       password,
-       obraSocialId,
-       'admin'
-     );
-
-    } else {
-      console.log('Formulario inválido');
-      this.errorMessage = 'Por favor, complete todos los campos requeridos.';
-      // 👤 Registro común de paciente
-     request$ = this.authService.register(
-       nombre,
-       apellido,
-       email,
-       password,
-       obraSocialId
-     );
-
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+      this.successMessage = '';
+      this.errorMessage = this.registroForm.get('email')?.invalid
+        ? 'El email no tiene un formato valido. Debe ser algo como ejemplo@mail.com.'
+        : 'Por favor completa todos los campos requeridos.';
+      this.infoMessage = 'Faltan datos antes de crear la cuenta.';
+      return;
     }
-     request$.subscribe({
-     next: (response) => {
-       console.log('Registro exitoso:', response);
-       this.registroForm.reset();
-       this.errorMessage = '';
 
+    const { nombre, apellido, email, password, obraSocialId } =
+      this.registroForm.getRawValue();
 
-       if (this.modoAdmin) {
-         this.successMessage =
-           'Usuario administrador registrado correctamente.';
-         setTimeout(() => this.router.navigate(['/home']), 1500);
-       } else {
-         this.successMessage = 'Registro exitoso. Por favor, inicie sesión.';
-         setTimeout(() => this.router.navigate(['/login']), 2000);
-       }
-     },
-     error: (error) => {
-       console.error('Error en el registro:', error);
-       this.errorMessage =
-         error?.error?.message || 'Ocurrió un error al registrar.';
-       this.successMessage = '';
-     },
-   });
+    this.enviando = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.infoMessage = this.modoAdmin
+      ? 'Registrando un nuevo administrador...'
+      : 'Creando tu cuenta de paciente...';
 
+    const request$ = this.modoAdmin
+      ? this.authService.registerByAdmin(
+          nombre,
+          apellido,
+          email,
+          password,
+          obraSocialId,
+          'admin'
+        )
+      : this.authService.register(
+          nombre,
+          apellido,
+          email,
+          password,
+          obraSocialId
+        );
+
+    request$.subscribe({
+      next: () => {
+        this.enviando = false;
+        this.registroForm.reset();
+
+        if (this.modoAdmin) {
+          this.successMessage = 'Usuario administrador registrado correctamente.';
+          this.infoMessage = 'Redirigiendo al inicio...';
+          setTimeout(() => this.router.navigate(['/home']), 1500);
+        } else {
+          this.successMessage = 'Registro exitoso. Ahora puedes iniciar sesion.';
+          this.infoMessage = 'Redirigiendo al login...';
+          setTimeout(() => this.router.navigate(['/login']), 2000);
+        }
+      },
+      error: (error) => {
+        this.enviando = false;
+        this.successMessage = '';
+        this.errorMessage = error || 'Ocurrio un error al registrar.';
+        this.infoMessage = 'No pudimos completar el registro.';
+      },
+    });
   }
-  
 }

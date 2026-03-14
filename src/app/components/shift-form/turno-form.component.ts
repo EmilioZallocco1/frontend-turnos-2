@@ -14,19 +14,18 @@ export class TurnoFormComponent implements OnInit {
   turnoForm: FormGroup;
   medicos: any[] = [];
   horariosDisponibles: string[] = [];
-  hoy: string = '';
+  hoy = '';
 
   errorMsg = '';
   successMsg = '';
-  redirectCountdown = 0; // segundos restantes antes de redirigir
+  infoMsg = 'Selecciona medico y fecha para ver horarios disponibles.';
+  redirectCountdown = 0;
 
-  // NUEVO: flags de carga específicos
   cargandoMedicos = false;
   cargandoTurno = false;
   cargandoHorarios = false;
   guardandoTurno = false;
 
-  //  para saber si estoy creando o editando
   modoEdicion = false;
   turnoId: number | null = null;
 
@@ -36,7 +35,7 @@ export class TurnoFormComponent implements OnInit {
     private authService: AuthService,
     private obraSocialService: ObraSocialService,
     private router: Router,
-    private route: ActivatedRoute //
+    private route: ActivatedRoute
   ) {
     this.turnoForm = this.fb.group({
       fecha: ['', [Validators.required]],
@@ -47,7 +46,6 @@ export class TurnoFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 🔹 Fecha mínima = hoy
     const d = new Date();
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -56,7 +54,6 @@ export class TurnoFormComponent implements OnInit {
 
     this.loadMedicos();
 
-    //  si viene /turno-form/:id => modo edición
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -66,7 +63,6 @@ export class TurnoFormComponent implements OnInit {
       }
     });
 
-    // recargar horarios al cambiar fecha o médico
     this.turnoForm.get('fecha')?.valueChanges.subscribe(() => {
       this.cargarHorariosDisponibles();
     });
@@ -77,31 +73,32 @@ export class TurnoFormComponent implements OnInit {
 
   loadMedicos() {
     this.cargandoMedicos = true;
+    this.infoMsg = 'Cargando medicos disponibles...';
 
     this.obraSocialService.getMedicos().subscribe({
       next: (response) => {
         this.medicos = response.data;
         this.cargandoMedicos = false;
+        this.infoMsg = this.medicos.length
+          ? 'Selecciona medico y fecha para consultar horarios.'
+          : 'No hay medicos disponibles para reservar.';
       },
       error: () => {
-        this.errorMsg = 'No se pudieron cargar los médicos';
+        this.errorMsg = 'No se pudieron cargar los medicos.';
         this.cargandoMedicos = false;
+        this.infoMsg = 'Intenta nuevamente mas tarde.';
       },
     });
   }
 
-  //  carga el turno desde la API y llena el formulario
   cargarTurnoParaEditar(id: number) {
     this.cargandoTurno = true;
+    this.infoMsg = 'Cargando los datos del turno...';
+
     this.turnoService.getTurnoById(id).subscribe({
       next: (res) => {
         const t = res.data;
-
-        let soloFecha = '';
-        if (t.fecha) {
-          // ejemplo t.fecha = "2025-12-13T00:00:00.000Z"
-          soloFecha = String(t.fecha).split('T')[0]; // "2025-12-13"
-        }
+        const soloFecha = t.fecha ? String(t.fecha).split('T')[0] : '';
 
         this.turnoForm.patchValue({
           fecha: soloFecha,
@@ -110,14 +107,15 @@ export class TurnoFormComponent implements OnInit {
           medicoId: t.medico?.id ?? t.medicoId,
         });
 
-        // cargar horarios para esa fecha/médico (manteniendo la hora actual si hace falta)
         this.cargarHorariosDisponibles();
         this.cargandoTurno = false;
+        this.infoMsg = 'Modifica los datos y guarda los cambios.';
       },
       error: (err) => {
-        console.error('Error al cargar turno para edición:', err);
+        console.error('Error al cargar turno para edicion:', err);
         this.errorMsg = 'No se pudo cargar el turno para editar.';
         this.cargandoTurno = false;
+        this.infoMsg = 'No pudimos preparar el formulario.';
       },
     });
   }
@@ -128,17 +126,22 @@ export class TurnoFormComponent implements OnInit {
 
     if (!fecha || !medicoId) {
       this.horariosDisponibles = [];
+      this.infoMsg = 'Selecciona medico y fecha para ver horarios disponibles.';
       this.actualizarEstadoHora();
       return;
     }
 
+    this.cargandoHorarios = true;
+    this.infoMsg = 'Buscando horarios disponibles...';
+
     this.turnoService.getHorariosDisponibles(medicoId, fecha).subscribe({
       next: (res) => {
         let lista = res.data || res;
-        if (!Array.isArray(lista)) lista = [];
+        if (!Array.isArray(lista)) {
+          lista = [];
+        }
 
         const horaActual = this.turnoForm.get('hora')?.value;
-
         if (horaActual && !lista.includes(horaActual)) {
           lista.unshift(horaActual);
         }
@@ -149,11 +152,17 @@ export class TurnoFormComponent implements OnInit {
           this.turnoForm.get('hora')?.reset('');
         }
 
+        this.cargandoHorarios = false;
+        this.infoMsg = this.horariosDisponibles.length
+          ? 'Selecciona uno de los horarios disponibles.'
+          : 'No hay horarios disponibles para esa fecha.';
         this.actualizarEstadoHora();
       },
       error: () => {
+        this.cargandoHorarios = false;
         this.horariosDisponibles = [];
         this.turnoForm.get('hora')?.reset('');
+        this.infoMsg = 'No pudimos consultar los horarios del medico.';
         this.actualizarEstadoHora();
       },
     });
@@ -165,12 +174,18 @@ export class TurnoFormComponent implements OnInit {
 
   onSubmit() {
     if (this.turnoForm.invalid) {
-      this.errorMsg = 'Completá todos los campos requeridos.';
+      this.turnoForm.markAllAsTouched();
+      this.errorMsg = 'Completa todos los campos requeridos.';
+      this.infoMsg = 'Faltan datos antes de guardar el turno.';
       return;
     }
 
     this.errorMsg = '';
     this.successMsg = '';
+    this.guardandoTurno = true;
+    this.infoMsg = this.modoEdicion
+      ? 'Guardando cambios del turno...'
+      : 'Registrando el turno...';
 
     if (this.modoEdicion && this.turnoId !== null) {
       this.actualizarTurno();
@@ -180,10 +195,11 @@ export class TurnoFormComponent implements OnInit {
   }
 
   private crearTurno() {
-    const { fecha, hora, descripcion, medicoId } = this.turnoForm.value;
+    const { fecha, hora, descripcion, medicoId } = this.turnoForm.getRawValue();
     const pacienteId = this.authService.getPacienteId();
 
     if (!pacienteId) {
+      this.guardandoTurno = false;
       this.errorMsg = 'No se pudo identificar al paciente.';
       return;
     }
@@ -200,58 +216,61 @@ export class TurnoFormComponent implements OnInit {
 
     this.turnoService.createTurno(nuevoTurno).subscribe({
       next: () => {
+        this.guardandoTurno = false;
         this.successMsg =
-          '✅ Turno creado con éxito. Serás redirigido al inicio en 5 segundos...';
+          'Turno creado con exito. Seras redirigido al inicio en 5 segundos.';
+        this.infoMsg = 'Ya reservamos el turno.';
         this.turnoForm.reset();
+        this.actualizarEstadoHora();
         this.iniciarRedireccion();
       },
       error: (msg: string) => {
+        this.guardandoTurno = false;
         this.errorMsg = msg || 'Error al crear el turno.';
+        this.infoMsg = 'No pudimos guardar el turno.';
         console.error('Error al crear el turno:', msg);
       },
     });
   }
 
-  // lógica para actualizar usando el mismo form
   private actualizarTurno() {
-    const { fecha, hora, descripcion, medicoId } = this.turnoForm.value;
+    const { fecha, hora, descripcion, medicoId } = this.turnoForm.getRawValue();
 
     const turnoActualizado = {
       fecha,
       hora,
       descripcion,
       medicoId: Number(medicoId),
-      // estado: 'Pendiente',
     };
 
-    this.turnoService
-      .updateTurno(this.turnoId!, turnoActualizado)
-      .subscribe({
-        next: () => {
-          this.successMsg =
-            '✅ Turno actualizado con éxito. Serás redirigido al inicio en 5 segundos...';
-          this.iniciarRedireccion();
-        },
-        error: (err: any) => {
-          const msg =
-            typeof err === 'string'
-              ? err
-              : err?.message || 'Error al actualizar el turno.';
-          this.errorMsg = msg;
-          console.error('Error al actualizar el turno:', err);
-        },
-      });
+    this.turnoService.updateTurno(this.turnoId!, turnoActualizado).subscribe({
+      next: () => {
+        this.guardandoTurno = false;
+        this.successMsg =
+          'Turno actualizado con exito. Seras redirigido al inicio en 5 segundos.';
+        this.infoMsg = 'Los cambios ya fueron guardados.';
+        this.iniciarRedireccion();
+      },
+      error: (err: any) => {
+        this.guardandoTurno = false;
+        const msg =
+          typeof err === 'string'
+            ? err
+            : err?.message || 'Error al actualizar el turno.';
+        this.errorMsg = msg;
+        this.infoMsg = 'No pudimos guardar los cambios.';
+        console.error('Error al actualizar el turno:', err);
+      },
+    });
   }
 
   private actualizarEstadoHora() {
     const horaCtrl = this.turnoForm.get('hora');
 
     if (!this.horariosDisponibles.length) {
-      // Deshabilitar y limpiar
       horaCtrl?.reset('');
       horaCtrl?.disable({ emitEvent: false });
     } else {
-      // Habilitar si hay horarios
       horaCtrl?.enable({ emitEvent: false });
     }
   }

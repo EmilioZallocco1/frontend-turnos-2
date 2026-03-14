@@ -1,29 +1,28 @@
 <div
   class="container d-flex justify-content-center align-items-center min-vh-100"
 >
-  <div *ngIf="cargandoMedicos" class="text-center mb-3">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-2">Cargando médicos...</p>
-  </div>
-
   <div
     class="card shadow-lg p-4 w-100"
     style="max-width: 500px; border-radius: 15px"
   >
-    <h2 class="text-center mb-4 text-primary fw-bold">🩺 SOLICITAR TURNO</h2>
+    <h2 class="text-center mb-4 text-primary fw-bold">
+      {{ modoEdicion ? 'EDITAR TURNO' : 'SOLICITAR TURNO' }}
+    </h2>
 
-    <!-- Mensajes -->
-    <div
-      *ngIf="errorMsg"
-      class="alert alert-danger text-center animate__animated animate__shakeX"
-    >
+    <div class="alert alert-info text-center" role="status">
+      <span
+        *ngIf="cargandoMedicos || cargandoTurno || cargandoHorarios || guardandoTurno"
+        class="spinner-border spinner-border-sm me-2"
+        aria-hidden="true"
+      ></span>
+      {{ infoMsg }}
+    </div>
+
+    <div *ngIf="errorMsg" class="alert alert-danger text-center">
       {{ errorMsg }}
     </div>
 
-    <div
-      *ngIf="successMsg"
-      class="alert alert-success text-center animate__animated animate__fadeIn"
-    >
+    <div *ngIf="successMsg" class="alert alert-success text-center">
       <strong>{{ successMsg }}</strong>
       <div
         *ngIf="redirectCountdown > 0"
@@ -37,18 +36,21 @@
         ></div>
       </div>
       <small *ngIf="redirectCountdown > 0" class="text-muted d-block mt-2">
-        Redirigiendo en {{ redirectCountdown }}s…
+        Redirigiendo en {{ redirectCountdown }}s...
       </small>
     </div>
 
-    <!-- Formulario -->
-
     <form [formGroup]="turnoForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="mb-4">
-        <label for="medicoId" class="form-label fw-semibold">👨‍⚕️ Médico</label>
-        <select id="medicoId" formControlName="medicoId" class="form-select">
-          <option [ngValue]="null" disabled selected>
-            Seleccione un médico
+        <label for="medicoId" class="form-label fw-semibold">Medico</label>
+        <select
+          id="medicoId"
+          formControlName="medicoId"
+          class="form-select"
+          [disabled]="cargandoMedicos || cargandoTurno || guardandoTurno"
+        >
+          <option [ngValue]="null">
+            {{ cargandoMedicos ? 'Cargando medicos...' : 'Seleccione un medico' }}
           </option>
           <option *ngFor="let medico of medicos" [value]="medico.id">
             {{ medico.nombre }}
@@ -57,20 +59,34 @@
       </div>
 
       <div class="mb-3">
-        <label for="fecha" class="form-label fw-semibold">📅 Fecha</label>
+        <label for="fecha" class="form-label fw-semibold">Fecha</label>
         <input
           type="date"
           id="fecha"
           formControlName="fecha"
           class="form-control"
           [min]="hoy"
+          [disabled]="cargandoTurno || guardandoTurno"
         />
       </div>
 
       <div class="mb-3">
-        <label for="hora" class="form-label fw-semibold">⏰ Hora</label>
-        <select id="hora" formControlName="hora" class="form-select">
-          <option value="" disabled selected>Seleccione un horario</option>
+        <label for="hora" class="form-label fw-semibold">Hora</label>
+        <select
+          id="hora"
+          formControlName="hora"
+          class="form-select"
+          [disabled]="cargandoHorarios || guardandoTurno || !horariosDisponibles.length"
+        >
+          <option value="">
+            {{
+              cargandoHorarios
+                ? 'Buscando horarios...'
+                : horariosDisponibles.length
+                ? 'Seleccione un horario'
+                : 'Sin horarios disponibles'
+            }}
+          </option>
           <option *ngFor="let h of horariosDisponibles" [value]="h">
             {{ h }}
           </option>
@@ -78,15 +94,14 @@
       </div>
 
       <div class="mb-3">
-        <label for="descripcion" class="form-label fw-semibold"
-          >📝 Descripción</label
-        >
+        <label for="descripcion" class="form-label fw-semibold">Descripcion</label>
         <textarea
           id="descripcion"
           formControlName="descripcion"
           class="form-control"
           placeholder="Motivo de la consulta"
           rows="3"
+          [disabled]="guardandoTurno"
         ></textarea>
       </div>
 
@@ -95,15 +110,25 @@
           type="button"
           class="btn btn-outline-secondary"
           (click)="volverHome()"
+          [disabled]="guardandoTurno"
         >
-          ⬅️ Volver al Home
+          Volver al Home
         </button>
         <button
           type="submit"
           class="btn btn-primary"
-          [disabled]="turnoForm.invalid"
+          [disabled]="turnoForm.invalid || guardandoTurno || cargandoTurno"
         >
-          💾 Solicitar Turno
+          <span
+            *ngIf="guardandoTurno"
+            class="spinner-border spinner-border-sm me-2"
+            aria-hidden="true"
+          ></span>
+          {{
+            guardandoTurno
+              ? (modoEdicion ? 'Guardando...' : 'Solicitando...')
+              : (modoEdicion ? 'Guardar cambios' : 'Solicitar turno')
+          }}
         </button>
       </div>
     </form>

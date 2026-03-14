@@ -11,7 +11,9 @@ import { AuthService } from '../../Services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  infoMessage = 'Ingresa tus datos para continuar.';
   role: string = 'paciente';
+  enviando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,19 +32,32 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-
-      this.authService.login(email, password).subscribe({
-        next: () => {
-          this.router.navigate(['/home']);
-        },
-        error: (error) => {
-          this.errorMessage = error || 'Correo o contrasena son incorrectos.';
-        }
-      });
-    } else {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       this.errorMessage = 'Por favor completa todos los campos correctamente.';
+      this.infoMessage = 'Revisa el email y la contrasena antes de continuar.';
+      return;
     }
+
+    this.enviando = true;
+    this.errorMessage = null;
+    this.infoMessage = 'Validando tus credenciales...';
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.infoMessage = 'Acceso concedido. Redirigiendo al inicio...';
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        this.enviando = false;
+        this.errorMessage = error || 'Correo o contrasena incorrectos.';
+        this.infoMessage = 'No pudimos iniciar sesion con esos datos.';
+      },
+      complete: () => {
+        this.enviando = false;
+      },
+    });
   }
 }

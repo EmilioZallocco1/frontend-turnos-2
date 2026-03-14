@@ -1,24 +1,28 @@
-<!-- Botón de volver atrás  -->
 <button class="btn btn-outline-secondary btn-go-back" (click)="goBack()">
-  ⬅️ Volver al Home  
+  Volver al Home
 </button>
 
 <div class="page-wrap d-flex align-items-center justify-content-center py-5">
-  
   <div class="card medico-card shadow-lg">
-   
     <div class="card-header border-0 bg-transparent text-center pt-4">
       <h2 class="mb-1 text-primary fw-bold">
-        {{ modoEdicion ? '✏️ Editar Médico' : '🩺 ALTA DE MÉDICO' }}
+        {{ modoEdicion ? 'Editar Medico' : 'ALTA DE MEDICO' }}
       </h2>
-      <p class="text-muted mb-0">Completá los datos del profesional</p>
+      <p class="text-muted mb-0">Completa los datos del profesional</p>
     </div>
 
     <div class="card-body p-4 p-lg-5">
+      <div class="alert alert-info text-center" role="status">
+        <span
+          *ngIf="cargandoCatalogos || cargandoMedico || guardando"
+          class="spinner-border spinner-border-sm me-2"
+          aria-hidden="true"
+        ></span>
+        {{ mensajeInfo }}
+      </div>
+
       <form (ngSubmit)="guardarMedico()" #f="ngForm" novalidate>
         <div class="row g-4">
-
-          <!-- Nombre -->
           <div class="col-md-6">
             <label for="nombre" class="form-label fw-semibold">Nombre</label>
             <div class="input-group has-validation">
@@ -32,14 +36,14 @@
                 required
                 minlength="2"
                 #nombre="ngModel"
-                placeholder="Ej.: Dra. Ana López"
+                placeholder="Ej.: Dra. Ana Lopez"
                 data-cy="input-medico-nombre"
+                [disabled]="cargandoMedico || guardando"
               />
-              <div class="invalid-feedback">Ingresá un nombre válido.</div>
+              <div class="invalid-feedback">Ingresa un nombre valido.</div>
             </div>
           </div>
 
-          <!-- Email -->
           <div class="col-md-6">
             <label for="email" class="form-label fw-semibold">Email</label>
             <div class="input-group has-validation">
@@ -55,14 +59,14 @@
                 #email="ngModel"
                 placeholder="profesional@clinica.com"
                 data-cy="input-medico-email"
+                [disabled]="cargandoMedico || guardando"
               />
-              <div class="invalid-feedback">Ingresá un email válido.</div>
+              <div class="invalid-feedback">Ingresa un email valido.</div>
             </div>
           </div>
 
-          <!-- Teléfono -->
           <div class="col-md-6">
-            <label for="telefono" class="form-label fw-semibold">Teléfono</label>
+            <label for="telefono" class="form-label fw-semibold">Telefono</label>
             <div class="input-group has-validation">
               <span class="input-group-text"><i class="bi bi-telephone"></i></span>
               <input
@@ -74,12 +78,12 @@
                 required
                 placeholder="Ej.: +54 11 5555-5555"
                 data-cy="input-medico-telefono"
+                [disabled]="cargandoMedico || guardando"
               />
-              <div class="invalid-feedback">Ingresá un teléfono válido.</div>
+              <div class="invalid-feedback">Ingresa un telefono valido.</div>
             </div>
           </div>
 
-          <!-- Especialidad -->
           <div class="col-md-6">
             <label for="especialidad" class="form-label fw-semibold">Especialidad</label>
             <div class="input-group has-validation">
@@ -92,17 +96,17 @@
                 required
                 #especialidad="ngModel"
                 data-cy="select-medico-especialidad"
+                [disabled]="cargandoCatalogos || guardando"
               >
-                <option [ngValue]="null" disabled>Seleccione una especialidad</option>
+                <option [ngValue]="null">Seleccione una especialidad</option>
                 <option *ngFor="let esp of especialidades" [ngValue]="esp.id">
                   {{ esp.name }}
                 </option>
               </select>
-              <div class="invalid-feedback">Seleccioná una especialidad.</div>
+              <div class="invalid-feedback">Selecciona una especialidad.</div>
             </div>
           </div>
 
-          <!-- Obra Social -->
           <div class="col-12">
             <label for="obraSocial" class="form-label fw-semibold">Obra Social (opcional)</label>
             <div class="input-group">
@@ -113,6 +117,7 @@
                 name="obraSocialId"
                 [(ngModel)]="medico.obraSocialId"
                 data-cy="select-medico-obra-social"
+                [disabled]="cargandoCatalogos || guardando"
               >
                 <option [ngValue]="null">Seleccione una obra social</option>
                 <option *ngFor="let os of obrasSociales" [ngValue]="os.id">
@@ -121,19 +126,21 @@
               </select>
             </div>
           </div>
-
         </div>
 
-        <!-- BOTÓN -->
         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end mt-5">
           <button
             type="submit"
             class="btn btn-primary px-4"
-            [disabled]="f.invalid"
+            [disabled]="f.invalid || guardando || cargandoCatalogos || cargandoMedico"
             data-cy="btn-guardar-medico"
           >
-            <i class="bi bi-save me-1"></i>
-            {{ modoEdicion ? 'Guardar cambios' : 'Registrar médico' }}
+            <span
+              *ngIf="guardando"
+              class="spinner-border spinner-border-sm me-2"
+              aria-hidden="true"
+            ></span>
+            {{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Registrar medico') }}
           </button>
         </div>
       </form>

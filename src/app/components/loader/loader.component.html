@@ -3,6 +3,7 @@
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
-    <p class="mt-2 text-white">Cargando...</p>
+    <p class="loader-title mt-3">La app esta trabajando</p>
+    <p class="loader-message">{{ (message$ | async) || 'Cargando...' }}</p>
   </div>
 </div>

@@ -1,15 +1,35 @@
 .loader-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(7, 20, 43, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  backdrop-filter: blur(3px);
 }
 
 .loader-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 260px;
+  padding: 1.5rem 1.75rem;
+  border-radius: 18px;
+  background: rgba(16, 35, 67, 0.92);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.loader-title {
+  margin-bottom: 0.35rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.loader-message {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.92rem;
 }

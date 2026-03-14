@@ -7,12 +7,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LoadingService {
   private loadingCount = 0;
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  private messageSubject = new BehaviorSubject<string>('Preparando informacion...');
 
   // observable para que el loader se suscriba
   loading$: Observable<boolean> = this.loadingSubject.asObservable();
+  message$: Observable<string> = this.messageSubject.asObservable();
 
-  show() {
+  show(message?: string) {
     this.loadingCount++;
+    if (message) {
+      this.messageSubject.next(message);
+    }
     if (this.loadingCount === 1) {
       this.loadingSubject.next(true);
     }
@@ -30,5 +35,10 @@ export class LoadingService {
   reset() {
     this.loadingCount = 0;
     this.loadingSubject.next(false);
+    this.messageSubject.next('Preparando informacion...');
+  }
+
+  setMessage(message: string) {
+    this.messageSubject.next(message);
   }
 }

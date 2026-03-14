@@ -1,29 +1,34 @@
 <div class="container py-5">
-  <!-- Botón de retroceso -->
   <div class="mb-4">
     <button class="btn btn-outline-secondary" (click)="goBack()">
-      ⬅️ Volver al Home
+      Volver al Home
     </button>
   </div>
 
-  <h2 class="text-primary fw-bold mb-4 text-center">📋 MIS TURNOS</h2>
+  <h2 class="text-primary fw-bold mb-4 text-center">MIS TURNOS</h2>
 
-  <!-- Mensajes -->
-  <div
-    *ngIf="successMessage"
-    class="alert alert-success text-center animate__animated animate__fadeIn"
-  >
+  <div class="alert alert-info text-center" role="status">
+    <span
+      *ngIf="cargando"
+      class="spinner-border spinner-border-sm me-2"
+      aria-hidden="true"
+    ></span>
+    {{ infoMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success text-center">
     {{ successMessage }}
   </div>
-  <div
-    *ngIf="error"
-    class="alert alert-danger text-center animate__animated animate__shakeX"
-  >
+  <div *ngIf="error" class="alert alert-danger text-center">
     {{ error }}
   </div>
 
-  <!-- Lista de turnos -->
-  <div *ngIf="turnos && turnos.length > 0; else noTurnos" class="turnos-list">
+  <div *ngIf="cargando" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-3 mb-0 text-muted">Consultando tus turnos...</p>
+  </div>
+
+  <div *ngIf="!cargando && turnos && turnos.length > 0; else noTurnos" class="turnos-list">
     <div
       *ngFor="let turno of turnos"
       class="card-turno shadow-sm p-3 mb-4 animate__animated animate__fadeInUp"
@@ -32,12 +37,12 @@
         <div class="info">
           <h5 class="text-primary mb-2">TURNO #{{ turno.id }}</h5>
           <p class="mb-1">
-            <strong>📅 Fecha:</strong>
+            <strong>Fecha:</strong>
             {{ turno.fecha | date : "dd/MM/yy" : "UTC" }}
           </p>
-          <p class="mb-1"><strong>⏰ Hora:</strong> {{ turno.hora }}</p>
+          <p class="mb-1"><strong>Hora:</strong> {{ turno.hora }}</p>
           <p class="mb-1">
-            <strong>⚙️ Estado:</strong>
+            <strong>Estado:</strong>
             <span
               class="badge"
               [ngClass]="{
@@ -54,13 +59,13 @@
             </span>
           </p>
           <p class="mb-1">
-            <strong>🩺 Médico:</strong> {{ turno.medico?.nombre }}
+            <strong>Medico:</strong> {{ turno.medico?.nombre }}
           </p>
           <p class="mb-1">
-            <strong>👤 Paciente:</strong> {{ turno.paciente?.nombre }}
+            <strong>Paciente:</strong> {{ turno.paciente?.nombre }}
           </p>
           <p class="mb-0">
-            <strong>📝 Descripción:</strong> {{ turno.descripcion }}
+            <strong>Descripcion:</strong> {{ turno.descripcion }}
           </p>
         </div>
 
@@ -68,30 +73,33 @@
           <button
             class="btn btn-outline-primary me-2"
             (click)="editarTurno(turno.id)"
-            [disabled]="!puedeModificar(turno)"
+            [disabled]="!puedeModificar(turno) || eliminandoId === turno.id"
           >
-            ✏️ Editar
+            Editar
           </button>
 
           <button
             class="btn btn-outline-danger"
             (click)="deleteTurno(turno.id)"
-            [disabled]="!puedeModificar(turno)"
+            [disabled]="!puedeModificar(turno) || eliminandoId === turno.id"
           >
-            🗑️ Eliminar
+            <span
+              *ngIf="eliminandoId === turno.id"
+              class="spinner-border spinner-border-sm me-2"
+              aria-hidden="true"
+            ></span>
+            {{ eliminandoId === turno.id ? 'Eliminando...' : 'Eliminar' }}
           </button>
         </div>
       </div>
     </div>
 
-    
-    <!-- Formulario de edición -->
     <div
       *ngIf="turnoEditando"
       class="card p-4 border-0 shadow-lg mt-5 animate__animated animate__fadeInUp"
     >
       <h4 class="text-center text-primary mb-3">
-        ✏️ Editar Turno (ID: {{ turnoEditando.id }})
+        Editar Turno (ID: {{ turnoEditando.id }})
       </h4>
       <form (ngSubmit)="guardarEdicion()" novalidate>
         <div class="row g-3">
@@ -104,7 +112,7 @@
             required
           />
           <div class="col-md-6">
-            <label class="form-label fw-semibold">⏰ Hora</label>
+            <label class="form-label fw-semibold">Hora</label>
             <input
               type="time"
               class="form-control"
@@ -114,7 +122,7 @@
             />
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-semibold">⚙️ Estado</label>
+            <label class="form-label fw-semibold">Estado</label>
             <select
               class="form-select"
               [(ngModel)]="turnoEditando.estado"
@@ -127,7 +135,7 @@
             </select>
           </div>
           <div class="col-md-6">
-            <label class="form-label fw-semibold">📝 Descripción</label>
+            <label class="form-label fw-semibold">Descripcion</label>
             <input
               type="text"
               class="form-control"
@@ -138,7 +146,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-3 mt-4">
-          <button type="submit" class="btn btn-success">💾 Guardar</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
           <button
             type="button"
             class="btn btn-secondary"
@@ -151,39 +159,34 @@
     </div>
   </div>
 
-  <!-- agregar al final del HTML de lista-turnos.component.html -->
+  <div
+    class="d-flex justify-content-between align-items-center mt-4"
+    *ngIf="totalPages > 0"
+  >
+    <div>Pagina {{ page }} de {{ totalPages }} | Total: {{ total }} turnos</div>
 
-<div class="d-flex justify-content-between align-items-center mt-4" *ngIf="totalPages > 0">
+    <div class="btn-group">
+      <button
+        class="btn btn-outline-primary"
+        (click)="paginaAnterior()"
+        [disabled]="page === 1 || cargando"
+      >
+        Anterior
+      </button>
 
-  <div>
-    Página {{ page }} de {{ totalPages }} | Total: {{ total }} turnos
+      <button
+        class="btn btn-outline-primary"
+        (click)="paginaSiguiente()"
+        [disabled]="page === totalPages || cargando"
+      >
+        Siguiente
+      </button>
+    </div>
   </div>
-
-  <div class="btn-group">
-
-    <button
-      class="btn btn-outline-primary"
-      (click)="paginaAnterior()"
-      [disabled]="page === 1"
-    >
-      ⬅️ Anterior
-    </button>
-
-    <button
-      class="btn btn-outline-primary"
-      (click)="paginaSiguiente()"
-      [disabled]="page === totalPages"
-    >
-      Siguiente ➡️
-    </button>
-
-  </div>
-
-</div>
 
   <ng-template #noTurnos>
-    <div class="text-center mt-5 text-muted">
-      <p>🚫 No tienes turnos registrados aún.</p>
+    <div *ngIf="!cargando" class="text-center mt-5 text-muted">
+      <p>No tienes turnos registrados aun.</p>
     </div>
   </ng-template>
 </div>
