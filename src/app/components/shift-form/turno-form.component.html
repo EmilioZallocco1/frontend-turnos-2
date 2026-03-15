@@ -56,6 +56,9 @@
             {{ medico.nombre }}
           </option>
         </select>
+        <small *ngIf="modoEdicion" class="text-muted d-block mt-2">
+          El medico asignado no se puede modificar desde esta pantalla.
+        </small>
       </div>
 
       <div class="mb-3">

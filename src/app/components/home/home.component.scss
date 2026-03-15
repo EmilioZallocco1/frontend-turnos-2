@@ -110,6 +110,91 @@
     border-color: #8AA8C7 !important;
 }
 
+.doctors-showcase {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(46, 107, 131, 0.12);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 18px 35px rgba(46, 107, 131, 0.08);
+}
+
+.doctors-showcase__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.doctors-showcase__eyebrow {
+    color: #2E6B83;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.doctors-showcase__title {
+    color: #173847;
+    font-size: 1.9rem;
+    font-weight: 700;
+}
+
+.doctors-showcase__count {
+    background: #e3f1f0;
+    color: #2E6B83;
+    border-radius: 999px;
+    font-weight: 700;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
+.doctor-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f4fbff 100%);
+    border: 1px solid #d6e8ef;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 28px rgba(46, 107, 131, 0.14);
+        border-color: #8AA8C7;
+    }
+}
+
+.doctor-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2E6B83 0%, #55AFA8 100%);
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.doctor-card__content {
+    min-width: 0;
+}
+
+.doctor-card__name {
+    color: #173847;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.doctor-card__specialty {
+    color: #4f6f7a;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
 
 .home-section .card {
 background-color: #e8ebeb !important;
@@ -132,3 +217,18 @@ background-color: #e8ebeb !important;
 }
 .home-section h1.text-primary {
     color: #010216 !important;}
+
+@media (max-width: 767.98px) {
+    .doctors-showcase {
+        padding: 20px;
+    }
+
+    .doctors-showcase__header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .doctors-showcase__count {
+        align-self: flex-start;
+    }
+}

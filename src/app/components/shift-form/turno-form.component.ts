@@ -14,6 +14,7 @@ export class TurnoFormComponent implements OnInit {
   turnoForm: FormGroup;
   medicos: any[] = [];
   horariosDisponibles: string[] = [];
+  turnoOriginal: any | null = null;
   hoy = '';
 
   errorMsg = '';
@@ -98,6 +99,7 @@ export class TurnoFormComponent implements OnInit {
     this.turnoService.getTurnoById(id).subscribe({
       next: (res) => {
         const t = res.data;
+        this.turnoOriginal = t;
         const soloFecha = t.fecha ? String(t.fecha).split('T')[0] : '';
 
         this.turnoForm.patchValue({
@@ -107,9 +109,11 @@ export class TurnoFormComponent implements OnInit {
           medicoId: t.medico?.id ?? t.medicoId,
         });
 
+        this.turnoForm.get('medicoId')?.disable({ emitEvent: false });
         this.cargarHorariosDisponibles();
         this.cargandoTurno = false;
-        this.infoMsg = 'Modifica los datos y guarda los cambios.';
+        this.infoMsg =
+          'Puedes modificar fecha, hora y descripcion. El medico asignado no se puede cambiar.';
       },
       error: (err) => {
         console.error('Error al cargar turno para edicion:', err);
@@ -234,13 +238,12 @@ export class TurnoFormComponent implements OnInit {
   }
 
   private actualizarTurno() {
-    const { fecha, hora, descripcion, medicoId } = this.turnoForm.getRawValue();
+    const { fecha, hora, descripcion } = this.turnoForm.getRawValue();
 
     const turnoActualizado = {
       fecha,
       hora,
       descripcion,
-      medicoId: Number(medicoId),
     };
 
     this.turnoService.updateTurno(this.turnoId!, turnoActualizado).subscribe({
