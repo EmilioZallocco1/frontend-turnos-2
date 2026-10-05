@@ -92,3 +92,4 @@ describe('PerfilComponent (simple)', () => {
     expect(locationSpy.back).toHaveBeenCalled();
   });
 }
+)
