@@ -1,120 +1,84 @@
-/* ========================================================= */
-
 :host {
-    min-height: 100vh;
-    width: 100%;
-    
-
-    background: linear-gradient(
-        to bottom, 
-        white 0%,       
-        white 50%,      
-        #a9bec4 50%,    
-        #8cd1f1 100%    
-    ) !important;
-    
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; 
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
 }
 
-
 .page-wrap {
-    
-    padding-top: 40px; 
-    padding-bottom: 40px;
-    width: 100%;
-    background-color: transparent !important;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  width: 100%;
 }
 
 .card {
-    border-radius: 12px !important;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); 
-    border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color) !important;
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .card-title {
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    color: #55AFA8 !important; 
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  color: var(--color-ink) !important;
 }
-
-.form-control, .form-label, .form-select {
-    border-radius: 8px;
-    font-size: 0.95rem;
-}
-.form-control:focus, .form-select:focus {
-    box-shadow: 0 0 0 0.2rem rgba(85, 175, 168, 0.25) !important;
-    border-color: #55AFA8 !important;
-}
-
 
 .btn-success {
-    background-color: #55AFA8 !important;
-    color: white !important;
-    border: none !important;
-    padding: 10px 20px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+  background-color: var(--color-success) !important;
+  border-color: var(--color-success) !important;
+  color: white !important;
 }
-
 
 .btn-outline-secondary {
-    background-color: #B7C9E3 !important;
-    color: #333 !important;
-    border: 1px solid #B7C9E3 !important;
-    padding: 10px 20px;
-    font-weight: 600;
-    border-radius: 8px;
-    
-    &:hover {
-        background-color: #A3BFE4 !important;
-        border-color: #A3BFE4 !important;
-    }
+  background-color: var(--surface) !important;
+  color: var(--color-ink) !important;
+  border: 1px solid var(--border-color) !important;
+
+  &:hover {
+    background-color: var(--surface-sunken) !important;
+  }
 }
 
-
 .table {
-    border-radius: 12px;
-    overflow: hidden; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .table-success {
-    --bs-table-bg: #EAF9F7 !important; 
-    --bs-table-striped-bg: #F0FCFB !important;
-    --bs-table-hover-bg: #D4F0ED !important;
-    --bs-table-border-color: #B2DCD7 !important;
+  --bs-table-bg: #eaf9f7;
+  --bs-table-striped-bg: #f0fcfb;
+  --bs-table-hover-bg: #d4f0ed;
+  --bs-table-border-color: #b2dcd7;
 }
 
 .table-success thead {
-    background-color: #55AFA8; 
-    color: white;
-}
-
-// Estilo del botón de volver (copy-paste tuyo, left: 5px para más a la izquierda)
-.btn {
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 600;
-    transition: all 0.2s ease;
+  background-color: var(--color-primary);
+  color: white;
 }
 
 .btn-go-back {
-    background-color: transparent !important;
-    color: #6c757d !important;
-    border: 1px solid #6c757d !important;
-    box-shadow: none !important;
-    position: absolute;
-    top: 15px;
-    left: 5px;
-    z-index: 100;
-    
-    &:hover {
-        background-color: #6c757d !important;
-        color: white !important;
-        border-color: #6c757d !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-    }
+  background-color: transparent !important;
+  color: var(--color-muted) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  z-index: 100;
+
+  &:hover {
+    background-color: var(--color-muted) !important;
+    color: white !important;
+    border-color: var(--color-muted) !important;
+    transform: translateY(-2px);
+  }
 }

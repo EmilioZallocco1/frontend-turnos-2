@@ -1,234 +1,236 @@
-
 :host {
-    /* Propiedades necesarias para que el componente se estire */
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-
-    /* 🛑 FONDO DIVIDIDO: Blanco (Arriba) y Degradado (Abajo) */
-    background: linear-gradient(
-        to bottom, 
-        white 0%,       /* Blanco desde el inicio */
-        white 50%,      /* Blanco termina exactamente al 50% */
-        #a9bec4 50%,    /* Degradado empieza inmediatamente al 50% */
-        #8cd1f1 100%    /* Degradado termina al 100% */
-    ) !important;
+  display: block;
+  min-height: 100vh;
+  width: 100%;
 }
 
-/* 2. ENVOLTORIO INTERNO (Debe ser transparente) */
 .home-wrapper {
-    /* Hacemos el wrapper transparente para que se vea el fondo dividido */
-    background: transparent !important; 
-    min-height: 100vh;
-    width: 100%; }
-
-
-.admin-card {
-    background-color: white !important;
-    border-radius: 12px !important;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2) !important;
+  min-height: 100vh;
+  width: 100%;
 }
 
-.admin-card .card-title {
-    font-size: 1.6em !important;
-    font-weight: 700 !important;
-    color: #333 !important;
-    text-transform: uppercase;
+.home-section {
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.admin-card p.text-muted {
-    font-size: 0.9em;
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.admin-card .row.g-3.mb-4 button {
-    padding: 12px 20px !important;
-    border-radius: 8px !important;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    color: white !important; 
-    border: none !important; 
+/* ---------- Encabezado ---------- */
+
+.home-section h1.text-primary {
+  color: var(--color-primary) !important;
 }
 
-.admin-card .btn-outline-primary { 
-    background-color: #64bd96 !important; 
-}
-.admin-card .btn-outline-success { 
-    background-color: #395e6b !important; 
-}
-.admin-card .btn-outline-warning { 
-    background-color: #a76f99 !important; 
-}
-.admin-card .btn-outline-info { 
-    background-color: #44af5f !important; 
-    color: #2db95c !important; 
-    border: 1px solid #3dcf44 !important; 
-    font-weight: 600;
-}
-
-.no-results-alert {
-    padding: 15px;
-    border-radius: 8px !important;
-    background-color: #e0f7fa !important; 
-    color: #038894 !important; 
-    text-align: center;
-    margin-top: 20px;
-    border: 1px solid #b2ebf2;
-    font-weight: 500;
-}
-
+/* ---------- Quick actions ---------- */
 
 .quick-actions button {
-    font-weight: 600 !important;
-    padding: 15px !important;
-    border-radius: 12px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    border: none !important;
-    color: white !important; 
-
-    &:hover {
-        transform: translateY(-2px); 
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2) !important;
-    }
+  padding: 16px !important;
+  box-shadow: var(--shadow-sm);
 }
 
-
-.quick-actions .btn-primary { 
-    background-color: #2E6B83 !important; 
-    border-color: #2E6B83 !important; 
-}
-
-.quick-actions .btn-outline-primary { 
-    background-color: #55AFA8 !important; 
-    border-color: #55AFA8 !important; 
-    color: white !important;
-}
-
-.quick-actions .btn-info { 
-    background-color: #8AA8C7 !important; 
-    border-color: #8AA8C7 !important;
-}
+/* ---------- Showcase de medicos ---------- */
 
 .doctors-showcase {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(46, 107, 131, 0.12);
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 18px 35px rgba(46, 107, 131, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
 }
 
 .doctors-showcase__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .doctors-showcase__eyebrow {
-    color: #2E6B83;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .doctors-showcase__title {
-    color: #173847;
-    font-size: 1.9rem;
-    font-weight: 700;
+  color: var(--color-ink);
+  font-size: 1.9rem;
+  font-weight: 700;
 }
 
 .doctors-showcase__count {
-    background: #e3f1f0;
-    color: #2E6B83;
-    border-radius: 999px;
-    font-weight: 700;
-    padding: 8px 14px;
-    white-space: nowrap;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  padding: 8px 14px;
+  white-space: nowrap;
 }
 
 .doctor-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f4fbff 100%);
-    border: 1px solid #d6e8ef;
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 16px 28px rgba(46, 107, 131, 0.14);
-        border-color: #8AA8C7;
-    }
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary);
+  }
 }
 
 .doctor-card__avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #2E6B83 0%, #55AFA8 100%);
-    color: white;
-    font-size: 1.25rem;
-    font-weight: 700;
-    flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .doctor-card__content {
-    min-width: 0;
+  min-width: 0;
 }
 
 .doctor-card__name {
-    color: #173847;
-    font-size: 1.05rem;
-    font-weight: 700;
+  color: var(--color-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .doctor-card__specialty {
-    color: #4f6f7a;
-    font-size: 0.95rem;
-    font-weight: 500;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
+/* ---------- Tarjetas de turnos ---------- */
+
 .home-section .card {
-background-color: #e8ebeb !important;
-    border-radius: 16px !important; 
-    border: 1px solid #e0e0e0 !important; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important; 
-    
+  border-radius: var(--radius-lg) !important;
+}
+
+.home-section .card-header {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .home-section .card-header h5 {
-    
-    color: #0f1adf !important; 
-    font-weight: 600;
+  color: var(--color-ink) !important;
+  font-weight: 700;
 }
 
+.next-turn-card {
+  background: var(--surface-alt);
+  border-color: var(--border-color) !important;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+.fecha-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 0.82em;
+  font-weight: 600;
+  white-space: nowrap;
+}
 
 .card-body .p-3.rounded-3 p.fw-semibold {
-    
-    color: #3336e7 !important; 
+  color: var(--color-primary) !important;
 }
-.home-section h1.text-primary {
-    color: #010216 !important;}
+
+/* ---------- Panel administrador ---------- */
+
+.admin-card {
+  background-color: var(--surface) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.admin-card .card-title {
+  font-size: 1.4em !important;
+  font-weight: 700 !important;
+  color: var(--color-ink) !important;
+}
+
+.admin-card p.text-muted {
+  font-size: 0.9em;
+}
+
+.admin-card .row.g-3.mb-4 button {
+  padding: 14px 20px !important;
+}
+
+.turno-admin-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg) !important;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md) !important;
+  }
+}
+
+.estado-badge {
+  font-size: 0.78em;
+  padding: 6px 12px;
+}
+
+.bg-pendiente {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.bg-realizado {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+}
+
+.bg-cancelado {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+.home-footer {
+  color: var(--color-muted);
+  font-size: 0.85em;
+}
 
 @media (max-width: 767.98px) {
-    .doctors-showcase {
-        padding: 20px;
-    }
+  .doctors-showcase {
+    padding: 20px;
+  }
 
-    .doctors-showcase__header {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .doctors-showcase__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .doctors-showcase__count {
-        align-self: flex-start;
-    }
+  .doctors-showcase__count {
+    align-self: flex-start;
+  }
 }

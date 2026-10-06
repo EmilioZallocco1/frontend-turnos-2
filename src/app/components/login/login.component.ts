@@ -14,6 +14,10 @@ export class LoginComponent implements OnInit {
   infoMessage = 'Ingresa tus datos para continuar.';
   role: string = 'paciente';
   enviando = false;
+  success = false;
+
+  showPassword = false;
+  capsLockOn = false;
 
   constructor(
     private fb: FormBuilder,
@@ -29,6 +33,28 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.role = this.route.snapshot.paramMap.get('role') || 'paciente';
+  }
+
+  get isMedico(): boolean {
+    return this.role.toLowerCase().startsWith('medic');
+  }
+
+  get roleLabel(): string {
+    return this.isMedico ? 'Médico' : 'Paciente';
+  }
+
+  get roleIcon(): string {
+    return this.isMedico ? 'bi-heart-pulse' : 'bi-person-heart';
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onPasswordKeydown(event: KeyboardEvent) {
+    if (typeof event.getModifierState === 'function') {
+      this.capsLockOn = event.getModifierState('CapsLock');
+    }
   }
 
   onSubmit() {
@@ -47,8 +73,9 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe({
       next: () => {
+        this.success = true;
         this.infoMessage = 'Acceso concedido. Redirigiendo al inicio...';
-        this.router.navigate(['/home']);
+        setTimeout(() => this.router.navigate(['/home']), 600);
       },
       error: (error) => {
         this.enviando = false;

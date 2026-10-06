@@ -22,6 +22,8 @@ export class RegistroComponent implements OnInit {
   cargandoObrasSociales = false;
   enviando = false;
   modoAdmin = false;
+  showPassword = false;
+  capsLockOn = false;
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +52,16 @@ export class RegistroComponent implements OnInit {
       ],
       obraSocialId: [null, [Validators.required]],
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onPasswordKeydown(event: KeyboardEvent) {
+    if (typeof event.getModifierState === 'function') {
+      this.capsLockOn = event.getModifierState('CapsLock');
+    }
   }
 
   ngOnInit() {

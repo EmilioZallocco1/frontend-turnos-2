@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.bg-field {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 15% 10%, #eef0ff 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, #e8fdfe 0%, transparent 40%),
+    #f7f8fc;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+
+.bg-blob--a {
+  width: 38vw;
+  height: 38vw;
+  min-width: 320px;
+  min-height: 320px;
+  top: -8vw;
+  left: -6vw;
+  background: radial-gradient(circle at 35% 35%, rgba(81, 90, 254, 0.28), transparent 70%);
+}
+
+.bg-blob--b {
+  width: 32vw;
+  height: 32vw;
+  min-width: 280px;
+  min-height: 280px;
+  bottom: -10vw;
+  right: -4vw;
+  background: radial-gradient(circle at 60% 40%, rgba(114, 237, 242, 0.32), transparent 70%);
+}
+
+.bg-blob--c {
+  width: 24vw;
+  height: 24vw;
+  min-width: 220px;
+  min-height: 220px;
+  top: 45%;
+  left: 55%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 143, 216, 0.2), transparent 70%);
+}
+
+@media (max-width: 720px) {
+  .bg-blob {
+    filter: blur(50px);
+  }
+}

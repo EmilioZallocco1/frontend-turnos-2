@@ -1,1 +1,304 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   Design system global — Mis Turnos
+   Carga DESPUES de Bootstrap (ver angular.json) para poder sobreescribirlo
+   con especificidad normal, sin pelear con !important.
+   ========================================================================== */
+
+@use "sass:color";
+
+:root {
+  --color-primary: #515afe;
+  --color-primary-dark: #3c43d1;
+  --color-primary-light: #eef0ff;
+  --color-accent: #72edf2;
+  --color-ink: #1f2430;
+  --color-muted: #6b7280;
+  --color-success: #22c55e;
+  --color-danger: #e11d48;
+  --color-warning: #f59e0b;
+
+  --surface: #ffffff;
+  --surface-alt: #f7f8fc;
+  --surface-sunken: #eef0f8;
+  --border-color: #e3e5ef;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 2px 8px rgba(31, 36, 48, 0.06);
+  --shadow-md: 0 10px 30px rgba(31, 36, 48, 0.08);
+  --shadow-lg: 0 20px 50px rgba(31, 36, 48, 0.14);
+
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--surface-alt);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7cbe0;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--surface-alt);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* ==========================================================================
+   App shell / interactive background
+   ========================================================================== */
+
+app-interactive-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.app-content {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   Reusable surfaces & utilities
+   ========================================================================== */
+
+.page-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.surface-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger > * {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger > *:nth-child(2) { animation-delay: 0.07s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.17s; }
+.stagger > *:nth-child(5) { animation-delay: 0.22s; }
+.stagger > *:nth-child(6) { animation-delay: 0.27s; }
+
+/* ==========================================================================
+   Bootstrap overrides — buttons
+   ========================================================================== */
+
+.btn {
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  padding: 0.6rem 1.15rem;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+    background-color var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-lg {
+  border-radius: var(--radius-md);
+}
+
+.btn-sm {
+  border-radius: var(--radius-sm);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 20px rgba(81, 90, 254, 0.28);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(81, 90, 254, 0.35);
+}
+
+.btn-outline-primary {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(81, 90, 254, 0.22);
+}
+
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-info,
+.btn-outline-danger {
+  background: var(--surface);
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-success:hover,
+.btn-outline-warning:hover,
+.btn-outline-info:hover,
+.btn-outline-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-info {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-ink);
+}
+
+.btn-info:hover {
+  background: color.adjust(#72edf2, $lightness: -10%);
+  border-color: color.adjust(#72edf2, $lightness: -10%);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Bootstrap overrides — cards, badges, alerts, forms
+   ========================================================================== */
+
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+}
+
+.card.shadow-sm {
+  box-shadow: var(--shadow-sm) !important;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.badge {
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+}
+
+.alert {
+  border-radius: var(--radius-md);
+  border: none;
+}
+
+.form-control,
+.form-select {
+  border-radius: var(--radius-sm);
+  border-color: var(--border-color);
+  padding: 0.6rem 0.85rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(81, 90, 254, 0.12);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--color-ink);
+  font-size: 0.9em;
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+.bg-primary-subtle {
+  background-color: var(--color-primary-light) !important;
+}
+
+.table {
+  --bs-table-hover-bg: var(--color-primary-light);
+}
+
+.table thead {
+  color: var(--color-muted);
+  text-transform: uppercase;
+  font-size: 0.78em;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .stagger > *,
+  .btn,
+  .surface-card,
+  .card.shadow-sm {
+    animation: none !important;
+    transition: none !important;
+  }
+}

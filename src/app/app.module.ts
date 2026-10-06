@@ -19,6 +19,7 @@ import { ObraSocialFormComponent } from './components/health-insurance-form/obra
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LoaderComponent } from './components/loader/loader.component';
+import { InteractiveBackgroundComponent } from './components/interactive-background/interactive-background.component';
 import { LoadingInterceptor } from './Services/loading.interceptor';
 import { AuthService } from './Services/auth.service';
 
@@ -41,6 +42,7 @@ export function initializeAuth(authService: AuthService) {
     ListaMedicosComponent,
     ObraSocialFormComponent,
     LoaderComponent,
+    InteractiveBackgroundComponent,
   ],
   imports: [
     BrowserModule,
