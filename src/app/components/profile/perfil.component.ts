@@ -34,7 +34,7 @@ export class PerfilComponent implements OnInit {
         this.error = null;
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Error al cargar el perfil';
+        this.error = this.extraerMensajeError(err) || 'Error al cargar el perfil';
         console.error('Error:', err);
       }
     });
@@ -65,7 +65,7 @@ export class PerfilComponent implements OnInit {
         setTimeout(() => (this.successMessage = null), 3000);
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Error al actualizar el perfil';
+        this.error = this.extraerMensajeError(err) || 'Error al actualizar el perfil';
         console.error('Error:', err);
       }
     });
@@ -83,10 +83,17 @@ export class PerfilComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.error = err?.error?.message || 'Error al eliminar la cuenta';
+        this.error = this.extraerMensajeError(err) || 'Error al eliminar la cuenta';
         console.error('Error:', err);
       }
     });
+  }
+
+  private extraerMensajeError(err: any): string | null {
+    if (typeof err === 'string') {
+      return err;
+    }
+    return err?.error?.message ?? null;
   }
 
   logout(): void {

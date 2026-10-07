@@ -145,6 +145,15 @@ export class TurnoFormComponent implements OnInit {
           lista = [];
         }
 
+        if (fecha === this.hoy) {
+          const ahora = new Date();
+          const minutosActuales = ahora.getHours() * 60 + ahora.getMinutes();
+          lista = lista.filter((h: string) => {
+            const [hh, mm] = h.split(':').map(Number);
+            return hh * 60 + mm > minutosActuales;
+          });
+        }
+
         const horaActual = this.turnoForm.get('hora')?.value;
         if (horaActual && !lista.includes(horaActual)) {
           lista.unshift(horaActual);
